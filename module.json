@@ -1,0 +1,27 @@
+{
+  "name": "lwm2m-client-6lowpan-example",
+  "version": "0.0.0",
+  "description": "6LoWPAN ND networking example",
+  "keywords": [
+    "6LoWPAN",
+    "mesh"
+  ],
+  "author": "Arto Kinnunen",
+  "repository": {
+    "url": "git@github.com:ARMmbed/lwm2m-client-6lowpan-example.git",
+    "type": "git"
+  },
+  "homepage": "https://github.com/ARMmbed/lwm2m-client-6lowpan-example",
+  "licenses": [
+    {
+      "url": "https://spdx.org/licenses/Apache-2.0",
+      "type": "Apache-2.0"
+    }
+  ],
+  "dependencies": {
+    "lwm2m-client": "~0.1.5",
+    "atmel-rf-driver": "0.0.13"
+  },
+  "targetDependencies": {},
+  "bin": "./source"
+}
