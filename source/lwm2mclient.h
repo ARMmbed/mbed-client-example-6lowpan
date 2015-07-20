@@ -1,30 +1,20 @@
-#ifndef __M2M_LW_CLIENT_H__
-#define __M2M_LW_CLIENT_H__
-
-#define SIXLOWPAN_INTERFACE
+#ifndef __LWM2MCLIENT_H__
+#define __LWM2MCLIENT_H__
 
 #include "lwm2m-client/m2minterfaceobserver.h"
-
-#ifndef TARGET_LIKE_LINUX
 #include "mbed/DigitalOut.h"
-#endif
-
-
-//#define BOOTSTRAP_ENABLED
 
 class M2MDevice;
 class M2MSecurity;
 class M2MObject;
 
-class M2MLWClient: public M2MInterfaceObserver {
+class LWM2MClient : public M2MInterfaceObserver {
 public:
-    M2MLWClient();
+    LWM2MClient();
 
-    ~M2MLWClient();
+    ~LWM2MClient();
 
-    bool create_interface(bool useSecureConnection);
-
-    bool bootstrap_successful();
+    bool create_interface();
 
     bool register_successful();
 
@@ -32,11 +22,7 @@ public:
 
     bool registration_update_successful();
 
-    M2MSecurity* create_bootstrap_object(bool useSecureConnection);
-
-    M2MSecurity* create_register_object(bool useSecureConnection);
-
-    void test_bootstrap(M2MSecurity *security);
+    M2MSecurity* create_register_object();
 
     M2MDevice* create_device_object();
 
@@ -49,8 +35,6 @@ public:
     void test_register(M2MObjectList object_list);
 
     void set_register_object(M2MSecurity *&register_object);
-
-    void test_update_register();
 
     void test_unregister();
 
@@ -84,22 +68,15 @@ public:
 
 private:
 
-#ifndef TARGET_LIKE_LINUX
     DigitalOut          _led;
-#endif
     M2MInterface        *_interface;
-    M2MSecurity         *_security;
     M2MSecurity         *_register_security;
     M2MDevice           *_device;
     M2MObject           *_object;
-    bool                _bootstrapped;
     bool                _error;
     bool                _registered;
     bool                _unregistered;
     bool                _registration_updated;
     int                 _value;
 };
-
-
-
-#endif //__M2M_LW_CLIENT_H__
+#endif //__LWM2MCLIENT_H__

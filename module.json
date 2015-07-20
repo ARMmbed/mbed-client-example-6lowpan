@@ -20,7 +20,8 @@
   ],
   "dependencies": {
     "lwm2m-client": "~0.1.5",
-    "atmel-rf-driver": "0.0.13"
+    "atmel-rf-driver": "0.0.13",
+    "mbed-mesh-api": "~0.0.2"
   },
   "targetDependencies": {},
   "bin": "./source"
