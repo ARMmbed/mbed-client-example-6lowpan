@@ -8,7 +8,7 @@
 // Enter your mbed Device Server's IPv6 address and Port number in
 // mentioned format like FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683
 
-const String &MBED_SERVER_ADDRESS = "coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683";
+const String &MBED_SERVER_ADDRESS = "coap://FD00:FF1:CE0B:A5E0:1068:AF13:9B61:D557:5683";
 
 const String &MANUFACTURER = "ARM";
 const String &TYPE = "type";
