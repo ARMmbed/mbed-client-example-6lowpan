@@ -12,7 +12,7 @@ This example application demonstrates how to:
 ## Required hardware
 
 * An `Frdm-k64f` development board (Client end-point)
-* An mbed 6LoWPAN shield
+* An mbed 6LoWPAN shield (with Radio Module)
 * An mbed 6LoWPAN `Gateway router` (ST Nucleo F401RE)
 * A micro-USB cable
 * A micro-USB charger for powering mbed 6LoWPAN Gateway
@@ -34,10 +34,10 @@ This example application demonstrates how to:
 
 * The communication link between the `Gateway router` and `mbed Device Server` is Ethernet. 
 * The `Gateway router` is powered up using a microUSB Charger connected to a wall socket.
-* In order to flash the `Gateway router` with the `Gateway router firmware` and , you need a microUSB cable . (See instructions below)
+* In order to flash the `Gateway router` with the `Gateway router firmware`, you need a microUSB cable . (See instructions below)
 * You can also power up your `Gateway router` with microUSB cable connected to the PC if you do not have a microUSB charger.
 * The wireless link between `Frdm-k64f (Client end-point)` and `Gateway router` is following `IEEE 802.15.4` standard. 
-* The `Frdm-k64f (Client end-point)` can also be powered up either a microUSB charger or a microUSB cable. If microUSB is used, debug/trace messages can be viewed utilizing an optional software listed above, e.g., Putty.
+* The `Frdm-k64f (Client end-point)` can also be powered up by either a microUSB charger or a microUSB cable. If microUSB is used, debug/trace messages can be viewed utilizing an optional software listed above, e.g., Putty.
 
 
 ##Test environment setup
@@ -60,7 +60,7 @@ This example application demonstrates how to:
     * copy IPv6 address to the String`MBED_SERVER_ADDRESS` at line no. 11 in the file `./source/lwm2mclient.cpp`
     *  Address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,   you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number. The `FD` prefix tells us that it is a Unique local IPv6 address.
 * Build the `lwm2m-client-6lowpan-example application` with `Yotta` (see `Build instructions` below)
-* Load the `lwm2m-client-6lowpan-example application` to the `FRDM-K64F` board
+* Load the `lwm2m-client-6lowpan-example application` to the `FRDM-K64F` board. (see `Running the example application` below)
 
 
 
@@ -170,10 +170,10 @@ This will open `WebUI` for `Connected Home Application`. Click on the tab named 
 
 ![](img/CH-endpoint_Device.PNG)  
 
-* By clicking the `Read` tab, you will actually be retrieving information from the client.
+* By clicking the `Read` button, you will actually be retrieving information from the client.
 
 * Open the `Test` pane .
-* Click `Read` tabs. **/Test/0/Static** should return `Static value` string whereas **/Test/0/Dynamic** returns the count of button-presses on the client (frdm-k64f) board. 
+* Click `Read` buttons. **/Test/0/Static** should return `Static value` string whereas **/Test/0/Dynamic** returns the count of button-presses on the client (frdm-k64f) board. 
 
 ![](img/CH-endpoint_Test.PNG) 
 
@@ -189,7 +189,7 @@ This will open `WebUI` for `Connected Home Application`. Click on the tab named 
 
 * In order to watch the debug trace at the mbed client, we can use either Wireshark or some sort of terminal emulation. Please consider the following example instructions using putty and Linux.
 
-* Open `putty` with root previllages on the `Client Side` PC.
+* Open `putty` with root privileges on the `Client Side` PC.
 ~~~
 $ sudo putty 
 ~~~
