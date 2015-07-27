@@ -34,19 +34,20 @@ This example application demonstrates how to:
 
 * Connect mbed 6LoWPAN Gateway to PC running mDS with ethernet cable. 
 * Connect micro-USB charger to mbed 6LoWPAN Gateway.
-* The router firmware is located in the [root](https://github.com/ARMmbed/mbed-coap-example-private) folder of the coap-example application called `mbed_6LP_Gateway.bin`. 
-* Connect the mbed gateway  will be shown in your computer as a removable memory. Copy the `mbed_6LP_Gateway.bin` file to the mbed gateway to flash the device. To reboot the new firmware, click **Reset** after flashing.
+* The firmware for Gateway `mbed_6LP_Gateway.bin`, is located in the `GW_Binary` folder in the root of this example. 
+* Connect the mbed gateway, it will be shown in your computer as a removable memory. Copy the `mbed_6LP_Gateway.bin` file to the mbed gateway to flash the device. To reboot the new firmware, click **Reset** after flashing.
 * Download and run mDS server on PC (see instructions below).
 
 
-**Note!**  For Windows OS: A seperate driver is needed. [Download](https://developer.mbed.org/handbook/Windows-serial-configuration)- the mbed Windows Serial Port driver.
+**Note!**  For Windows OS: A seperate driver is needed. [Download](https://developer.mbed.org/handbook/Windows-serial-configuration) the mbed Windows Serial Port driver.
 
 #### Client Side
 * Connect `frdm-k64f` development board and mbed 6LoWPAN shield together.
 * Configure the `lwm2m-client-6lowpan-example` application in order to use `Device Server(mDS)` IPv6 address.
     * in the PC running `mDS` open command prompt and type _ipconfig_
     * section `Ethernet adapter Local Area Connection` field `IPv6 address` contains IPv6 address
-    * copy IPv6 address to define `MBED_SERVER_ADDRESS` in file `./source/m2mlwclient.cpp`
+    * copy IPv6 address to the String`MBED_SERVER_ADDRESS` at line no. 11 in the file `./source/lwm2mclient.cpp`
+    *  Address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,   you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number.
 * Build the `lwm2m-client-6lowpan-example application` with `Yotta` (see `Build instructions` below)
 * Load the `lwm2m-client-6lowpan-example application` to the `FRDM-K64F` board
 
@@ -75,7 +76,8 @@ Ref Apps.tar.gz
 
 ### Starting the mbed Device Server (mDS)
 
-* Go to the `bin` folder of the Device Server package that you downloaded.
+* Extract 'Device Server.tar.gz'.
+* Go to the `bin` folder of the `Device Server` package that you just extracted.
 * Run the start script:
     - If you are running mDS on Linux OS, run the `runDS.sh` in a new shell.
     - If you are running mDS on Windows, run the `runDS.bat` in a new command prompt.
@@ -84,7 +86,8 @@ This will start the mbed Device Server on your system.
 
 ### Starting the WebUI ("Connected home" reference app)
 
-* Go to the `bin` folder in the Connected-home-trial reference app that you downloaded.
+* Extract `Ref Apps.tar.gz`.
+* Go to the `bin` folder in the Connected-home-trial reference app that you extracted.
 * Run the start script:	
     - If you are running mDS on Linux OS, run the `runConnectedHome.sh` in a new shell.	
     - If you are running mDS on Windows, run the `runConnectedHome.bat` in a new command prompt.	
@@ -105,7 +108,7 @@ This will start the WebUI on your system.
 pip install --pre pyusb
 ~~~    
 
-* Open file `source/lwm2mclient.cpp` and edit your mbed Device Server's Ipv6 address in place of `MBED_SERVER_ADDRESS`. Address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`, you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number.
+* Set the `IPv6` address of the `Device Server` in `source/lwm2mclient.cpp` if you have not done it yet. The instructions were given in the subsection `Client Side` of the section named `Test environment setup`. 
 * At the command line, move to the root of this example application.
 * Set up the target device 
 ~~~
@@ -120,7 +123,7 @@ The executable file will be created in `/build/frdm-k64f-gcc/source/` folder.
 ### Running the example application
 
 * Find the binary file named `lwm2m-client-6lowpan-example.bin` in the folder `lwm2m-client-6lowpan-example/build/frdm-k64f-gcc/source/`.
-* Copy the binary to the USB mass storage root of the `frdm-k64f` development board. It will be automatically flashed to target MCU. After flashing the board will restart itself.
+* Copy the binary to the USB mass storage root of the `frdm-k64f` development board. It will be automatically flashed to target MCU. After flashing, the board will restart itself.
 3. Press the reset button of frdm-development board if it does not restarts automatically.
 4. The program begins execution and will start registration to the mbed Device Server.
 5. After a successful registration, the program will automatically start sending observations after every 10 seconds.
@@ -128,7 +131,7 @@ The executable file will be created in `/build/frdm-k64f-gcc/source/` folder.
 ### Test Usage
 
 * Make sure that `Device Server` and `Connected Home App.` are up and running.
-* On the PC where `Device Server` is runing, open a browser and write:
+* On the server side where `Device Server` is runing, open a browser and write:
 ~~~
 https://localhost:8081
 ~~~ 
@@ -168,32 +171,35 @@ This will open `WebUI` for `Connected Home Application`. Click on the tab named 
 ![](img/board.PNG) 
 
 * You should be able to see an increment in **/Test/0/Dynamic** count.
-* Press the register/un-register button in order to register or un-register your device respectively to mbed Device Server.
+* Press the indicated un-register button in order to un-register your device from mbed Device Server. You will see that the end-point has been removed from the WebUI and the device status is `Stale` in `Connected Home app.`
+* In order to register your device again, simply press the **Restart** button.
 
 ## Debug Trace at Client Side
 
-* In order to watch the communication between the mbed client and the mbed Device server, we can use either Wireshark or some terminal emulation. Follow the following example instructions using putty and Linux.
+* In order to watch the debug trace at the mbed client, we can use either Wireshark or some sort of terminal emulation. Please consider the following example instructions using putty and Linux.
 
-* Open `putty` with root previllages.
+* Open `putty` with root previllages on the `Client Side` PC.
 ~~~
-$ sudo putty &
+$ sudo putty 
 ~~~
 * Use the following command to see which serial port your mbed client controller is connected to.
 ~~~
 dmesg
 ~~~
 * Go the `Serial` Category in putty.
-* Write your port identified in the section `Serial luine to connect to`.
+* Write your identified port in the section `Serial line to connect to`, e.g., `/dev/ttyACM0`.
 * In `Configure the serial line` section, enter the following details:
+
 				* Baud-rate = 9600
 				* Data bits = 8
 				* Stop bits = 1
 				* flow control = xon/xoff.
+
 * Click on the `Session` category. Save the session with desired name, e.g., _mbed_trace_.
 * Choose `Connection_type` as `Serial`.
 * Click `Open`.
 
-This will provide you with the trace of all the communication taking place between `client` and `mDS` through `Gateway`.
+This will provide you with the debug trace of the `client`.
 
 
 
