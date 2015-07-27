@@ -13,11 +13,13 @@ This example application demonstrates how to:
 
 * An `Frdm-k64f` development board (Client end-point)
 * An mbed 6LoWPAN shield (with Radio Module)
-* An mbed 6LoWPAN `Gateway router` (ST Nucleo F401RE)
+* An mbed 6LoWPAN `Gateway router`
 * A micro-USB cable
 * A micro-USB charger for powering mbed 6LoWPAN Gateway
 * Ethernet Cable
 * A PC running `mbed Device Server (mDS)`
+
+![](img/hw_photo.png) 
 
 
 ## Required software
