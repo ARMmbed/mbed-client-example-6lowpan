@@ -8,17 +8,17 @@ This example application demonstrates how to:
 * register, unregister, read resource values and send observations to mbed Device Server
 * disconnect from the network
 
-## Reference Block Diagram
-![](img/Dia.png) 
+
 ## Required hardware
 
-* An frdm-k64f development board
+* An `Frdm-k64f` development board (Client end-point)
 * An mbed 6LoWPAN shield
-* An mbed 6LoWPAN Gateway
+* An mbed 6LoWPAN `Gateway router` (ST Nucleo F401RE)
 * A micro-USB cable
 * A micro-USB charger for powering mbed 6LoWPAN Gateway
 * Ethernet Cable
-* A PC running mbed Device Server
+* A PC running `mbed Device Server (mDS)`
+
 
 ## Required software
 
@@ -29,25 +29,36 @@ This example application demonstrates how to:
 * [Wireshark](https://www.wireshark.org/) - for packet inspection/network debugging.
 * [Putty](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) - for serial terminal emulation
 
+## Reference Block Diagram
+![](img/Dia.png) 
+
+* The communication link between the `Gateway router` and `mbed Device Server` is Ethernet. 
+* The `Gateway router` is powered up using a microUSB Charger connected to a wall socket.
+* In order to flash the `Gateway router` with the `Gateway router firmware` and , you need a microUSB cable . (See instructions below)
+* You can also power up your `Gateway router` with microUSB cable connected to the PC if you do not have a microUSB charger.
+* The wireless link between `Frdm-k64f (Client end-point)` and `Gateway router` is following `IEEE 802.15.4` standard. 
+* The `Frdm-k64f (Client end-point)` can also be powered up either a microUSB charger or a microUSB cable. If microUSB is used, debug/trace messages can be viewed utilizing an optional software listed above, e.g., Putty.
+
+
 ##Test environment setup
 #### Server Side
 
-* Connect mbed 6LoWPAN Gateway to PC running mDS with ethernet cable. 
-* Connect micro-USB charger to mbed 6LoWPAN Gateway.
+* Connect mbed 6LoWPAN `Gateway Router` to PC running mDS with ethernet cable. 
+* Connect micro-USB cable to mbed 6LoWPAN `Gateway Router`.  It will be shown in your computer as a removable memory
 * The firmware for Gateway `mbed_6LP_Gateway.bin`, is located in the `GW_Binary` folder in the root of this example. 
-* Connect the mbed gateway, it will be shown in your computer as a removable memory. Copy the `mbed_6LP_Gateway.bin` file to the mbed gateway to flash the device. To reboot the new firmware, click **Reset** after flashing.
+* Copy the `mbed_6LP_Gateway.bin` file to the mbed 6LoWPAN `Gateway router` in order to flash the device. The device will reboot automatically after flashing. If it does not happen, push the **Reset** button on the board.
 * Download and run mDS server on PC (see instructions below).
 
 
 **Note!**  For Windows OS: A seperate driver is needed. [Download](https://developer.mbed.org/handbook/Windows-serial-configuration) the mbed Windows Serial Port driver.
 
 #### Client Side
-* Connect `frdm-k64f` development board and mbed 6LoWPAN shield together.
+* Connect `Frdm-k64f` development board and mbed 6LoWPAN shield together.
 * Configure the `lwm2m-client-6lowpan-example` application in order to use `Device Server(mDS)` IPv6 address.
     * in the PC running `mDS` open command prompt and type _ipconfig_
     * section `Ethernet adapter Local Area Connection` field `IPv6 address` contains IPv6 address
     * copy IPv6 address to the String`MBED_SERVER_ADDRESS` at line no. 11 in the file `./source/lwm2mclient.cpp`
-    *  Address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,   you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number.
+    *  Address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,   you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number. The `FD` prefix tells us that it is a Unique local IPv6 address.
 * Build the `lwm2m-client-6lowpan-example application` with `Yotta` (see `Build instructions` below)
 * Load the `lwm2m-client-6lowpan-example application` to the `FRDM-K64F` board
 
