@@ -55,7 +55,7 @@ This example application demonstrates how to:
 **Note!**  
 You need a separate driver for Windows OS. [Download](https://developer.mbed.org/handbook/Windows-serial-configuration) the mbed Windows Serial Port driver.
 
-#### Client side
+#### Client Side
 * Connect the FRDM-K64F development board and mbed 6LoWPAN shield together.
 * Configure the `lwm2m-client-6lowpan-example` application to use the Device Server's (mDS) IPv6 address:
     * in the PC running the mDS, open the command prompt and type _ipconfig_
@@ -68,6 +68,17 @@ You need a separate driver for Windows OS. [Download](https://developer.mbed.org
 
 **Note!** 
 You might need to open UDP port 5683 in your computer firewall for mDS to communicate with this example application. 
+
+##Radio Module Identification
+* Please make sure that you are using same Radio modules on both Server and Client sides. 
+* If your Radio module on the Gateway router supports 2.4 GHz frequency band, you must use an mbed 6LoWPAN shield on the Client side which contains a 2.4 GHz Radio module.   
+* If your Radio module on the Gateway router supports sub-GHz frequency band, you must use an mbed 6LoWPAN shield on the Client side which contains a sub-GHz Radio module.   
+* An easy way to identify which frequency band your setup uses, is to check the **Antenna size** on the Radio module.
+* Sub-GHz band antenna is larger in size as compared to 2.4 GHz antenna.
+* For Client side (mbed 6LoWPAN Shield connected to FRDM-K64F board), see the image below.
+  ![](img/Radio_Identifications.png) 
+* For Gateway router, see the image below.
+  ![](img/Radio_Identifications_GW.png) 
 
 ### Downloading mbed Device Server (mDS)
 
