@@ -12,12 +12,7 @@
     "type": "git"
   },
   "homepage": "https://github.com/ARMmbed/lwm2m-client-6lowpan-example",
-  "licenses": [
-    {
-      "url": "https://spdx.org/licenses/Apache-2.0",
-      "type": "Apache-2.0"
-    }
-  ],
+  "license": "Apache-2.0",
   "dependencies": {
     "lwm2m-client": "~0.1.5",
     "atmel-rf-driver": "0.0.13",
