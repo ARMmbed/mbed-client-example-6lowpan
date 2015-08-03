@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 #include "lwm2mclient.h"
-
 #include "lwm2m-client/m2minterfacefactory.h"
 #include "lwm2m-client/m2mdevice.h"
 #include "lwm2m-client/m2mobjectinstance.h"
 #include "lwm2m-client/m2mresource.h"
+#include "minar/minar.h"
+#include "test_env.h"
 
 // Enter your mbed Device Server's IPv6 address and Port number in
 // mentioned format like FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683
 
-const String &MBED_SERVER_ADDRESS = "coap://FD00:FF1:CE0B:A5E0:1068:AF13:9B61:D557:5683";
+const String &MBED_SERVER_ADDRESS = "coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683";
 
 const String &MANUFACTURER = "ARM";
 const String &TYPE = "type";
@@ -122,7 +123,10 @@ M2MObject* LWM2MClient::create_generic_object() {
     if(_object) {
         M2MObjectInstance* inst = _object->create_object_instance();
         if(inst) {
-            M2MResource* res = inst->create_dynamic_resource("Dynamic","ResourceTest",true);
+            M2MResource* res = inst->create_dynamic_resource("Dynamic",
+                                                             "ResourceTest",
+                                                             M2MResourceInstance::INTEGER,
+                                                             true);
             char buffer[20];
             int size = sprintf(buffer,"%d",_value);
             res->set_operation(M2MBase::GET_PUT_POST_ALLOWED);
@@ -133,6 +137,7 @@ M2MObject* LWM2MClient::create_generic_object() {
 
             inst->create_static_resource("Static",
                                          "ResourceTest",
+                                         M2MResourceInstance::STRING,
                                          STATIC_VALUE,
                                          sizeof(STATIC_VALUE)-1);
         }
@@ -148,8 +153,7 @@ void LWM2MClient::update_resource() {
             char buffer[20];
             int size = sprintf(buffer,"%d",_value);
             res->set_value((const uint8_t*)buffer,
-                           (const uint32_t)size,
-                           true);
+                           (const uint32_t)size);
             _value++;
         }
     }
@@ -187,6 +191,10 @@ void LWM2MClient::object_registered(M2MSecurity */*security_object*/, const M2MS
 void LWM2MClient::object_unregistered(M2MSecurity */*server_object*/){
     _unregistered = true;
     _registered = false;
+    // This will turn on the LED on the board specifying that
+    // the application has run successfully.
+    notify_completion(_unregistered);
+    minar::Scheduler::stop();
 }
 
 void LWM2MClient::registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/){
@@ -198,4 +206,33 @@ void LWM2MClient::error(M2MInterface::Error /*error*/){
 }
 
 void LWM2MClient::value_updated(M2MBase */*base*/, M2MBase::BaseType /*type*/) {
+}
+
+void LWM2MClient::mesh_network_handler(mesh_connection_status_t status) {
+    if (status == MESH_CONNECTED) {
+        // Create LWM2M Client API interface to manage bootstrap,
+        // register and unregister
+        this->create_interface();
+
+        M2MSecurity *register_object = create_register_object();
+
+        register_object->set_resource_value(M2MSecurity::SecurityMode, M2MSecurity::NoSecurity);
+
+        set_register_object(register_object);
+
+        // Create LWM2M device object specifying device resources
+        // as per OMA LWM2M specification.
+        M2MDevice* device_object = create_device_object();
+
+        M2MObject* object = create_generic_object();
+
+        // Add all the objects that you would like to register
+        // into the list and pass the list for register API.
+        M2MObjectList object_list;
+        object_list.push_back(device_object);
+        object_list.push_back(object);
+
+        // Issue register command.
+        test_register(object_list);
+    }
 }

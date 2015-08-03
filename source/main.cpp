@@ -15,6 +15,7 @@
  */
 
 #include "lwm2mclient.h"
+#include "minar/minar.h"
 #include "atmel-rf-driver/driverRFPhy.h"    // rf_device_register
 #include "mbed-mesh-api/Mesh6LoWPAN_ND.h"
 #include "test_env.h"
@@ -26,25 +27,17 @@
 #include "lwm2m-client/m2mobjectinstance.h"
 #include "lwm2m-client/m2mresource.h"
 #include "ns_trace.h"
+#include "mbed-mesh-api/AbstractMesh.h"
 
 #define OBS_BUTTON SW2
 #define UNREG_BUTTON SW3
-
-
-volatile uint8_t mesh_network_state = MESH_DISCONNECTED;
-
-void mesh_network_callback(mesh_connection_status_t mesh_state)
-{
-    tr_info("Network established");
-    mesh_network_state = mesh_state;
-}
 
 void trace_printer(const char* str)
 {
   printf("%s\r\n", str);
 }
 
-int main() {
+void app_start(int, char**) {
 
     // Instantiate the class which implements
     // LWM2M Client API
@@ -56,21 +49,11 @@ int main() {
     Mesh6LoWPAN_ND *mesh_api = Mesh6LoWPAN_ND::getInstance();
     int8_t status;
 
-    status = mesh_api->init(rf_device_register(), mesh_network_callback);
+    status = mesh_api->init(rf_device_register(), AbstractMesh::MeshNetworkHandler_t(&lwm2mclient,&LWM2MClient::mesh_network_handler));
     if (status != MESH_ERROR_NONE) {
         tr_error("Mesh network initialization failed %d!", status);
-        return 1;
+        return;
     }
-
-    status = mesh_api->connect();
-    if (status != MESH_ERROR_NONE) {
-        tr_error("Can't connect to mesh network!");
-        return 1;
-    }
-
-    do {
-        mesh_api->processEvent();
-    } while(mesh_network_state != MESH_CONNECTED);
 
     // Set up Hardware interrupt button.
     InterruptIn obs_button(OBS_BUTTON);
@@ -84,62 +67,9 @@ int main() {
     // will send observation towards mbed Device Server
     obs_button.fall(&lwm2mclient,&LWM2MClient::update_resource);
 
-    // Create LWM2M Client API interface to manage bootstrap,
-    // register and unregister
-
-    lwm2mclient.create_interface();
-    M2MSecurity *register_object = lwm2mclient.create_register_object();
-
-    register_object->set_resource_value(M2MSecurity::SecurityMode, M2MSecurity::NoSecurity);
-
-    lwm2mclient.set_register_object(register_object);
-
-    // Create LWM2M device object specifying device resources
-    // as per OMA LWM2M specification.
-    M2MDevice* device_object = lwm2mclient.create_device_object();
-
-    M2MObject* object = lwm2mclient.create_generic_object();
-
-    // Add all the objects that you would like to register
-    // into the list and pass the list for register API.
-    M2MObjectList object_list;
-    object_list.push_back(device_object);
-    object_list.push_back(object);
-
-    // Issue register command.
-    lwm2mclient.test_register(object_list);
-
-    // Wait till the register callback is called successfully.
-    // Callback comes in object_registered()
-    /* wait network to be established */
-    do {
-        mesh_api->processEvent();
-    } while(!lwm2mclient.register_successful());
-
-    // Wait for the unregister successful callback,
-    // Callback comes in object_unregsitered(), this will be
-    // waiting for user to press SW2 button on K64F board.
-    /* wait network to be established */
-    do {
-        mesh_api->processEvent();
-    } while(!lwm2mclient.unregister_successful());
-
-    // This will turn on the LED on the board specifying that
-    // the application has run successfully.
-    notify_completion(lwm2mclient.unregister_successful() &&
-                      lwm2mclient.register_successful());
-
-
-    // Disconnect the connect and teardown the network interface
-    mesh_api->disconnect();
-
-    // Delete device object created for registering device
-    // resources.
-    if(device_object) {
-        M2MDevice::delete_instance();
+    status = mesh_api->connect();
+    if (status != MESH_ERROR_NONE) {
+        tr_error("Can't connect to mesh network!");
+        return;
     }
-    if(object) {
-        delete object;
-    }
-    return 0;
 }

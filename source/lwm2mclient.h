@@ -18,6 +18,7 @@
 
 #include "lwm2m-client/m2minterfaceobserver.h"
 #include "mbed/DigitalOut.h"
+#include "mbed-mesh-api/mesh_interface_types.h"
 
 class M2MDevice;
 class M2MSecurity;
@@ -80,6 +81,9 @@ public:
     // during PUT operation. Object and its type is passed in
     // the callback.
     void value_updated(M2MBase *base, M2MBase::BaseType type);
+
+    //Handler for mesh network status events
+    void mesh_network_handler(mesh_connection_status_t status);
 
 private:
 
