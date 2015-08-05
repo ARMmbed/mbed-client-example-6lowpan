@@ -1,6 +1,6 @@
 {
   "name": "lwm2m-client-6lowpan-example",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "6LoWPAN ND networking example",
   "keywords": [
     "6LoWPAN",
