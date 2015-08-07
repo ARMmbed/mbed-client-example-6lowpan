@@ -1,5 +1,5 @@
 {
-  "name": "lwm2m-client-6lowpan-example",
+  "name": "mbed-client-example-6lowpan",
   "version": "0.0.1",
   "description": "6LoWPAN ND networking example",
   "keywords": [
@@ -14,7 +14,7 @@
   "homepage": "https://github.com/ARMmbed/lwm2m-client-6lowpan-example",
   "license": "Apache-2.0",
   "dependencies": {
-    "lwm2m-client": "~0.2.0",
+    "mbed-client": "~0.2.0",
     "atmel-rf-driver": "~0.0.15",
     "mbed-mesh-api": "~0.1.0"
   },
