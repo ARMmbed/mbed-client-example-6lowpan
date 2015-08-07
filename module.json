@@ -15,7 +15,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "lwm2m-client": "~0.2.0",
-    "atmel-rf-driver": "0.0.13",
+    "atmel-rf-driver": "~0.0.15",
     "mbed-mesh-api": "~0.1.0"
   },
   "targetDependencies": {},
