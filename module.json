@@ -8,15 +8,15 @@
   ],
   "author": "Arto Kinnunen",
   "repository": {
-    "url": "git@github.com:ARMmbed/lwm2m-client-6lowpan-example.git",
+    "url": "git@github.com:ARMmbed/mbed-client-example-6lowpan.git",
     "type": "git"
   },
-  "homepage": "https://github.com/ARMmbed/lwm2m-client-6lowpan-example",
+  "homepage": "https://github.com/ARMmbed/mbed-client-example-6lowpan",
   "license": "Apache-2.0",
   "dependencies": {
-    "mbed-client": "~0.2.0",
-    "atmel-rf-driver": "~0.0.15",
-    "mbed-mesh-api": "~0.1.0"
+    "mbed-client": "~0.2.5",
+    "atmel-rf-driver": "~0.0.17",
+    "mbed-mesh-api": "~0.1.1"
   },
   "targetDependencies": {},
   "bin": "./source"

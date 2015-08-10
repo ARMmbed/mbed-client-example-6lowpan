@@ -32,6 +32,8 @@
 #define OBS_BUTTON SW2
 #define UNREG_BUTTON SW3
 
+static LWM2MClient *lwm2mclient = NULL;
+
 void trace_printer(const char* str)
 {
   printf("%s\r\n", str);
@@ -41,7 +43,7 @@ void app_start(int, char**) {
 
     // Instantiate the class which implements
     // LWM2M Client API
-    LWM2MClient lwm2mclient;
+    lwm2mclient = new LWM2MClient();
 
     // This sets up the network interface configuration which will be used
     // by LWM2M Client API to communicate with mbed Device server.
@@ -49,7 +51,7 @@ void app_start(int, char**) {
     Mesh6LoWPAN_ND *mesh_api = Mesh6LoWPAN_ND::getInstance();
     int8_t status;
 
-    status = mesh_api->init(rf_device_register(), AbstractMesh::MeshNetworkHandler_t(&lwm2mclient,&LWM2MClient::mesh_network_handler));
+    status = mesh_api->init(rf_device_register(), AbstractMesh::MeshNetworkHandler_t(lwm2mclient,&LWM2MClient::mesh_network_handler));
     if (status != MESH_ERROR_NONE) {
         tr_error("Mesh network initialization failed %d!", status);
         return;
@@ -61,11 +63,11 @@ void app_start(int, char**) {
 
     // On press of SW3 button on K64F board, example application
     // will call unregister API towards mbed Device Server
-    unreg_button.fall(&lwm2mclient,&LWM2MClient::test_unregister);
+    unreg_button.fall(lwm2mclient,&LWM2MClient::test_unregister);
 
     // On press of SW2 button on K64F board, example application
     // will send observation towards mbed Device Server
-    obs_button.fall(&lwm2mclient,&LWM2MClient::update_resource);
+    obs_button.fall(lwm2mclient,&LWM2MClient::update_resource);
 
     status = mesh_api->connect();
     if (status != MESH_ERROR_NONE) {
