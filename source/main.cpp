@@ -33,6 +33,8 @@
 #define UNREG_BUTTON SW3
 
 static LWM2MClient *lwm2mclient = NULL;
+static InterruptIn *obs_button;
+static InterruptIn *unreg_button;
 
 void trace_printer(const char* str)
 {
@@ -44,6 +46,8 @@ void app_start(int, char**) {
     // Instantiate the class which implements
     // LWM2M Client API
     lwm2mclient = new LWM2MClient();
+    obs_button = new InterruptIn(OBS_BUTTON);
+    unreg_button = new InterruptIn(UNREG_BUTTON);
 
     // This sets up the network interface configuration which will be used
     // by LWM2M Client API to communicate with mbed Device server.
@@ -58,16 +62,16 @@ void app_start(int, char**) {
     }
 
     // Set up Hardware interrupt button.
-    InterruptIn obs_button(OBS_BUTTON);
-    InterruptIn unreg_button(UNREG_BUTTON);
+  //  InterruptIn obs_button(OBS_BUTTON);
+   // InterruptIn unreg_button(UNREG_BUTTON);
 
     // On press of SW3 button on K64F board, example application
     // will call unregister API towards mbed Device Server
-    unreg_button.fall(lwm2mclient,&LWM2MClient::test_unregister);
+    unreg_button->fall(lwm2mclient,&LWM2MClient::test_unregister);
 
     // On press of SW2 button on K64F board, example application
     // will send observation towards mbed Device Server
-    obs_button.fall(lwm2mclient,&LWM2MClient::update_resource);
+    obs_button->fall(lwm2mclient,&LWM2MClient::update_resource);
 
     status = mesh_api->connect();
     if (status != MESH_ERROR_NONE) {
