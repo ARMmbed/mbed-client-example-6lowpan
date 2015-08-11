@@ -16,7 +16,7 @@
 #ifndef __LWM2MCLIENT_H__
 #define __LWM2MCLIENT_H__
 
-#include "lwm2m-client/m2minterfaceobserver.h"
+#include "mbed-client/m2minterfaceobserver.h"
 #include "mbed/DigitalOut.h"
 #include "mbed-mesh-api/mesh_interface_types.h"
 
@@ -87,7 +87,7 @@ public:
 
 private:
 
-    DigitalOut          _led;
+    mbed::DigitalOut    _led;
     M2MInterface        *_interface;
     M2MSecurity         *_register_security;
     M2MDevice           *_device;

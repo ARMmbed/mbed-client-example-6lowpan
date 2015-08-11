@@ -20,12 +20,12 @@
 #include "mbed-mesh-api/Mesh6LoWPAN_ND.h"
 #include "test_env.h"
 
-#include "lwm2m-client/m2minterfacefactory.h"
-#include "lwm2m-client/m2mdevice.h"
-#include "lwm2m-client/m2minterfaceobserver.h"
-#include "lwm2m-client/m2minterface.h"
-#include "lwm2m-client/m2mobjectinstance.h"
-#include "lwm2m-client/m2mresource.h"
+#include "mbed-client/m2minterfacefactory.h"
+#include "mbed-client/m2mdevice.h"
+#include "mbed-client/m2minterfaceobserver.h"
+#include "mbed-client/m2minterface.h"
+#include "mbed-client/m2mobjectinstance.h"
+#include "mbed-client/m2mresource.h"
 #include "ns_trace.h"
 #include "mbed-mesh-api/AbstractMesh.h"
 
