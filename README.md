@@ -58,16 +58,16 @@ You might need a separate driver for Windows OS. [Download](https://developer.mb
 
 #### Client Side
 * Connect the FRDM-K64F development board and mbed 6LoWPAN shield together.
-* Configure the `lwm2m-client-6lowpan-example` application to use the Device Server's (mDS) IPv6 address:
+* Configure the `mbed-client-example-6lowpan` application to use the Device Server's (mDS) IPv6 address:
     * in the PC running the mDS, open the command prompt and type _ipconfig_
     * section **Ethernet adapter Local Area Connection** field **IPv6 address** contains the IPv6 address
     * copy the IPv6 address to the string `MBED_SERVER_ADDRESS` at line 11 in the file `/source/lwm2mclient.cpp`
     * the address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,  you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number. The `FD` prefix tells you that it is a Unique local IPv6 address.
-* Build the `lwm2m-client-6lowpan-example application` with `Yotta` (see [Build instructions](#build-instructions)).
+* Build the `mbed-client-example-6lowpan` with `Yotta` (see [Build instructions](#build-instructions)).
 * Depending upon your Radio Module (mbed 6LoWPAN Shield), you need to configure an appropriate Radio Channel. Default channels for Gateway Router are as follows:
 	* 2.4 GHz ISM band    -  **Channel 12**
 	* Sub-GHz ISM band  - **Channel 4**
-* Configure the `lwm2m-client-6lowpan-example` application to use an appropriate Radio Channel.
+* Configure the `mbed-client-example-6lowpan` application to use an appropriate Radio Channel.
 	* Open the file `yotta_modules/mbed-mesh-api/source mesh_tasklet.cpp`
 	* At line no. 52, change the macro `CONFIGURED_SCAN_CHANNEL` to either **4** or **12** depending upon your hardware.
 	* Use Channel 4 for Sub-GHz module and Channel 12 for 2.4 GHz module.
@@ -76,7 +76,7 @@ You might need a separate driver for Windows OS. [Download](https://developer.mb
 ```
 yotta build
 ```
-* Load the `lwm2m-client-6lowpan-example application` to the FRDM-K64F board (see [Running the example application](#running-the-example-application))
+* Load the mbed-client-example-6lowpan application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application))
 
 
 **Note!** 
@@ -165,7 +165,7 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 ### Running the example application
 
-1. Find the binary file named `lwm2m-client-6lowpan-example.bin` in the folder `lwm2m-client-6lowpan-example/build/frdm-k64f-gcc/source/`.
+1. Find the binary file named `mbed-client-example-6lowpan.bin` in the folder `mbed-client-example-6lowpan/build/frdm-k64f-gcc/source/`.
 2. Copy the binary to the USB mass storage root of the FRDM-K64F development board. It will be automatically flashed to target MCU. After flashing, the board will restart itself.
 3. Press the **Reset** button of the development board if it does not restart automatically.
 4. The program begins execution and will start registration to the mbed Device Server.
