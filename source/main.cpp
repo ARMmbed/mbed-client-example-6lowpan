@@ -32,7 +32,7 @@
 #include "mbed-mesh-api/AbstractMesh.h"
 
 // Set bootstrap mode to be Thread, otherwise 6LOWPAN_ND is used
-#define APPL_BOOTSTRAP_MODE_THREAD
+//#define APPL_BOOTSTRAP_MODE_THREAD
 
 #define OBS_BUTTON SW2
 #define UNREG_BUTTON SW3
