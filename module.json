@@ -4,7 +4,8 @@
   "description": "6LoWPAN networking example",
   "keywords": [
     "6LoWPAN",
-    "mesh"
+    "mesh",
+    "Thread"
   ],
   "author": "Arto Kinnunen",
   "repository": {
