@@ -105,9 +105,9 @@ You do not need to adjust your computer settings because the mbed 6LoWPAN Gatewa
 3. Build the `mbed-client-example-6lowpan` with `yotta` (see [Build instructions](#build-instructions)).
 4. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware.
 	* Open the file `yotta_modules/mbed-mesh-api/source/include/static_config.h`.
-    	* For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **4** (1<<4) or **12** (1<<12).
-        * For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **4** or **12**.	
-	* Use channel 4 for Sub-GHz module and channel 12 for 2.4 GHz module.
+    	* For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **1** (1<<1) or **12** (1<<12).
+        * For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **1** or **12**.	
+	* Use channel 1 for Sub-GHz module and channel 12 for 2.4 GHz module.
 	* To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
 5. Build the application again using the command `yotta build`.
 6. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
