@@ -65,12 +65,12 @@ network mask `fd00:ff1:ce0b:a5e0::1/64`.
 
 **Setting up IP in Windows:**
 
-	1. Read first [Microsoft: Changing TCP/IP settings](http://windows.microsoft.com/en-gb/windows/change-tcp-ip-settings).
-	2. Go to **IPv6 properties**.
-	3. Select **Use following**.
-	4. Enter `fd00:ff1:ce0b:a5e0::1`.
-	5. Enter subnet prefix length: `64`.
-	6. Click **OK**.
+1. Read first [Microsoft: Changing TCP/IP settings](http://windows.microsoft.com/en-gb/windows/change-tcp-ip-settings).
+2. Go to **IPv6 properties**.
+3. Select **Use following**.
+4. Enter `fd00:ff1:ce0b:a5e0::1`.
+5. Enter subnet prefix length: `64`.
+6. Click **OK**.
 
 **Note!**  
 If you need a separate driver for Windows OS [download](https://developer.mbed.org/handbook/Windows-serial-configuration) the mbed Windows Serial Port driver.
