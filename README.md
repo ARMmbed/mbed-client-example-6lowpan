@@ -95,8 +95,12 @@ There is no need to adjust PC settings in this case as the mbed 6LoWPAN Gateway 
 #### Client Side
 * Connect the FRDM-K64F development board and mbed 6LoWPAN shield together.
 * Configure the `mbed-client-example-6lowpan` application to use the Device Server's (mDS) IPv6 address:
-    * in the PC running the mDS, open the command prompt and type _ipconfig_
-    * section **Ethernet adapter Local Area Connection** field **IPv6 address** contains the IPv6 address
+    * On Windows:
+         * in the PC running the mDS, open the command prompt and type _ipconfig_
+         * section **Ethernet adapter Local Area Connection** field **IPv6 address** contains the IPv6 address
+    * On Mac OS X and Linux:
+         * in the Mac/Linux machine running the mDS, open the terminal and type _ifconfig_
+         * under the appropriate device (usually eth0, en0, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`. That is your IPv6 address.
     * copy the IPv6 address to the string `MBED_SERVER_ADDRESS` at line 11 in the file `/source/lwm2mclient.cpp`
     * the address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,  you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number. The `FD` prefix tells you that it is a Unique local IPv6 address.
 * Build the `mbed-client-example-6lowpan` with `Yotta` (see [Build instructions](#build-instructions)).
