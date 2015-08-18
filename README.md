@@ -4,9 +4,12 @@ This document describes how to use mesh networking to communicate with mbed Devi
 
 This example application demonstrates how to:
 
-* connect to a 6LoWPAN ND type of mesh network
+* connect to a **6LoWPAN ND** or **Thread** type of mesh network
 * register, unregister, read resource values and send observations to mbed Device Server
 * disconnect from the network
+
+By default example application makes **6LoWPAN ND** bootstrap, to change bootstrap mode to **Thread**
+you need to define (uncomment) macro `APPL_BOOTSTRAP_MODE_THREAD` in file `source/main.cpp`. 
 
 
 ## Required hardware
@@ -47,14 +50,47 @@ This example application demonstrates how to:
 
 * Connect the mbed 6LoWPAN Gateway Router to a PC running mDS with an ethernet cable. 
 * Connect the micro-USB cable to the mbed 6LoWPAN Gateway Router. It will be shown in your computer as a removable memory.
-* The firmware for the Gateway `mbed_6LP_Gateway.bin`, is located in the `GW_Binary` folder in the root of this example. 
-* Copy the `mbed_6LP_Gateway.bin` file to the mbed 6LoWPAN Gateway router to flash the device. The device will reboot automatically after flashing. If it does not happen, push the **Reset** button on the board.
+* The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the right binary based on the application bootstrap mode.
+	* if **6LoWPAN ND** boostrap is used then `gateway6LoWPANStatic.bin` must be used
+	* if **Thread** bootstrap is selected then `gatewayThreadStatic.bin` must be used
+* Copy the Gateway binary file to the mbed 6LoWPAN Gateway router to flash the device. The device will reboot automatically after flashing. If it does not happen, push the **Reset** button on the board.
 * Download and run the mDS server on your PC (see instructions below).
-* Make sure that the PC you are running mDS server on, is not connected to the internet.
 
+#####Set static configuration to PC
+
+First you need to set your computer to run on IP address `fd00:ff1:ce0b:a5e0::1` and use 64bit
+network mask. (fd00:ff1:ce0b:a5e0::1/64).
+
+* Make sure that the PC you are running mDS server on, is not connected to the internet.
+* Change your PC IP address to `fd00:ff1:ce0b:a5e0::1/64`
+
+**Setting up IP in Windows:**
+
+	1. Famialiarize yourself with [Microsoft: Changing TCP/IP settings](http://windows.microsoft.com/en-gb/windows/change-tcp-ip-settings)
+	2. Go to IPv6 properties.
+	3. Select "Use following"
+	4. Enter `fd00:ff1:ce0b:a5e0::1`
+	5. Enter subnet prefix length: `64`
+	6. Click OK.
 
 **Note!**  
 You might need a separate driver for Windows OS. [Download](https://developer.mbed.org/handbook/Windows-serial-configuration) the mbed Windows Serial Port driver.
+
+**Setting up IP in Linux:**
+
+```
+ifconfig eth0 add fd00:ff1:ce0b:a5e0::1/64
+```
+
+#####Dynamic configuration
+
+**Note!**, this section applies only if you plan to run the mDS from a network server
+
+Binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mDS is running on the IPv6 network. You should use the 
+binary that corresponds your application bootstrap mode and flash it according to the instructions above.
+
+There is no need to adjust PC settings in this case as the mbed 6LoWPAN Gateway will receive the IPv6 address from the network.
+
 
 #### Client Side
 * Connect the FRDM-K64F development board and mbed 6LoWPAN shield together.
@@ -67,9 +103,10 @@ You might need a separate driver for Windows OS. [Download](https://developer.mb
 * Depending upon your Radio Module (mbed 6LoWPAN Shield), you need to configure an appropriate Radio Channel. Default channels for Gateway Router are as follows:
 	* 2.4 GHz ISM band    -  **Channel 12**
 	* Sub-GHz ISM band  - **Channel 4**
-* Configure the `mbed-client-example-6lowpan` application to use an appropriate Radio Channel.
-	* Open the file `yotta_modules/mbed-mesh-api/source mesh_tasklet.cpp`
-	* At line no. 52, change the macro `CONFIGURED_SCAN_CHANNEL` to either **4** or **12** depending upon your hardware.
+* Configure the `mbed-client-example-6lowpan` application to use an appropriate Radio Channel based on your hardware:
+	* Open the file `yotta_modules/mbed-mesh-api/source/include/static_config.h`
+    	* for **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **4** (1<<4) or **12** (1<<12).
+        * for **Thread**, change the macro `THREAD_RF_CHANNEL` to either **4** or **12**.	
 	* Use Channel 4 for Sub-GHz module and Channel 12 for 2.4 GHz module.
 	* In order to correctly identify what Radio Module you have, please see the section named `Radio Module Identification` below.
 * Build the application again using the command

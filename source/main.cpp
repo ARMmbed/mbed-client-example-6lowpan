@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+#include "mbed.h"
 #include "lwm2mclient.h"
-#include "minar/minar.h"
 #include "atmel-rf-driver/driverRFPhy.h"    // rf_device_register
 #include "mbed-mesh-api/Mesh6LoWPAN_ND.h"
+#include "mbed-mesh-api/MeshThread.h"
+#include "mbed-mesh-api/MeshInterfaceFactory.h"
 #include "test_env.h"
 
 #include "mbed-client/m2minterfacefactory.h"
@@ -29,16 +31,19 @@
 #include "ns_trace.h"
 #include "mbed-mesh-api/AbstractMesh.h"
 
+// Set bootstrap mode to be Thread, otherwise 6LOWPAN_ND is used
+//#define APPL_BOOTSTRAP_MODE_THREAD
+
 #define OBS_BUTTON SW2
 #define UNREG_BUTTON SW3
 
-static LWM2MClient *lwm2mclient = NULL;
+static LWM2MClient *lwm2mclient;
 static InterruptIn *obs_button;
 static InterruptIn *unreg_button;
 
 void trace_printer(const char* str)
 {
-  printf("%s\r\n", str);
+    printf("%s\r\n", str);
 }
 
 void app_start(int, char**) {
@@ -51,11 +56,19 @@ void app_start(int, char**) {
 
     // This sets up the network interface configuration which will be used
     // by LWM2M Client API to communicate with mbed Device server.
-
-    Mesh6LoWPAN_ND *mesh_api = Mesh6LoWPAN_ND::getInstance();
+    AbstractMesh *mesh_api;
     int8_t status;
+#ifdef APPL_BOOTSTRAP_MODE_THREAD
+    mesh_api = MeshInterfaceFactory::createInterface(MESH_TYPE_THREAD);
+    uint8_t eui64[8];
+    rf_read_mac_address(&eui64[0]);
+    char *pskd = (char*)"Secret password";
+    status = ((MeshThread*)mesh_api)->init(rf_device_register(), AbstractMesh::MeshNetworkHandler_t(lwm2mclient,&LWM2MClient::mesh_network_handler), eui64, pskd);
+#else /* APPL_BOOTSTRAP_MODE_THREAD */
+    mesh_api = (Mesh6LoWPAN_ND*)MeshInterfaceFactory::createInterface(MESH_TYPE_6LOWPAN_ND);
+    status = ((Mesh6LoWPAN_ND*)mesh_api)->init(rf_device_register(), AbstractMesh::MeshNetworkHandler_t(lwm2mclient,&LWM2MClient::mesh_network_handler));
+#endif /* APPL_BOOTSTRAP_MODE */
 
-    status = mesh_api->init(rf_device_register(), AbstractMesh::MeshNetworkHandler_t(lwm2mclient,&LWM2MClient::mesh_network_handler));
     if (status != MESH_ERROR_NONE) {
         tr_error("Mesh network initialization failed %d!", status);
         return;

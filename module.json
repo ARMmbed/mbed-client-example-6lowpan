@@ -1,10 +1,11 @@
 {
   "name": "mbed-client-example-6lowpan",
   "version": "0.0.1",
-  "description": "6LoWPAN ND networking example",
+  "description": "6LoWPAN networking example",
   "keywords": [
     "6LoWPAN",
-    "mesh"
+    "mesh",
+    "Thread"
   ],
   "author": "Arto Kinnunen",
   "repository": {
@@ -16,7 +17,7 @@
   "dependencies": {
     "mbed-client": "~0.2.5",
     "atmel-rf-driver": "~0.0.17",
-    "mbed-mesh-api": "~0.1.1"
+    "mbed-mesh-api": "~0.2.0"
   },
   "targetDependencies": {},
   "bin": "./source"
