@@ -45,7 +45,7 @@ you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `sou
 
 
 ##Test environment setup
-#### Server side
+### Server side
 
 1. Connect the mbed 6LoWPAN Gateway router to a computer running mDS with an Ethernet cable.
 2. Connect the micro-USB cable to the mbed 6LoWPAN Gateway router. It will be shown in your computer as a removable memory.
@@ -57,11 +57,10 @@ you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `sou
 4. Copy the gateway binary file to the mbed 6LoWPAN Gateway router to flash the device. The device will reboot automatically after flashing. If it does not happen, push the **Reset** button on the board.
 5. Download and run the mDS on your computer (see instructions below).
 
-##### Set static configuration to the computer
+#### Static configuration
 
-1. Set your computer to run on IP address `fd00:ff1:ce0b:a5e0::1` and use 64-bit
-network mask `fd00:ff1:ce0b:a5e0::1/64`.
-2. Make sure that the computer with mDS running is **not** connected to the internet.
+Set your computer to run on IP address `fd00:ff1:ce0b:a5e0::1` and use 64-bit
+network mask `fd00:ff1:ce0b:a5e0::1/64`. Make sure that the computer with mDS running is **not** connected to the internet.
 
 **Setting up IP in Windows:**
 
@@ -81,7 +80,7 @@ If you need a separate driver for Windows OS [download](https://developer.mbed.o
 ifconfig eth0 add fd00:ff1:ce0b:a5e0::1/64
 ```
 
-##### Dynamic configuration
+#### Dynamic configuration
 
 **Note:** This section applies only if you plan to run the mDS from a network server.
 
@@ -90,7 +89,7 @@ Binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work wh
 You do not need to adjust your computer settings because the mbed 6LoWPAN Gateway will receive the IPv6 address from the network.
 
 
-#### Client side
+### Client side
 
 1. Connect the FRDM-K64F development board to the mbed 6LoWPAN shield.
 2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of the mDS:
@@ -102,23 +101,43 @@ You do not need to adjust your computer settings because the mbed 6LoWPAN Gatewa
          * under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`. That is your IPv6 address.
     * copy the IPv6 address to the string `MBED_SERVER_ADDRESS` at line 11 in the file `/source/lwm2mclient.cpp`
     * the address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,  you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number. The  prefix `FD` tells you that it is a Unique local IPv6 address.
-3. Build the `mbed-client-example-6lowpan` with `yotta` (see [Build instructions](#build-instructions)).
-4. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware.
-	* Open the file `yotta_modules/mbed-mesh-api/source/include/static_config.h`.
-    	* For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **1** (1<<1) or **12** (1<<12).
-        * For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **1** or **12**.	
-	* Use channel 1 for Sub-GHz module and channel 12 for 2.4 GHz module.
-	* To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
-5. Build the application again using the command `yotta build`.
-6. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
+3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. 
+(see [Changing Channel](#changing-channel)).
+4. Build the `mbed-client-example-6lowpan` with `yotta` (see [Build instructions](#build-instructions)).
+5. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
 
 
 **Note:** You may need to open UDP port 5683 in your computer firewall for mDS to communicate with this example application. 
 
-##Radio Module Identification
+#### Changing Channel
+
+To configure used radio channel you need to clone `mbed-mesh-api` repository to your work area, 
+modify the source code and create a yotta link to it:
+```
+git clone git@github.com:ARMmbed/mbed-mesh-api.git
+cd mbed-mesh-api
+yt link
+```
+To configure the radio channel you need to modify a file: `./source/include/static_config.h` in the `mbed-mesh-api` repository:
+
+* For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **1** (1<<1) or **12** (1<<12).
+* For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **1** or **12**.	
+* Use channel **1** for Sub-GHz module and channel **12** for 2.4 GHz module.
+* To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
+
+Once linked go back to `mbed-client-example-6lowpan` application folder and make a link to the cloned `mbed-mesh-api` repository:
+
+```
+cd mbed-client-example-6lowpan
+yt link mbed-mesh-api
+```
+
+You can check that linking is successful by using command `yt ls` and checking that module `mbed-mesh-api` points to the cloned repository.
+
+### Radio Module Identification
 * Make sure that you are using same radio modules on both server and client sides. 
-* If your radio module on the Gateway router supports 2.4 GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses the 2.4 GHz radio module.   
-* If your radio module on the Gateway router supports sub-GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses a sub-GHz radio module.   
+* If your radio module on the Gateway router supports 2.4 GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses the 2.4 GHz radio module (e.g. Atmel RF-233).
+* If your radio module on the Gateway router supports sub-GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses a sub-GHz radio module (e.g. Atmel RF-212B).
 * An easy way to identify which frequency band your setup uses is to check the **Antenna size** on the radio module.
 * Sub-GHz band antenna is larger than 2.4 GHz antenna.
 * For the client side (mbed 6LoWPAN Shield connected to FRDM-K64F board), see the image below.
@@ -175,7 +194,7 @@ This will start the WebUI on your system.
 
 The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder.
 
-### Running the example application
+## Running the example application
 
 1. Find the binary file `mbed-client-example-6lowpan.bin` in the folder `mbed-client-example-6lowpan/build/frdm-k64f-gcc/source/`.
 2. Copy the binary to the USB mass storage root of the FRDM-K64F development board. It will be automatically flashed to the target MCU. After flashing, the board will restart itself.
@@ -183,7 +202,7 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 4. The program begins execution and will start registration to the mDS.
 5. After a successful registration, the program will automatically start sending observations every 10 seconds.
 
-### Test Usage
+## Test Usage
 
 * Make sure that the mDS and Connected Home App are up and running.
 * On the server side where the mDS is running, open a browser and type:
