@@ -35,9 +35,14 @@ you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `sou
 * [Putty](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) - for serial terminal emulation.
 
 ## Reference Block Diagram
+- **Static Setup Block Diagram**
+
 ![](img/Dia.png) 
 
-* Connect the Gateway router to the mDS with an Ethernet cable. 
+- **Dynamic Setup Block Diagram**
+![](img/Dia2.png) 
+
+* Connect the Gateway router  with an Ethernet cable to the ethernet card of the local machine running mDS or to a Router/L3 Switch. 
 * To power up the Gateway router use a micro-USB charger connected to a wall socket or a micro-USB cable connected to a computer.
 * To flash the Gateway router with the firmware, you need a micro-USB cable. (See flashing instructions below)
 * The wireless link between the FRDM-K64F board (Client end-point) and the Gateway router is following the IEEE 802.15.4 standard. 
@@ -45,24 +50,80 @@ you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `sou
 
 
 ##Test environment setup
-### Server side
+The test environment for this example can be setup in two modes.
 
-1. Connect the mbed 6LoWPAN Gateway router to a computer running mDS with an Ethernet cable.
+1. **Static Setup**
+	- Where an mDS instance is running locally, i.e., on a local machine and the Gateway route is connected  directly to that machine via Ethernet Cable.
+
+2. **Dynamic Setup**
+
+	- Where an mDS instance is running in the IPv6 enabled cloud or behind a global IPv6 network. In that case, the Gateway Router is connected to a physical network Router/L3-Switch.
+
+In order to simplify the example we will emphasis more on **Static Setup**. 
+   
+## Server Side Configuration
+
+1. Connect the mbed 6LoWPAN Gateway router with an Ethernet cable to a computer which will be running mDS upon it.
 2. Connect the micro-USB cable to the mbed 6LoWPAN Gateway router. It will be shown in your computer as a removable memory.
-3. The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the right binary based on the application bootstrap mode.
+3. The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the right binary based on the application bootstrap mode. 
 
-	* with the **6LoWPAN ND** boostrap, use `gateway6LoWPANStatic.bin`
-	* with the **Thread** bootstrap, use `gatewayThreadStatic.bin`
+	* For **Static Setup** with the **6LoWPAN ND** boostrap, use `gateway6LoWPANStatic.bin`
+	* For **Static Setup** with the **Thread** bootstrap, use `gatewayThreadStatic.bin`
+
+4. If and only if you have access to a global IPv6 network and a remote mDS instance running somewhere behind an IPv6 network, you can also try Dynamic setup. Otherwise skip it and carry on with Static setup.
+	* For **Dynamic Setup** with the **6LoWPAN ND** boostrap, use `gateway6LoWPANDynamic.bin`
+	* For **Dynamic Setup** with the **Thread** bootstrap, use `gatewayThreadDynamic.bin`
 
 4. Copy the gateway binary file to the mbed 6LoWPAN Gateway router to flash the device. The device will reboot automatically after flashing. If it does not happen, push the **Reset** button on the board.
 5. Download and run the mDS on your computer (see instructions below).
 
-#### Static configuration
+### Static Setup Configuration (_Server Side_)
+
+As mentioned above, in Static Setup the mDS instance runs on a local pc/laptop. The example application running on the client side will register with the mDS creating a 6LoWPAN network. Please follow the instructions below. 
+#### Downloading mDS
+
+Installing the mDS on your computer:
+
+1. Download the free developer version of the mDS from [ARM silver](https://silver.arm.com/browse/SEN00).
+2. Click the **Download Now** button in the right hand side pane.  
+3. Unzip the package on your computer. You should see the following files:
+
+```
+Device Server.tar.gz
+Device Server Clients.tar.gz
+Device Server Tools.tar.gz
+Ref Apps.tar.gz
+```
+
+**Note:** These instructions are valid for the Device Server 2.2 release.
+
+#### Starting the mDS
+
+1. Extract the `Device Server.tar.gz` file.
+2. Go to the `bin` folder of the `Device Server` package that you just extracted.
+3. Run the start script:
+    - If you are running mDS on Linux OS, run the `runDS.sh` in a new shell.
+    - If you are running mDS on Windows, run the `runDS.bat` in a new command prompt.
+		
+This will start the mDS on your system.
+
+#### Starting the WebUI (_Connected_ _home_ _reference_ _app_)
+
+1. Extract the `Ref Apps.tar.gz` file.
+2. Go to the `bin` folder in the `Connected-home-trial` reference app that you extracted.
+3. Run the start script:	
+    - If you are running mDS on Linux OS, run the `runConnectedHome.sh` in a new shell.	
+    - If you are running mDS on Windows, run the `runConnectedHome.bat` in a new command prompt.	
+		
+This will start the WebUI on your system.
+
+
+#### Setting up a static IP addres
 
 Set your computer to run on IP address `fd00:ff1:ce0b:a5e0::1` and use 64-bit
 network mask `fd00:ff1:ce0b:a5e0::1/64`. Make sure that the computer with mDS running is **not** connected to the internet.
 
-**Setting up IP in Windows:**
+**IP settting in Windows:**
 
 1. Read first [Microsoft: Changing TCP/IP settings](http://windows.microsoft.com/en-gb/windows/change-tcp-ip-settings).
 2. Go to **IPv6 properties**.
@@ -74,42 +135,43 @@ network mask `fd00:ff1:ce0b:a5e0::1/64`. Make sure that the computer with mDS ru
 **Note!**  
 If you need a separate driver for Windows OS [download](https://developer.mbed.org/handbook/Windows-serial-configuration) the mbed Windows Serial Port driver.
 
-**Setting up IP in Linux:**
+**IP setting in Linux:**
 
 ```
 ifconfig eth0 add fd00:ff1:ce0b:a5e0::1/64
 ```
 
-#### Dynamic configuration
+### Dynamic Setup Configuration (_Server Side_)
 
-**Note:** This section applies only if you plan to run the mDS from a network server.
+**Note:** This section applies only if you plan to run the mDS from a network server behind a global IPv6 network.
 
 Binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mDS is running on the IPv6 network. You should use the binary that corresponds your application bootstrap mode and flash it according to the instructions above.
 
-You do not need to adjust your computer settings because the mbed 6LoWPAN Gateway will receive the IPv6 address from the network.
+You do not need to adjust your computer's IP settings because the mbed 6LoWPAN Gateway will receive the IPv6 address from the network.
 
 
-### Client side
+## Client Side Configuration
 
+For client side configuration, please follow the steps below.
+### Static Setup Configuration (_Client Side_)
 1. Connect the FRDM-K64F development board to the mbed 6LoWPAN shield.
-2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of the mDS:
-    * On Windows:
-         * in the computer running the mDS, open the command prompt and type _ipconfig_
-         * section **Ethernet adapter Local Area Connection** field **IPv6 address** contains the IPv6 address
-    * On Mac OS X and Linux:
-         * in a Mac or a Linux machine running the mDS, open the terminal and type _ifconfig_
-         * under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`. That is your IPv6 address.
-    * copy the IPv6 address to the string `MBED_SERVER_ADDRESS` at line 11 in the file `/source/lwm2mclient.cpp`
-    * the address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,  you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number. The  prefix `FD` tells you that it is a Unique local IPv6 address.
+2. Make sure that the `/source/lwm2mclient.cpp` file contains the right IPv6 address for the mDS which is set by default to be  "FD00:FF1:CE0B:A5E0::1". Notice that this is the same IP address you just set for your mDS machine in the section `Server Side Configuration`.
+3. The string `MBED_SERVER_ADDRESS` at line 27 in the file `/source/lwm2mclient.cpp` contains this IP address.
+4. The address format is `coap://<IPv6 address>:PORT`, i.e.,  "FD00:FF1:CE0B:A5E0::1:5386"
 3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. 
 (see [Changing Channel](#changing-channel)).
 4. Build the `mbed-client-example-6lowpan` with `yotta` (see [Build instructions](#build-instructions)).
 5. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
 
+### Dynamic Setup Configuration (_Client Side_)
+
+Dynamic Setup also follows the same steps mentioned above with one exception:
+ 	
+*  	  The string `MBED_SERVER_ADDRESS` gets the IPv6 address of the remote server machine where the mDS instance is being run.
 
 **Note:** You may need to open UDP port 5683 in your computer firewall for mDS to communicate with this example application. 
 
-#### Changing Channel
+### Changing Radio Channel
 
 To configure used radio channel you need to clone `mbed-mesh-api` repository to your work area, 
 modify the source code and create a yotta link to it:
@@ -145,42 +207,6 @@ You can check that linking is successful by using command `yt ls` and checking t
 * For the Gateway router, see the image below.
   ![](img/Radio_Identifications_GW.png) 
 
-### Downloading mDS
-
-The example application will register with the mDS. Install the mDS on your computer.
-
-1. Download the free developer version of the mDS from [ARM silver](https://silver.arm.com/browse/SEN00).
-2. Click the **Download Now** button in the right hand side pane.  
-3. Unzip the package on your computer. You should see the following files:
-
-```
-Device Server.tar.gz
-Device Server Clients.tar.gz
-Device Server Tools.tar.gz
-Ref Apps.tar.gz
-```
-
-**Note:** These instructions are valid for the Device Server 2.2 release.
-
-### Starting the mDS
-
-1. Extract the `Device Server.tar.gz` file.
-2. Go to the `bin` folder of the `Device Server` package that you just extracted.
-3. Run the start script:
-    - If you are running mDS on Linux OS, run the `runDS.sh` in a new shell.
-    - If you are running mDS on Windows, run the `runDS.bat` in a new command prompt.
-		
-This will start the mDS on your system.
-
-### Starting the WebUI (_Connected home_ reference app)
-
-1. Extract the `Ref Apps.tar.gz` file.
-2. Go to the `bin` folder in the `Connected-home-trial` reference app that you extracted.
-3. Run the start script:	
-    - If you are running mDS on Linux OS, run the `runConnectedHome.sh` in a new shell.	
-    - If you are running mDS on Windows, run the `runConnectedHome.bat` in a new command prompt.	
-		
-This will start the WebUI on your system.
 
 ## Build instructions
 		
@@ -207,16 +233,7 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 * Make sure that the mDS and Connected Home App are up and running.
 * On the server side where the mDS is running, open a browser and type:
 
-```
-https://localhost:8081
-```
-
-This will open the WebUI for mDS Admin Control.
-*  Click on the tab named **End-points**. You should see **lwm2m endpoint** activated there. An example is shown below.
-
-![](img/DS-EndPoint.PNG) 
-
-* Open another tab in the browser and type:
+* Open a tab in the browser and type:
 
 ```
 //localhost:8082
