@@ -48,6 +48,11 @@ you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `sou
 * The wireless link between the FRDM-K64F board (Client end-point) and the Gateway router is following the IEEE 802.15.4 standard. 
 * To power up the FRDM-K64F board (Client end-point) use either a micro-USB charger or a micro-USB cable. If you are using micro-USB, you can view the debug and trace messages utilizing an optional software listed above, for example Putty.
 
+**Note!**  
+	
+* If you happen to use a Virtual Machine, please select Network Adapter Mode to be Bridged.
+
+* If you are using a docking board with laptop, connect your ethernet cable to the docking board RJ45 female connector rather than laptop's own RJ45 female connector.
 
 ##Test environment setup
 The test environment for this example can be setup in two modes.
