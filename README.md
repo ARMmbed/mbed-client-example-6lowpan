@@ -52,7 +52,9 @@ you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `sou
 	
 * If you happen to use a Virtual Machine, please select Network Adapter Mode to be Bridged.
 
-* If you are using a docking board with laptop, connect your ethernet cable to the docking board RJ45 female connector rather than laptop's own RJ45 female connector.
+* If you are using a docking board with laptop, connect your ethernet cable to the docking board RJ45 female connector rather than laptop's own RJ45 female connector. (only for Static Setup)
+
+* If you have access to an IPv6 network but don't have access to a globally running mDS instance, you can still test the Dynamic Setup by running a local instance of mDS. 
 
 ##Test environment setup
 The test environment for this example can be setup in two modes.
@@ -62,9 +64,8 @@ The test environment for this example can be setup in two modes.
 
 2. **Dynamic Setup**
 
-	- Where an mDS instance is running in the IPv6 enabled cloud or behind a global IPv6 network. In that case, the Gateway Router is connected to a physical network Router/L3-Switch.
-
-In order to simplify the example we will emphasis more on **Static Setup**. 
+	- Where an mDS instance is running in the IPv6 enabled cloud or behind a global IPv6 network. In that case, the Gateway Router is connected to a physical network Router/Switch.
+ 
    
 ## Server Side Configuration
 
@@ -75,7 +76,7 @@ In order to simplify the example we will emphasis more on **Static Setup**.
 	* For **Static Setup** with the **6LoWPAN ND** boostrap, use `gateway6LoWPANStatic.bin`
 	* For **Static Setup** with the **Thread** bootstrap, use `gatewayThreadStatic.bin`
 
-4. If and only if you have access to a global IPv6 network and a remote mDS instance running somewhere behind an IPv6 network, you can also try Dynamic setup. Otherwise skip it and carry on with Static setup.
+4. If and only if you have access to a global IPv6 network, you can also try Dynamic setup. Otherwise skip it and carry on with Static setup.
 	* For **Dynamic Setup** with the **6LoWPAN ND** boostrap, use `gateway6LoWPANDynamic.bin`
 	* For **Dynamic Setup** with the **Thread** bootstrap, use `gatewayThreadDynamic.bin`
 
@@ -84,7 +85,8 @@ In order to simplify the example we will emphasis more on **Static Setup**.
 
 ### Static Setup Configuration (_Server Side_)
 
-As mentioned above, in Static Setup the mDS instance runs on a local pc/laptop. The example application running on the client side will register with the mDS creating a 6LoWPAN network. Please follow the instructions below. 
+As mentioned above, in Static Setup the mDS instance runs on a local pc/laptop with a statically configured IPv6 address. The example application running on the client side will register with the mDS creating a 6LoWPAN network. Please follow the instructions below. 
+
 #### Downloading mDS
 
 Installing the mDS on your computer:
@@ -148,12 +150,45 @@ ifconfig eth0 add fd00:ff1:ce0b:a5e0::1/64
 
 ### Dynamic Setup Configuration (_Server Side_)
 
-**Note:** This section applies only if you plan to run the mDS from a network server behind a global IPv6 network.
+**Note:** This section applies only if you plan to run mDS in a networked environment and have access to a global IPv6 network.
 
-Binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mDS is running on the IPv6 network. You should use the binary that corresponds your application bootstrap mode and flash it according to the instructions above.
+ - Binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mDS is running on the IPv6 network. You should use the binary that corresponds your application bootstrap mode and flash it according to the instructions above. In the Dynamic Setup, the mbed 6LoWPAN Gateway will learn the network prefix from the IPv6 network it is connected to dynamically/autonomously.
 
-You do not need to adjust your computer's IP settings because the mbed 6LoWPAN Gateway will receive the IPv6 address from the network.
+- If you have remote mDS instance running behind the IPv6 network (or IPv6 enable cloud), you don't have to configure anything. However if you plan to run your own instance of mDS on your network, please go through the information provided below.
 
+
+
+#### How to check if you have a valid IPv6 network ?
+
+Please follow the instructions below to check whether you have access to a valid IPv6 network or not.
+
+** Windows OS :**
+	
+1. Go to **Network and Sharing Center**.
+2. Click the link **Local Area Connection**.
+3. From the menu, select **Details**.
+4. In **Network Connection Details** menu, look for **IPv6 address**.
+5. If an **IPv6 address** is defined there, you have a valid IPv6 network.
+6. Another way of checking the same information is by using the command  **ipconfig** in command prompt and then checking whether your ethernet interface have a global scope IPv6 address.
+
+** Linux (Ubuntu) :**
+
+1. Open a terminal and write the command **ifconfig**.
+2. Check the ethernet interface (eth0) status.
+3. If you see an IPv6 address with global scope, you are good to go, e.g., 
+
+	- inet6 addr: xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx/prefix Scope:Global
+
+4. If you are sure that you have IPv6 access but the Linux (especially running as a Virtual Machine) is not showing it, then it could be an issue of Duplicate Address Detection. You can check this phenomenon by disconnecing and reconnecting the ethernet cable to your ethernet card and the issuing the **dmesg** command in the terminal.
+5. If you are facing an issue of Duplicate Address Detection (DAD), then use the following command to disable the DAD. After that do the **ifconfig** again, you should have an IPv6 address with a global scope now.
+```
+sudo sysctl net.ipv6.conf.eth0.accept_dad=0
+```
+
+
+**Note !**
+
+If you only see a link local address, i.e., starting with 'fe80' or a unique local address, i.e., starting with 'fd00', you do not have a access to a global IPv6 network. 
 
 ## Client Side Configuration
 
@@ -227,7 +262,7 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 ## Running the example application
 
-1. Find the binary file `mbed-client-example-6lowpan.bin` in the folder `mbed-client-example-6lowpan/build/frdm-k64f-gcc/source/`.
+1. Find the  binary file `mbed-client-example-6lowpan.bin` in the folder `mbed-client-example-6lowpan/build/frdm-k64f-gcc/source/`
 2. Copy the binary to the USB mass storage root of the FRDM-K64F development board. It will be automatically flashed to the target MCU. After flashing, the board will restart itself.
 3. Press the **Reset** button of the development board if it does not restart automatically.
 4. The program begins execution and will start registration to the mDS.
@@ -236,9 +271,8 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 ## Test Usage
 
 * Make sure that the mDS and Connected Home App are up and running.
-* On the server side where the mDS is running, open a browser and type:
+* On the server side where the mDS is running, open a browser tab and type:
 
-* Open a tab in the browser and type:
 
 ```
 //localhost:8082
