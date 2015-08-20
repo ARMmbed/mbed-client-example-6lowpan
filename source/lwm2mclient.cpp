@@ -23,6 +23,7 @@
 
 // Enter your mbed Device Server's IPv6 address and Port number in
 // mentioned format like FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683
+// For dynamic setup use something like coap://xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:5683", i.e., The IPv6 address and Port no.
 
 const String &MBED_SERVER_ADDRESS = "coap://FD00:FF1:CE0B:A5E0::1:5683";
 
