@@ -65,10 +65,10 @@ void app_start(int, char**) {
     // Read mac address after registering the device.
     rf_read_mac_address(&eui64[0]);
     char *pskd = (char*)"Secret password";
-    status = ((MeshThread*)mesh_api)->init(rf_device_id, AbstractMesh::MeshNetworkHandler_t(lwm2mclient,&LWM2MClient::mesh_network_handler), eui64, pskd);
+    status = ((MeshThread*)mesh_api)->init(rf_device_id, AbstractMesh::mesh_network_handler_t(lwm2mclient,&LWM2MClient::mesh_network_handler), eui64, pskd);
 #else /* APPL_BOOTSTRAP_MODE_THREAD */
     mesh_api = (Mesh6LoWPAN_ND*)MeshInterfaceFactory::createInterface(MESH_TYPE_6LOWPAN_ND);
-    status = ((Mesh6LoWPAN_ND*)mesh_api)->init(rf_device_register(), AbstractMesh::MeshNetworkHandler_t(lwm2mclient,&LWM2MClient::mesh_network_handler));
+    status = ((Mesh6LoWPAN_ND*)mesh_api)->init(rf_device_register(), AbstractMesh::mesh_network_handler_t(lwm2mclient,&LWM2MClient::mesh_network_handler));
 #endif /* APPL_BOOTSTRAP_MODE */
 
     if (status != MESH_ERROR_NONE) {
