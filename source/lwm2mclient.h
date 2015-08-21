@@ -24,7 +24,8 @@ class M2MDevice;
 class M2MSecurity;
 class M2MObject;
 
-class LWM2MClient : public M2MInterfaceObserver {
+class LWM2MClient : public M2MInterfaceObserver
+{
 public:
     LWM2MClient();
 
@@ -38,13 +39,13 @@ public:
 
     bool registration_update_successful();
 
-    M2MSecurity* create_register_object();
+    M2MSecurity *create_register_object();
 
-    M2MDevice* create_device_object();
+    M2MDevice *create_device_object();
 
     void execute_function(void *argument);
 
-    M2MObject* create_generic_object();
+    M2MObject *create_generic_object();
 
     void update_resource();
 
