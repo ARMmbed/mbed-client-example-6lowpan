@@ -41,14 +41,11 @@ static LWM2MClient *lwm2mclient;
 static InterruptIn *obs_button;
 static InterruptIn *unreg_button;
 
-<<<<<<< Updated upstream
-void trace_printer(const char *str)
-=======
+
 
 Serial pc(USBTX, USBRX);
 
 void trace_printer(const char* str)
->>>>>>> Stashed changes
 {
 	pc.printf("%s\r\n", str);
 }
