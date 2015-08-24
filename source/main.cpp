@@ -41,13 +41,23 @@ static LWM2MClient *lwm2mclient;
 static InterruptIn *obs_button;
 static InterruptIn *unreg_button;
 
+<<<<<<< Updated upstream
 void trace_printer(const char *str)
+=======
+
+Serial pc(USBTX, USBRX);
+
+void trace_printer(const char* str)
+>>>>>>> Stashed changes
 {
-    printf("%s\r\n", str);
+	pc.printf("%s\r\n", str);
 }
 
 void app_start(int, char **)
 {
+
+
+	pc.baud(115200);  //Setting the Baud-Rate for trace output
 
     // Instantiate the class which implements
     // LWM2M Client API
