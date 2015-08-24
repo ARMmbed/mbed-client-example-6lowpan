@@ -41,12 +41,13 @@ static LWM2MClient *lwm2mclient;
 static InterruptIn *obs_button;
 static InterruptIn *unreg_button;
 
-void trace_printer(const char* str)
+void trace_printer(const char *str)
 {
     printf("%s\r\n", str);
 }
 
-void app_start(int, char**) {
+void app_start(int, char **)
+{
 
     // Instantiate the class which implements
     // LWM2M Client API
@@ -61,12 +62,14 @@ void app_start(int, char**) {
 #ifdef APPL_BOOTSTRAP_MODE_THREAD
     mesh_api = MeshInterfaceFactory::createInterface(MESH_TYPE_THREAD);
     uint8_t eui64[8];
+    int8_t rf_device_id = rf_device_register();
+    // Read mac address after registering the device.
     rf_read_mac_address(&eui64[0]);
-    char *pskd = (char*)"Secret password";
-    status = ((MeshThread*)mesh_api)->init(rf_device_register(), AbstractMesh::MeshNetworkHandler_t(lwm2mclient,&LWM2MClient::mesh_network_handler), eui64, pskd);
+    char *pskd = (char *)"Secret password";
+    status = ((MeshThread *)mesh_api)->init(rf_device_id, AbstractMesh::mesh_network_handler_t(lwm2mclient, &LWM2MClient::mesh_network_handler), eui64, pskd);
 #else /* APPL_BOOTSTRAP_MODE_THREAD */
-    mesh_api = (Mesh6LoWPAN_ND*)MeshInterfaceFactory::createInterface(MESH_TYPE_6LOWPAN_ND);
-    status = ((Mesh6LoWPAN_ND*)mesh_api)->init(rf_device_register(), AbstractMesh::MeshNetworkHandler_t(lwm2mclient,&LWM2MClient::mesh_network_handler));
+    mesh_api = (Mesh6LoWPAN_ND *)MeshInterfaceFactory::createInterface(MESH_TYPE_6LOWPAN_ND);
+    status = ((Mesh6LoWPAN_ND *)mesh_api)->init(rf_device_register(), AbstractMesh::mesh_network_handler_t(lwm2mclient, &LWM2MClient::mesh_network_handler));
 #endif /* APPL_BOOTSTRAP_MODE */
 
     if (status != MESH_ERROR_NONE) {
@@ -75,16 +78,13 @@ void app_start(int, char**) {
     }
 
     // Set up Hardware interrupt button.
-  //  InterruptIn obs_button(OBS_BUTTON);
-   // InterruptIn unreg_button(UNREG_BUTTON);
-
     // On press of SW3 button on K64F board, example application
     // will call unregister API towards mbed Device Server
-    unreg_button->fall(lwm2mclient,&LWM2MClient::test_unregister);
+    unreg_button->fall(lwm2mclient, &LWM2MClient::test_unregister);
 
     // On press of SW2 button on K64F board, example application
     // will send observation towards mbed Device Server
-    obs_button->fall(lwm2mclient,&LWM2MClient::update_resource);
+    obs_button->fall(lwm2mclient, &LWM2MClient::update_resource);
 
     status = mesh_api->connect();
     if (status != MESH_ERROR_NONE) {

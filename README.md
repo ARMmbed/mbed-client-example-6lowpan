@@ -239,6 +239,24 @@ For client side configuration, please follow the steps below.
 #### Static setup configuration (_Client Side_)
 
 1. Connect the FRDM-K64F development board to the mbed 6LoWPAN shield.
+2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of the mDS:
+    * On Windows:
+         * in the computer running the mDS, open the command prompt and type _ipconfig_
+         * section **Ethernet adapter Local Area Connection** field **IPv6 address** contains the IPv6 address
+    * On Mac OS X and Linux:
+         * in a Mac or a Linux machine running the mDS, open the terminal and type _ifconfig_
+         * under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`. That is your IPv6 address.
+    * copy the IPv6 address to the string `MBED_SERVER_ADDRESS` at line 11 in the file `/source/lwm2mclient.cpp`
+    * the address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,  you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number. The  prefix `FD` tells you that it is a Unique local IPv6 address.
+3. Build the `mbed-client-example-6lowpan` with `yotta` (see [Build instructions](#build-instructions)).
+4. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware.
+	* Open the file `yotta_modules/mbed-mesh-api/source/include/static_config.h`.
+    	* For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **4** (1<<4) or **12** (1<<12).
+        * For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **4** or **12**.	
+	* Use channel 4 for Sub-GHz module and channel 12 for 2.4 GHz module.
+	* To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
+5. Build the application again using the command `yotta build`.
+6. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
 
 2. Make sure that the `/source/lwm2mclient.cpp` file contains the right IPv6 address for mDS. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 27, as the value of `MBED_SERVER_ADDRESS`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5386".
 
