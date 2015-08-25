@@ -11,18 +11,19 @@ This example application demonstrates how to:
 
 ## Switching to Thread
 
-By default, the example application makes a **6LoWPAN ND** bootstrap. To change the bootstrap mode to **Thread** you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the file `source/main.cpp`. 
+By default, the example application makes a **6LoWPAN ND** bootstrap. To change the bootstrap mode to **Thread**
+you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `source/main.cpp`. 
 
 
 ## Required hardware
 
-* An FRDM-K64F development board (client end-point).
-* An mbed 6LoWPAN shield (with radio module).
-* An mbed 6LoWPAN Gateway router.
-* A micro-USB cable.
-* A micro-USB charger for powering the mbed 6LoWPAN Gateway.
-* An Ethernet cable.
-* A computer running mDS.
+* An FRDM-K64F development board (client end-point)
+* An mbed 6LoWPAN shield (with radio module)
+* An mbed 6LoWPAN Gateway router
+* A micro-USB cable
+* A micro-USB charger for powering the mbed 6LoWPAN Gateway
+* An Ethernet cable
+* A computer running the mDS
 
 ![](img/hw_photo.png) 
 
@@ -30,42 +31,47 @@ By default, the example application makes a **6LoWPAN ND** bootstrap. To change 
 ## Required software
 
 * [yotta](http://docs.yottabuild.org/#installing) - to build the example programs.
-* [mbed Device Server (mDS)](https://silver.arm.com/browse/SEN00) - what the example application connects to.
+* [mbed Device Server (mDS)](https://silver.arm.com/browse/SEN00) - where the example application connects to.
 
 ## Optional software
 * [Wireshark](https://www.wireshark.org/) - for packet inspection and network debugging.
 * [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) - for serial terminal emulation.
 
 ## Reference block diagram
+- **Static setup block diagram**
+
 ![](img/Dia.png) 
+
+- **Dynamic setup block diagram**
+![](img/Dia2.png) 
 
 * Connect the Gateway router  with an Ethernet cable to the ethernet card of the local machine running mDS or to a Router/L3 Switch. 
 
 * To power up the Gateway router use a micro-USB charger connected to a wall socket or a micro-USB cable connected to a computer.
 
-* To flash the Gateway router with the firmware, you need a micro-USB cable (See flashing instructions below).
+* To flash the Gateway router with the firmware, you need a micro-USB cable. (See flashing instructions below)
 
-* The wireless link between the FRDM-K64F board (client end-point) and the Gateway router follows the IEEE 802.15.4 standard. 
+* The wireless link between the FRDM-K64F board (Client end-point) and the Gateway router is following the IEEE 802.15.4 standard. 
 
-* To power up the FRDM-K64F board (client end-point) use either a micro-USB charger or a micro-USB cable. If you are using micro-USB, you can view the debug and trace messages using third-party software, for example PuTTY.
+* To power up the FRDM-K64F board (Client end-point) use either a micro-USB charger or a micro-USB cable. If you are using micro-USB, you can view the debug and trace messages utilizing an optional software listed above, for example PuTTY.
 
 **Note!**  
 	
-* If you're using a virtual Machine, please set your Network Adapter Mode to Bridged.
+* If you are using a Virtual Machine, please set your Network Adapter Mode to 'Bridged'.
 
-* If you are using a docking board with a laptop, connect your Ethernet cable to the docking board RJ45 female connector rather than the laptop's own RJ45 female connector (only for Static Setup).
+* If you are using a docking board with laptop, connect your ethernet cable to the docking board RJ45 female connector rather than laptop's own RJ45 female connector (only for Static Setup). 
 
 * If you have access to an IPv6 network but don't have access to a globally running mDS instance, you can still test the Dynamic Setup by running a local instance of mDS.
 
-
 ##Test environment setup
-The test environment for this example can be set up in two modes:
+The test environment for this example can be setup in two modes.
 
-1. **Static setup**: Where an mDS instance is running on a local machine and the Gateway router is connected directly to that machine using an Ethernet cable.
+1. **Static setup:** Where an mDS instance is running locally, i.e., on a local machine and the Gateway route is connected  directly to that machine via Ethernet Cable.
 
-2. **Dynamic setup**: Where an mDS instance is running in the IPv6 enabled cloud or behind a global IPv6 network. In this case, the Gateway Router is connected to a physical network router or switch.
+2. **Dynamic setup:** Where an mDS instance is running in the IPv6 enabled cloud or behind a global IPv6 network. In that case, the Gateway Router is connected to a physical network Router or switch.
+
    
-### Server side configuration
+### Server Side Configuration
 
 1. Use an Ethernet cable to connect the mbed 6LoWPAN Gateway router to a computer running mDS.
 
@@ -85,18 +91,18 @@ The test environment for this example can be set up in two modes:
 
 5. Download and run mDS on your computer (see instructions below).
 
-#### Static setup configuration (_Server Side_)
 
-As mentioned above, in static setup the mDS instance runs on a local computer with a statically configured IPv6 address. The example application running on the client side will register with the mDS creating a 6LoWPAN network. Please follow the instructions below. 
+#### Static Setup Configuration (_Server Side_)
+
+
+As mentioned above, in static setup the mDS instance runs on a local computer with a statically configured IPv6 address. The example application running on the client side will register with the mDS creating a 6LoWPAN network. Please follow the instructions below.  
 
 ##### Downloading mDS
 
-Installing mDS on your computer:
+Installing the mDS on your computer:
 
-1. Download the free developer version of mDS from [ARM silver](https://silver.arm.com/browse/SEN00).
-
-2. Click the **Download Now** button on the right-hand side pane. 
- 
+1. Download the free developer version of the mDS from [ARM silver](https://silver.arm.com/browse/SEN00).
+2. Click the **Download Now** button in the right hand side pane.  
 3. Unzip the package on your computer. You should see the following files:
 
 ```
@@ -106,42 +112,38 @@ Device Server Tools.tar.gz
 Ref Apps.tar.gz
 ```
 
-**Note:** These instructions are valid for the mbed Device Server 2.2 release.
+**Note:** These instructions are valid for the Device Server 2.2 release.
 
-##### Starting mDS
+##### Starting the mDS
 
-1. Extract the `Device Server.tar.gz` file
-.
+1. Extract the `Device Server.tar.gz` file.
 2. Go to the `bin` folder of the `Device Server` package that you just extracted.
-
 3. Run the start script:
-
-    - If you are running mDS on Linux OS, run `runDS.sh` in a new shell.
-    - If you are running mDS on Windows, run `runDS.bat` in a new command prompt.
+    - If you are running mDS on Linux OS, run the `runDS.sh` in a new shell.
+    - If you are running mDS on Windows, run the `runDS.bat` in a new command prompt.
 		
-This will start mDS on your system.
+This will start the mDS on your system.
 
-##### Starting the web UI (_Connected_ _home_ _reference_ _app_)
+##### Starting the WebUI (_Connected_ _home_ _reference_ _app_)
 
 1. Extract the `Ref Apps.tar.gz` file.
-
 2. Go to the `bin` folder in the `Connected-home-trial` reference app that you extracted.
-
 3. Run the start script:	
+    - If you are running mDS on Linux OS, run the `runConnectedHome.sh` in a new shell.	
+    - If you are running mDS on Windows, run the `runConnectedHome.bat` in a new command prompt.	
+		
+This will start the WebUI on your system.
 
-    - If you are running mDS on Linux OS, run `runConnectedHome.sh` in a new shell.	
-    - If you are running mDS on Windows, run `runConnectedHome.bat` in a new command prompt.	
 
-This will start the web UI on your system.
+##### Setting up a static IP addres
 
-
-##### Setting up a static IP address
 
 * Set your computer to run on IP address `fd00:ff1:ce0b:a5e0::1` .
 
 * Use the 64-bit network mask `fd00:ff1:ce0b:a5e0::1/64`.
 
 Note: Make sure that the computer running mDS is **not** connected to the internet.
+
 
 **IP setting in Windows:**
 
@@ -166,14 +168,14 @@ If you need a separate driver for Windows, [download](https://developer.mbed.org
 ifconfig eth0 add fd00:ff1:ce0b:a5e0::1/64
 ```
 
-#### Dynamic setup configuration (_Server Side_)
+#### Dynamic Setup Configuration (_Server Side_)
+
 
 **Note:** This section applies only if you plan to run mDS in a networked environment and have access to a global IPv6 network.
 
 - The binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mDS is running on the IPv6 network. You should use the binary that corresponds to your application bootstrap mode and flash it according to the instructions above. In the dynamic setup, the mbed 6LoWPAN Gateway will dynamically learn the network prefix from the IPv6 network it is connected.
 
 - If you have a remote mDS instance running behind the IPv6 network (or IPv6 enable cloud), you don't have to configure anything. However, if you plan to run your own instance of mDS on your network, please read the information provided below.
-
 
 ##### How to check if you have a valid IPv6 network
 
@@ -232,7 +234,8 @@ You do not have access to a global IPv6 network if you:
 
 * See only a unique local address (starts with "fd00").
 
-### Client side configuration
+
+## Client Side Configuration
 
 For client side configuration, please follow the steps below.
 
@@ -419,7 +422,7 @@ The following is an example of using PuTTY and Linux:
 
 5. In the **Configure the serial line** section, enter the following details:
 
-	* Baud-rate = 9600
+	* Baud-rate = 11500
 	* Data bits = 8
 	* Stop bits = 1
 	* flow control = xon/xoff.
@@ -431,8 +434,6 @@ The following is an example of using PuTTY and Linux:
 8. Click **Open**.
 
 This will give you the debug trace of the client.
-
-
 
 
 

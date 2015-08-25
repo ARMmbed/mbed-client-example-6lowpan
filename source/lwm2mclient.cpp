@@ -25,7 +25,8 @@
 // mentioned format like FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683
 // For dynamic setup use something like coap://xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:5683", i.e., The IPv6 address and Port no.
 
-const String &MBED_SERVER_ADDRESS = "coap://FD00:FF1:CE0B:A5E0::1:5683";
+//const String &MBED_SERVER_ADDRESS = "coap://FD00:FF1:CE0B:A5E0::1:5683";
+const String &MBED_SERVER_ADDRESS = "coap://fe80::20c:29ff:fed6:4418:5683";
 
 const String &MANUFACTURER = "ARM";
 const String &TYPE = "type";
