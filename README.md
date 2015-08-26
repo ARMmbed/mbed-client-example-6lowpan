@@ -422,7 +422,7 @@ The following is an example of using PuTTY and Linux:
 
 5. In the **Configure the serial line** section, enter the following details:
 
-	* Baud-rate = 11500
+	* Baud-rate = 115200
 	* Data bits = 8
 	* Stop bits = 1
 	* flow control = xon/xoff.
