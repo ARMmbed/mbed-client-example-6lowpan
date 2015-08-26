@@ -12,18 +12,17 @@ This example application demonstrates how to:
 ## Switching to Thread
 
 By default, the example application makes a **6LoWPAN ND** bootstrap. To change the bootstrap mode to **Thread**
-you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `source/main.cpp`. 
-
+you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the file `source/main.cpp`. 
 
 ## Required hardware
 
-* An FRDM-K64F development board (client end-point)
-* An mbed 6LoWPAN shield (with radio module)
-* An mbed 6LoWPAN Gateway router
-* A micro-USB cable
-* A micro-USB charger for powering the mbed 6LoWPAN Gateway
-* An Ethernet cable
-* A computer running the mDS
+* An FRDM-K64F development board (client end-point).
+* An mbed 6LoWPAN shield (with a radio module).
+* An mbed 6LoWPAN Gateway router.
+* A micro-USB cable.
+* A micro-USB charger for powering the mbed 6LoWPAN Gateway router.
+* An Ethernet cable.
+* A computer running mDS.
 
 ![](img/hw_photo.png) 
 
@@ -31,7 +30,7 @@ you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `sou
 ## Required software
 
 * [yotta](http://docs.yottabuild.org/#installing) - to build the example programs.
-* [mbed Device Server (mDS)](https://silver.arm.com/browse/SEN00) - where the example application connects to.
+* [mbed Device Server (mDS)](https://silver.arm.com/browse/SEN00) - what the example application connects to.
 
 ## Optional software
 * [Wireshark](https://www.wireshark.org/) - for packet inspection and network debugging.
@@ -45,39 +44,39 @@ you need to define (uncomment) a macro `APPL_BOOTSTRAP_MODE_THREAD` in file `sou
 - **Dynamic setup block diagram**
 ![](img/Dia2.png) 
 
-* Connect the Gateway router  with an Ethernet cable to the ethernet card of the local machine running mDS or to a Router/L3 Switch. 
+* Connect the Gateway router with an Ethernet cable to the Ethernet card of the local machine running mDS or to a router/L3 switch. 
 
 * To power up the Gateway router use a micro-USB charger connected to a wall socket or a micro-USB cable connected to a computer.
 
-* To flash the Gateway router with the firmware, you need a micro-USB cable. (See flashing instructions below)
+* To flash the Gateway router with the firmware, you need a micro-USB cable (see flashing instructions below).
 
-* The wireless link between the FRDM-K64F board (Client end-point) and the Gateway router is following the IEEE 802.15.4 standard. 
+* The wireless link between the FRDM-K64F board (client end-point) and the Gateway router follows the IEEE 802.15.4 standard. 
 
-* To power up the FRDM-K64F board (Client end-point) use either a micro-USB charger or a micro-USB cable. If you are using micro-USB, you can view the debug and trace messages utilizing an optional software listed above, for example PuTTY.
+* To power up the FRDM-K64F board (client end-point) use either a micro-USB charger or a micro-USB cable. If you are using micro-USB, you can view the debug and trace messages using third party software like PuTTY.
 
 **Note!**  
 	
-* If you are using a Virtual Machine, please set your Network Adapter Mode to 'Bridged'.
+* If you are using a virtual machine, please set your network adapter mode to 'Bridged'.
 
-* If you are using a docking board with laptop, connect your ethernet cable to the docking board RJ45 female connector rather than laptop's own RJ45 female connector (only for Static Setup). 
+* For static setup: If you are using a docking board with a laptop, connect your Ethernet cable to the docking board RJ45 female connector rather than the laptop's own RJ45 female connector. 
 
-* If you have access to an IPv6 network but don't have access to a globally running mDS instance, you can still test the Dynamic Setup by running a local instance of mDS.
+* If you have access to an IPv6 network but don't have access to a globally running mDS instance, you can still test the dynamic setup by running a local instance of mDS.
 
 ##Test environment setup
-The test environment for this example can be setup in two modes.
+The test environment for this example can be set up in two modes:
 
-1. **Static setup:** Where an mDS instance is running locally, i.e., on a local machine and the Gateway route is connected  directly to that machine via Ethernet Cable.
+1. **Static setup:** Where an mDS instance is running on a local machine and the Gateway router is connected directly to that machine using an Ethernet cable.
 
-2. **Dynamic setup:** Where an mDS instance is running in the IPv6 enabled cloud or behind a global IPv6 network. In that case, the Gateway Router is connected to a physical network Router or switch.
+2. **Dynamic setup:** Where an mDS instance is running in the IPv6-enabled cloud or behind a global IPv6 network. In that case, the Gateway Router is connected to a physical network router or switch.
 
    
-### Server Side Configuration
+### Server side configuration
 
 1. Use an Ethernet cable to connect the mbed 6LoWPAN Gateway router to a computer running mDS.
 
 2. Use a micro-USB cable to connect the mbed 6LoWPAN Gateway router to your computer. The computer will list the router as removable storage.
 
-3. The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the binary matching the application bootstrap mode:
+3. The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the binary matching your application bootstrap mode:
 
 	* For **static setup** with the **6LoWPAN ND** bootstrap, use `gateway6LoWPANStatic.bin`.
 	* For **static setup** with the **Thread** bootstrap, use `gatewayThreadStatic.bin`.
@@ -92,16 +91,18 @@ The test environment for this example can be setup in two modes.
 5. Download and run mDS on your computer (see instructions below).
 
 
-#### Static Setup Configuration (_Server Side_)
+#### Static setup configuration (_Server Side_)
 
 
-As mentioned above, in static setup the mDS instance runs on a local computer with a statically configured IPv6 address. The example application running on the client side will register with the mDS creating a 6LoWPAN network. Please follow the instructions below.  
+As mentioned above, in static setup the mDS instance runs on a local computer with a statically configured IPv6 address. The example application running on the client side will register with the mDS creating a 6LoWPAN network. 
+
+Please follow the instructions below to complete the setup.
 
 ##### Downloading mDS
 
-Installing the mDS on your computer:
+Installing mDS on your computer:
 
-1. Download the free developer version of the mDS from [ARM silver](https://silver.arm.com/browse/SEN00).
+1. Download the free developer version of mDS from [ARM silver](https://silver.arm.com/browse/SEN00).
 2. Click the **Download Now** button in the right hand side pane.  
 3. Unzip the package on your computer. You should see the following files:
 
@@ -114,38 +115,38 @@ Ref Apps.tar.gz
 
 **Note:** These instructions are valid for the Device Server 2.2 release.
 
-##### Starting the mDS
+##### Starting mDS
 
 1. Extract the `Device Server.tar.gz` file.
 2. Go to the `bin` folder of the `Device Server` package that you just extracted.
 3. Run the start script:
-    - If you are running mDS on Linux OS, run the `runDS.sh` in a new shell.
-    - If you are running mDS on Windows, run the `runDS.bat` in a new command prompt.
+    - If you are running mDS on Linux, run `runDS.sh` in a new shell.
+    - If you are running mDS on Windows, run `runDS.bat` in a new command prompt.
 		
-This will start the mDS on your system.
+This will start mDS on your system.
 
-##### Starting the WebUI (_Connected_ _home_ _reference_ _app_)
+##### Starting the web UI (_Connected_ _home_ _reference_ _app_)
 
 1. Extract the `Ref Apps.tar.gz` file.
 2. Go to the `bin` folder in the `Connected-home-trial` reference app that you extracted.
 3. Run the start script:	
-    - If you are running mDS on Linux OS, run the `runConnectedHome.sh` in a new shell.	
-    - If you are running mDS on Windows, run the `runConnectedHome.bat` in a new command prompt.	
+    - If you are running mDS on Linux, run `runConnectedHome.sh` in a new shell.	
+    - If you are running mDS on Windows, run `runConnectedHome.bat` in a new command prompt.	
 		
-This will start the WebUI on your system.
+This will start the web UI on your system.
 
 
-##### Setting up a static IP addres
+##### Setting up a static IP address
 
 
-* Set your computer to run on IP address `fd00:ff1:ce0b:a5e0::1` .
+* Set your computer to use the IP address `fd00:ff1:ce0b:a5e0::1` .
 
 * Use the 64-bit network mask `fd00:ff1:ce0b:a5e0::1/64`.
 
 Note: Make sure that the computer running mDS is **not** connected to the internet.
 
 
-**IP setting in Windows:**
+**IP settings in Windows:**
 
 1. Read [**Microsoft: Changing TCP/IP settings**](http://windows.microsoft.com/en-gb/windows/change-tcp-ip-settings).
 
@@ -168,14 +169,14 @@ If you need a separate driver for Windows, [download](https://developer.mbed.org
 ifconfig eth0 add fd00:ff1:ce0b:a5e0::1/64
 ```
 
-#### Dynamic Setup Configuration (_Server Side_)
+#### Dynamic setup configuration (_Server Side_)
 
 
 **Note:** This section applies only if you plan to run mDS in a networked environment and have access to a global IPv6 network.
 
-- The binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mDS is running on the IPv6 network. You should use the binary that corresponds to your application bootstrap mode and flash it according to the instructions above. In the dynamic setup, the mbed 6LoWPAN Gateway will dynamically learn the network prefix from the IPv6 network it is connected.
+- The binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mDS is running on the IPv6 network. You should use the binary that corresponds to your application bootstrap mode and flash it according to the instructions above. In dynamic setup, the mbed 6LoWPAN Gateway will dynamically learn the network prefix from the IPv6 network it is connected to.
 
-- If you have a remote mDS instance running behind the IPv6 network (or IPv6 enable cloud), you don't have to configure anything. However, if you plan to run your own instance of mDS on your network, please read the information provided below.
+- If you have a remote mDS instance running behind the IPv6 network (or IPv6-enabled cloud), you don't have to configure anything. However, if you plan to run your own instance of mDS on your network, please read the information provided below.
 
 ##### How to check if you have a valid IPv6 network
 
@@ -235,33 +236,38 @@ You do not have access to a global IPv6 network if you:
 * See only a unique local address (starts with "fd00").
 
 
-## Client Side Configuration
+## Client side configuration
 
 For client side configuration, please follow the steps below.
 
 #### Static setup configuration (_Client Side_)
 
 1. Connect the FRDM-K64F development board to the mbed 6LoWPAN shield.
-2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of the mDS:
+
+2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of mDS:
     * On Windows:
-         * in the computer running the mDS, open the command prompt and type _ipconfig_
-         * section **Ethernet adapter Local Area Connection** field **IPv6 address** contains the IPv6 address
+         * On the computer running the mDS, open the command prompt and type _ipconfig_.
+         * The section **Ethernet adapter Local Area Connection** in the field **IPv6 address** contains the IPv6 address.
     * On Mac OS X and Linux:
-         * in a Mac or a Linux machine running the mDS, open the terminal and type _ifconfig_
-         * under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`. That is your IPv6 address.
-    * copy the IPv6 address to the string `MBED_SERVER_ADDRESS` at line 11 in the file `/source/lwm2mclient.cpp`
-    * the address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`,  you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` where `5683` is the port number. The  prefix `FD` tells you that it is a Unique local IPv6 address.
-3. Build the `mbed-client-example-6lowpan` with `yotta` (see [Build instructions](#build-instructions)).
-4. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware.
+         * On a Mac or a Linux machine running mDS, open the terminal and type _ifconfig_.
+         * Under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`. That is your IPv6 address.
+    * Copy the IPv6 address to the string `MBED_SERVER_ADDRESS` at line 11 in the file `/source/lwm2mclient.cpp`.
+    * The address format is `coap://<IPv6 address>:PORT`. For example, if your server's IP address is `FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557`, you would enter `coap://FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683` (where `5683` is the port number). The  prefix `FD` tells you that it is a unique local IPv6 address.
+
+3. Build `mbed-client-example-6lowpan` with `yotta` (see [Build instructions](#build-instructions)).
+
+4. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware:
 	* Open the file `yotta_modules/mbed-mesh-api/source/include/static_config.h`.
     	* For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **4** (1<<4) or **12** (1<<12).
         * For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **4** or **12**.	
-	* Use channel 4 for Sub-GHz module and channel 12 for 2.4 GHz module.
+	* Use channel 4 for a sub-GHz module and channel 12 for a 2.4 GHz module.
 	* To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
+
 5. Build the application again using the command `yotta build`.
+
 6. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
 
-2. Make sure that the `/source/lwm2mclient.cpp` file contains the right IPv6 address for mDS. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 27, as the value of `MBED_SERVER_ADDRESS`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5386".
+7. Make sure that the `/source/lwm2mclient.cpp` file contains the right IPv6 address for mDS. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 27, as the value of `MBED_SERVER_ADDRESS`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5386".
 
 	Notice that this is the same IP address you just set for your mDS machine in the section Server Side Configuration.
 
@@ -293,7 +299,7 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 
 	- In your copy of the `mbed-mesh-api` repository, find the file  `./source/include/static_config.h`.
 
-	- You'll need to use channel **1** for Sub-GHz module and channel **12** for 2.4 GHz module.
+	- You'll need to use channel **1** for a sub-GHz module and channel **12** for a 2.4 GHz module.
 
 		Tip: To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
 
@@ -306,7 +312,7 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 	cd mbed-mesh-api
 	yt link
 	```
-* Go back to `mbed-client-example-6lowpan` application folder and make a link to the cloned `mbed-mesh-api` repository:
+* Go back to the `mbed-client-example-6lowpan` application folder and make a link to the cloned `mbed-mesh-api` repository:
 
 	```
 	cd mbed-client-example-6lowpan
@@ -319,15 +325,15 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 
 * Make sure that you are using the same radio modules on both server and client sides:
 
-	* If the radio module on the Gateway router supports the 2.4 GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses the 2.4 GHz radio module (such as Atmel RF-233).
+	* If the radio module on the Gateway router supports the 2.4 GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses a 2.4 GHz radio module (such as Atmel RF-233).
 
-	* If the radio module on the Gateway router supports sub-GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses a sub-GHz radio module (such as Atmel RF-212B).
+	* If the radio module on the Gateway router supports the sub-GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses a sub-GHz radio module (such as Atmel RF-212B).
 
 * An easy way to identify which frequency band your setup uses is to check the **Antenna size** on the radio module:
 
-	* Sub-GHz band antenna is larger than 2.4 GHz antenna.
+	* The sub-GHz band antenna is larger than the 2.4 GHz antenna.
 
-	* For the client side (mbed 6LoWPAN Shield connected to an FRDM-K64F board), see the image below:
+	* For the client side (mbed 6LoWPAN shield connected to an FRDM-K64F board), see the image below:
   ![](img/Radio_Identifications.png) 
 
 	* For the Gateway router, see the image below:
@@ -336,13 +342,11 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 
 ## Build instructions
 		
-1. Install yotta. See instructions [here](http://docs.yottabuild.org/#installing).
+1. Install yotta. See instructions [here](http://docs.yottabuild.org/#installing). On Linux, enter `pip install --pre pyusb` and then `pip install yotta`.
 
-2. Install the necessary toolchains. See [Required software](#required-software), to learn how to install the toolchains. 
+2. Install the necessary toolchains. See [Required software](#required-software). 
 
-3. On Linux, enter `pip install --pre pyusb` and then `pip install yotta`.
-
-4. Set the `IPv6` address of mDS in `source/lwm2mclient.cpp` if you have not done it yet. The instructions are in the [Client side](#client-side) section of this document. 
+4. Set the `IPv6` address for mDS in `source/lwm2mclient.cpp` if you have not done it yet. The instructions are in the [Client side](#client-side) section of this document. 
 
 5. In the command line, move to the root of this example application.
 
@@ -358,15 +362,15 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 2. Copy the binary to the USB mass storage root of the FRDM-K64F development board. It will be automatically flashed to the target MCU. After flashing, the board will restart itself. Press the **Reset** button of the development board if it does not restart automatically.
 
-4. The program begins execution and will start registration to the mDS.
+4. The program starts up and will begin registration with mDS.
 
 5. After a successful registration, the program will automatically start sending observations every 10 seconds.
 
 ## Test usage
 
-* Make sure that mDS and Connected Home app are up and running.
+* Make sure that mDS and the Connected Home app are up and running.
 
-* On the server side where the mDS is running, open a browser tab and type:
+* On the server side where mDS is running, open a browser tab and type:
 
 
 	```
@@ -384,11 +388,11 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 ![](img/CH-endpoint.PNG) 
 
-* Click **lwm2m-client-6lowpan-endpoint**. It will bring you to a panel where you will see panes called **Device** and **Test** as shown below:
+* Click **lwm2m-client-6lowpan-endpoint**. It will bring you to a panel where you will see panes called **Device** and **Test**:
 
 ![](img/CH-endpoint_Device.PNG)  
 
-* When you click the **Read** button, you will retrieve information from the client:
+* Click the **Read** button to retrieve information from the client:
 
 * Open the **Test** pane.
 
@@ -402,7 +406,7 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 * You should be able to see an increment in the **/Test/0/Dynamic** count.
 
-* Press the **register** button (indicated in the image below) to deregister your device from mDS. You will see that the end-point has been removed from the web UI and the device status is `Stale` in the Connected Home app.
+* Press the **Register** button (indicated in the image below) to deregister your device from mDS. You will see that the end-point has been removed from the web UI and the device status is `Stale` in the Connected Home app.
 
 * To register your device again, simply press the **Restart** button.
 
@@ -422,9 +426,9 @@ The following is an example of using PuTTY and Linux:
 
 5. In the **Configure the serial line** section, enter the following details:
 
-	* Baud-rate = 115200
-	* Data bits = 8
-	* Stop bits = 1
+	* Baud-rate = 115200.
+	* Data bits = 8.
+	* Stop bits = 1.
 	* flow control = xon/xoff.
 
 6. Click the **Session** category. Give the session a name, for example `mbed_trace`, and save it.
@@ -433,7 +437,4 @@ The following is an example of using PuTTY and Linux:
 
 8. Click **Open**.
 
-This will give you the debug trace of the client.
-
-
-
+This will give you the client's debug trace.
