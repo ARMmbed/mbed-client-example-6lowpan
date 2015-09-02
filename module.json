@@ -1,6 +1,6 @@
 {
   "name": "mbed-client-example-6lowpan",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "6LoWPAN networking example",
   "keywords": [
     "6LoWPAN",
