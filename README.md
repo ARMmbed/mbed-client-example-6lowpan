@@ -30,8 +30,8 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 ## Required software
 
 * [yotta](http://docs.yottabuild.org/#installing) - to build the example programs.
-* [mbed Device Server (mDS)](https://silver.arm.com/browse/SEN00) - what the example application connects to. Installation instructions in [Starting mDS](#starting-mds).
-* Java runtime for running the mDS
+* [mbed Device Server (mDS)](https://silver.arm.com/browse/SEN00) - what the example application connects to. For installation instructions see [Starting mDS](#starting-mds).
+* Java Runtime for running the mDS.
 
 ## Optional software
 * [Wireshark](https://www.wireshark.org/) - for packet inspection and network debugging.
@@ -134,7 +134,7 @@ This will start mDS on your system.
     - If you are running mDS on Linux, run `runConnectedHome.sh` in a new shell.	
     - If you are running mDS on Windows, run `runConnectedHome.bat` in a new command prompt.	
 		
-This will start the web UI on your system. To see user interface follow [Test usage](#test-usage).
+This will start the web UI on your system. For user interface instructions, see [Test usage](#test-usage).
 
 
 ##### Setting up a static IP address
@@ -254,7 +254,7 @@ For client side configuration, please follow the steps below.
          * Under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E0::1`. That is the IPv6 address of the machine running mDS.
 	* Make sure that on the client side, the `/source/lwm2mclient.cpp` file contains the right IPv6 address for mDS. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 28, as the value of `MBED_SERVER_ADDRESS`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5386". The  prefix `FD` tells you that it is a unique local IPv6 address. Notice that this is the same IP address you just set for your mDS machine (see [Static setup configuration (_Server Side_)](#static-setup-configuration-server-side)).
 
-3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel below](#changing-radio-channel) for instructions.
+3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) below for instructions.
 
 4. Build `mbed-client-example-6lowpan` with `yotta` (see [Build instructions](#build-instructions)).
 
@@ -425,8 +425,8 @@ This will give you the client's debug trace.
 
 ## Troubleshooting
 
-In case  **lwm2m-client-6lowpan-endpoint** is not visible in the Connected Home application or if the 
-**Read** buttons on the **Device** pane doesn't return value you can try one of the following:
+In case **lwm2m-client-6lowpan-endpoint** is not visible in the Connected Home application or if the 
+**Read** buttons on the **Device** pane doesn't return a value you can try one of the following:
 
 * Restart the Connected Home application.
 * Restart the 6LoWPAN Gateway.
@@ -435,11 +435,11 @@ In case  **lwm2m-client-6lowpan-endpoint** is not visible in the Connected Home 
 
 You can also check the following settings:
 
-* Check that computer running mDS is having IP address like instructed in [Setting up a static IP address](#setting-up-a-static-ip-address). Sometimes IP address is lost if network cable is unplugged.
-* Check that channels are correctly set like described in [Changing radio channel](#changing-radio-channel).
-* Check that the mbed 6LoWPAN Gateway is using right binary according to [Server side configuration](#server-side-configuration).
-* Check that the mDS IP address is set to `mbed-client-example-6lowpan` according to [Client side configuration](#client-side-configuration).
-* Check the client trace, it should indicate that bootstrap is ready when FRDM-K64F is connected to the mbed 6LoWPAN Gateway. For example in case of **6LoWPAN ND** bootstrap there is a following line in the trace window:
+* Check that computer running mDS has an IP address as instructed in [Setting up a static IP address](#setting-up-a-static-ip-address). Sometimes the IP address is lost when the network cable is unplugged.
+* Check that channels are set as described in [Changing radio channel](#changing-radio-channel).
+* Check that the mbed 6LoWPAN Gateway is using the right binary, as explained in [Server side configuration](#server-side-configuration).
+* Check that the mDS IP address is set to `mbed-client-example-6lowpan`, as exalained in [Client side configuration](#client-side-configuration).
+* Check the client trace. It should indicate that the bootstrap is ready when FRDM-K64F is connected to the mbed 6LoWPAN Gateway. For example, for the **6LoWPAN ND** bootstrap the trace window will show:
 ```
 [INFO][m6LND]: 6LoWPAN ND bootstrap ready
 ```
