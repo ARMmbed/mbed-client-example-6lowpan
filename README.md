@@ -426,20 +426,20 @@ This will give you the client's debug trace.
 ## Troubleshooting
 
 In case **lwm2m-client-6lowpan-endpoint** is not visible in the Connected Home application or if the 
-**Read** buttons on the **Device** pane doesn't return a value you can try one of the following:
+**Read** buttons on the **Device** pane do not return a value you can try one of the following:
 
 * Restart the Connected Home application.
 * Restart the 6LoWPAN Gateway.
-* Restart the FRDM-K64F (always start the 6LoWPAN Gateway before the FRDM-K64F).
+* Restart the FRDM-K64F board (always start the 6LoWPAN Gateway before the FRDM-K64F board).
 * Reset your browser cache.
 
 You can also check the following settings:
 
-* Check that computer running mDS has an IP address as instructed in [Setting up a static IP address](#setting-up-a-static-ip-address). Sometimes the IP address is lost when the network cable is unplugged.
+* Check that the computer running mDS has an IP address as instructed in [Setting up a static IP address](#setting-up-a-static-ip-address). Sometimes the IP address is lost when the network cable is unplugged.
 * Check that channels are set as described in [Changing radio channel](#changing-radio-channel).
-* Check that the mbed 6LoWPAN Gateway is using the right binary, as explained in [Server side configuration](#server-side-configuration).
-* Check that the mDS IP address is set to `mbed-client-example-6lowpan`, as exalained in [Client side configuration](#client-side-configuration).
-* Check the client trace. It should indicate that the bootstrap is ready when FRDM-K64F is connected to the mbed 6LoWPAN Gateway. For example, for the **6LoWPAN ND** bootstrap the trace window will show:
+* Check that the mbed 6LoWPAN Gateway is using the correct binary, as explained in [Server side configuration](#server-side-configuration).
+* Check that the mDS IP address is set to `mbed-client-example-6lowpan`, as explained in [Client side configuration](#client-side-configuration).
+* Check the client trace. It should indicate that the bootstrap is ready when the FRDM-K64F board is connected to the mbed 6LoWPAN Gateway. For example, for the **6LoWPAN ND** bootstrap the trace window will show:
 ```
 [INFO][m6LND]: 6LoWPAN ND bootstrap ready
 ```
