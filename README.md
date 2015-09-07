@@ -61,7 +61,7 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 
 * For static setup: If you are using a docking board with a laptop, connect your Ethernet cable to the docking board RJ45 female connector rather than the laptop's own RJ45 female connector. 
 
-* If you have access to an IPv6 network but don't have access to a globally running mDS instance, you can still test the dynamic setup by running a local instance of mDS.
+* If you have access to an IPv6 network but do not have access to a globally running mDS instance, you can still test the dynamic setup by running a local instance of mDS.
 
 ##Test environment setup
 The test environment for this example can be set up in two modes:
@@ -177,7 +177,7 @@ ifconfig eth0 add fd00:ff1:ce0b:a5e0::1/64
 
 - The binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mDS is running on the IPv6 network. You should use the binary that corresponds to your application bootstrap mode and flash it according to the instructions above. In dynamic setup, the mbed 6LoWPAN Gateway will dynamically learn the network prefix from the IPv6 network it is connected to.
 
-- If you have a remote mDS instance running behind the IPv6 network (or IPv6-enabled cloud), you don't have to configure anything. However, if you plan to run your own instance of mDS on your network, please read the information provided below.
+- If you have a remote mDS instance running behind the IPv6 network (or IPv6-enabled cloud), you do not need to configure anything. However, if you plan to run your own instance of mDS on your network, please read the information provided below.
 
 ##### How to check if you have a valid IPv6 network
 
