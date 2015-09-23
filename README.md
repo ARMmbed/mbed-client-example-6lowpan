@@ -1,12 +1,12 @@
 # Getting started with mesh networking
 
-This document describes how to use mesh networking to communicate with mbed Device Server (mDS).
+This document describes how to use mesh networking to communicate with mbed Device Server (mbed DS).
 
 This example application demonstrates how to:
 
 * Connect to a **6LoWPAN ND** or **Thread** type of mesh network.
-* Register, read resource values and send observations to mDS.
-* Deregister from mDS.
+* Register, read resource values and send observations to mbed DS.
+* Deregister from mbed DS.
 * Disconnect from the network.
 
 ## Switching to Thread
@@ -22,7 +22,7 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 * A micro-USB cable.
 * A micro-USB charger for powering the mbed 6LoWPAN Gateway router.
 * An Ethernet cable.
-* A computer running mDS.
+* A computer running mbed DS.
 
 ![](img/hw_photo.png) 
 
@@ -30,8 +30,8 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 ## Required software
 
 * [yotta](http://docs.yottabuild.org/#installing) - to build the example programs.
-* [mbed Device Server (mDS)](https://silver.arm.com/browse/SEN00) - what the example application connects to. For installation instructions see [Starting mDS](#starting-mds).
-* Java Runtime for running the mDS.
+* [mbed Device Server (mbed DS)](https://silver.arm.com/browse/SEN00) - what the example application connects to. For installation instructions see [Starting mbed DS](#starting-mbed-ds).
+* Java Runtime for running the mbed DS.
 
 ## Optional software
 * [Wireshark](https://www.wireshark.org/) - for packet inspection and network debugging.
@@ -45,7 +45,7 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 - **Dynamic setup block diagram**
 ![](img/Dia2.png) 
 
-* Connect the Gateway router with an Ethernet cable to the Ethernet card of the local machine running mDS or to a router/L3 switch. 
+* Connect the Gateway router with an Ethernet cable to the Ethernet card of the local machine running mbed DS or to a router/L3 switch. 
 
 * To power up the Gateway router use a micro-USB charger connected to a wall socket or a micro-USB cable connected to a computer.
 
@@ -61,19 +61,19 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 
 * For static setup: If you are using a docking board with a laptop, connect your Ethernet cable to the docking board RJ45 female connector rather than the laptop's own RJ45 female connector. 
 
-* If you have access to an IPv6 network but do not have access to a globally running mDS instance, you can still test the dynamic setup by running a local instance of mDS.
+* If you have access to an IPv6 network but do not have access to a globally running mbed DS instance, you can still test the dynamic setup by running a local instance of mbed DS.
 
 ##Test environment setup
 The test environment for this example can be set up in two modes:
 
-1. **Static setup:** Where an mDS instance is running on a local machine and the Gateway router is connected directly to that machine using an Ethernet cable.
+1. **Static setup:** Where an mbed DS instance is running on a local machine and the Gateway router is connected directly to that machine using an Ethernet cable.
 
-2. **Dynamic setup:** Where an mDS instance is running in the IPv6-enabled cloud or behind a global IPv6 network. In that case, the Gateway Router is connected to a physical network router or switch.
+2. **Dynamic setup:** Where an mbed DS instance is running in the IPv6-enabled cloud or behind a global IPv6 network. In that case, the Gateway Router is connected to a physical network router or switch.
 
    
 ### Server side configuration
 
-1. Use an Ethernet cable to connect the mbed 6LoWPAN Gateway router to a computer running mDS.
+1. Use an Ethernet cable to connect the mbed 6LoWPAN Gateway router to a computer running mbed DS.
 
 2. Use a micro-USB cable to connect the mbed 6LoWPAN Gateway router to your computer. The computer will list the router as removable storage.
 
@@ -89,21 +89,21 @@ The test environment for this example can be set up in two modes:
 
 4. Copy the gateway binary file to the mbed 6LoWPAN Gateway router to flash the device. The device will reboot automatically after flashing. If that does not happen, push the **Reset** button on the board.
 
-5. Download and run mDS on your computer (see instructions below).
+5. Download and run mbed DS on your computer (see instructions below).
 
 
 #### Static setup configuration (_Server Side_)
 
 
-As mentioned above, in static setup the mDS instance runs on a local computer with a statically configured IPv6 address. The example application running on the client side will register with the mDS creating a 6LoWPAN network. 
+As mentioned above, in static setup the mbed DS instance runs on a local computer with a statically configured IPv6 address. The example application running on the client side will register with the mbed DS creating a 6LoWPAN network. 
 
 Please follow the instructions below to complete the setup.
 
-##### Downloading mDS
+##### Downloading mbed DS
 
-Installing mDS on your computer:
+Installing mbed DS on your computer:
 
-1. Download the free developer version of mDS from [ARM silver](https://silver.arm.com/browse/SEN00).
+1. Download the free developer version of mbed DS from [ARM silver](https://silver.arm.com/browse/SEN00).
 2. Click the **Download Now** button in the right hand side pane.  
 3. Unzip the package on your computer. You should see the following files:
 
@@ -116,23 +116,23 @@ Ref Apps.tar.gz
 
 **Note:** These instructions are valid for the Device Server 2.2 release.
 
-##### Starting mDS
+##### Starting mbed DS
 
 1. Extract the `Device Server.tar.gz` file.
 2. Go to the `bin` folder of the `Device Server` package that you just extracted.
 3. Run the start script:
-    - If you are running mDS on Linux, run `runDS.sh` in a new shell.
-    - If you are running mDS on Windows, run `runDS.bat` in a new command prompt.
+    - If you are running mbed DS on Linux, run `runDS.sh` in a new shell.
+    - If you are running mbed DS on Windows, run `runDS.bat` in a new command prompt.
 		
-This will start mDS on your system.
+This will start mbed DS on your system.
 
 ##### Starting the web UI (_Connected_ _home_ _reference_ _app_)
 
 1. Extract the `Ref Apps.tar.gz` file.
 2. Go to the `bin` folder in the `Connected-home-trial` reference app that you extracted.
 3. Run the start script:	
-    - If you are running mDS on Linux, run `runConnectedHome.sh` in a new shell.	
-    - If you are running mDS on Windows, run `runConnectedHome.bat` in a new command prompt.	
+    - If you are running mbed DS on Linux, run `runConnectedHome.sh` in a new shell.	
+    - If you are running mbed DS on Windows, run `runConnectedHome.bat` in a new command prompt.	
 		
 This will start the web UI on your system. For user interface instructions, see [Test usage](#test-usage).
 
@@ -144,7 +144,7 @@ This will start the web UI on your system. For user interface instructions, see 
 
 * Use the 64-bit network mask `fd00:ff1:ce0b:a5e0::1/64`.
 
-Note: Make sure that the computer running mDS is **not** connected to the internet.
+Note: Make sure that the computer running mbed DS is **not** connected to the internet.
 
 
 **IP settings in Windows:**
@@ -173,11 +173,11 @@ ifconfig eth0 add fd00:ff1:ce0b:a5e0::1/64
 #### Dynamic setup configuration (_Server Side_)
 
 
-**Note:** This section applies only if you plan to run mDS in a networked environment and have access to a global IPv6 network.
+**Note:** This section applies only if you plan to run mbed DS in a networked environment and have access to a global IPv6 network.
 
-- The binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mDS is running on the IPv6 network. You should use the binary that corresponds to your application bootstrap mode and flash it according to the instructions above. In dynamic setup, the mbed 6LoWPAN Gateway will dynamically learn the network prefix from the IPv6 network it is connected to.
+- The binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mbed DS is running on the IPv6 network. You should use the binary that corresponds to your application bootstrap mode and flash it according to the instructions above. In dynamic setup, the mbed 6LoWPAN Gateway will dynamically learn the network prefix from the IPv6 network it is connected to.
 
-- If you have a remote mDS instance running behind the IPv6 network (or IPv6-enabled cloud), you do not need to configure anything. However, if you plan to run your own instance of mDS on your network, please read the information provided below.
+- If you have a remote mbed DS instance running behind the IPv6 network (or IPv6-enabled cloud), you do not need to configure anything. However, if you plan to run your own instance of mbed DS on your network, please read the information provided below.
 
 ##### How to check if you have a valid IPv6 network
 
@@ -245,14 +245,14 @@ For client side configuration, please follow the steps below.
 
 1. Connect the FRDM-K64F development board to the mbed 6LoWPAN shield.
 
-2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of mDS:
+2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of mbed DS:
     * On Windows:
-         * On the computer running the mDS, open the command prompt and type _ipconfig_.
+         * On the computer running the mbed DS, open the command prompt and type _ipconfig_.
          * The section **Ethernet adapter Local Area Connection** in the field **IPv6 address** contains the IPv6 address.
     * On Mac OS X and Linux:
-         * On a Mac or a Linux machine running mDS, open the terminal and type _ifconfig_.
-         * Under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E0::1`. That is the IPv6 address of the machine running mDS.
-	* Make sure that on the client side, the `/source/lwm2mclient.cpp` file contains the right IPv6 address for mDS. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 28, as the value of `MBED_SERVER_ADDRESS`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5386". The  prefix `FD` tells you that it is a unique local IPv6 address. Notice that this is the same IP address you just set for your mDS machine (see [Static setup configuration (_Server Side_)](#static-setup-configuration-server-side)).
+         * On a Mac or a Linux machine running mbed DS, open the terminal and type _ifconfig_.
+         * Under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E0::1`. That is the IPv6 address of the machine running mbed DS.
+	* Make sure that on the client side, the `/source/lwm2mclient.cpp` file contains the right IPv6 address for mbed DS. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 28, as the value of `MBED_SERVER_ADDRESS`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5386". The  prefix `FD` tells you that it is a unique local IPv6 address. Notice that this is the same IP address you just set for your mbed DS machine (see [Static setup configuration (_Server Side_)](#static-setup-configuration-server-side)).
 
 3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) below for instructions.
 
@@ -265,9 +265,9 @@ For client side configuration, please follow the steps below.
 
 Dynamic setup follows the same steps detailed above, with one exception:
  	
-* The string `MBED_SERVER_ADDRESS` gets the IPv6 address of the remote server machine that is running the mDS instance.
+* The string `MBED_SERVER_ADDRESS` gets the IPv6 address of the remote server machine that is running the mbed DS instance.
 
-**Note:** You may need to open UDP port 5683 in your computer's firewall for mDS to communicate with this example application. 
+**Note:** You may need to open UDP port 5683 in your computer's firewall for mbed DS to communicate with this example application. 
 
 #### Changing radio channel
 
@@ -330,7 +330,7 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 
 2. Install the necessary toolchains. See [Required software](#required-software). 
 
-4. Set the `IPv6` address for mDS in `source/lwm2mclient.cpp` if you have not done it yet. The instructions are in the [Client side](#client-side) section of this document. 
+4. Set the `IPv6` address for mbed DS in `source/lwm2mclient.cpp` if you have not done it yet. The instructions are in the [Client side](#client-side) section of this document. 
 
 5. In the command line, move to the root of this example application.
 
@@ -346,15 +346,15 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 2. Copy the binary to the USB mass storage root of the FRDM-K64F development board. It will be automatically flashed to the target MCU. After flashing, the board will restart itself. Press the **Reset** button of the development board if it does not restart automatically.
 
-4. The program starts up and will begin registration with mDS.
+4. The program starts up and will begin registration with mbed DS.
 
 5. After a successful registration, the program will automatically start sending observations every 10 seconds.
 
 ## Test usage
 
-* Make sure that mDS and the Connected Home app are up and running.
+* Make sure that mbed DS and the Connected Home app are up and running.
 
-* On the server side where mDS is running, open a browser tab and type:
+* On the server side where mbed DS is running, open a browser tab and type:
 
 
 	```
@@ -390,7 +390,7 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 * You should be able to see an increment in the **/Test/0/Dynamic** count.
 
-* Press the **Register** button (indicated in the image below) to deregister your device from mDS. You will see that the end-point has been removed from the web UI and the device status is `Stale` in the Connected Home app.
+* Press the **Register** button (indicated in the image below) to deregister your device from mbed DS. You will see that the end-point has been removed from the web UI and the device status is `Stale` in the Connected Home app.
 
 * To register your device again, simply press the **Restart** button.
 
@@ -435,10 +435,10 @@ In case **lwm2m-client-6lowpan-endpoint** is not visible in the Connected Home a
 
 You can also check the following settings:
 
-* Check that the computer running mDS has an IP address as instructed in [Setting up a static IP address](#setting-up-a-static-ip-address). Sometimes the IP address is lost when the network cable is unplugged.
+* Check that the computer running mbed DS has an IP address as instructed in [Setting up a static IP address](#setting-up-a-static-ip-address). Sometimes the IP address is lost when the network cable is unplugged.
 * Check that channels are set as described in [Changing radio channel](#changing-radio-channel).
 * Check that the mbed 6LoWPAN Gateway is using the correct binary, as explained in [Server side configuration](#server-side-configuration).
-* Check that the mDS IP address is set to `mbed-client-example-6lowpan`, as explained in [Client side configuration](#client-side-configuration).
+* Check that the mbed DS IP address is set to `mbed-client-example-6lowpan`, as explained in [Client side configuration](#client-side-configuration).
 * Check the client trace. It should indicate that the bootstrap is ready when the FRDM-K64F board is connected to the mbed 6LoWPAN Gateway. For example, for the **6LoWPAN ND** bootstrap the trace window will show:
 ```
 [INFO][m6LND]: 6LoWPAN ND bootstrap ready
