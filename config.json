@@ -2,9 +2,9 @@
   "mbed-os": {
     "net": {
       "stacks": {
-         "lwip":false
+         "lwip":false,
+         "nanostack": true
       }
     }
-  },
- "nanostack": true
+  }
 }
