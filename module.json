@@ -16,8 +16,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "mbed-client": "^1.0.0",
-    "atmel-rf-driver": "~0.0.17",
-    "mbed-mesh-api": "~0.3.0"
+    "atmel-rf-driver": "^1.0.0",
+    "mbed-mesh-api": "^1.0.0"
   },
   "targetDependencies": {},
   "bin": "./source"
