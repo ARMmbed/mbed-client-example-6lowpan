@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __LWM2MCLIENT_H__
-#define __LWM2MCLIENT_H__
+#ifndef __MBEDCLIENT_H__
+#define __MBEDCLIENT_H__
 
 #include "mbed-client/m2minterfaceobserver.h"
 #include "mbed/DigitalOut.h"
@@ -24,12 +24,12 @@ class M2MDevice;
 class M2MSecurity;
 class M2MObject;
 
-class LWM2MClient : public M2MInterfaceObserver
+class MbedClient : public M2MInterfaceObserver
 {
 public:
-    LWM2MClient();
+    MbedClient();
 
-    ~LWM2MClient();
+    ~MbedClient();
 
     bool create_interface();
 
@@ -50,6 +50,8 @@ public:
     void update_resource();
 
     void test_register(M2MObjectList object_list);
+
+    void send_registration();
 
     void set_register_object(M2MSecurity *&register_object);
 
@@ -73,6 +75,8 @@ public:
 
     void registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/);
 
+    void test_update_register(void);
+
     //Callback from mbed client stack if any error is encountered
     // during any of the LWM2M operations. Error type is passed in
     // the callback.
@@ -93,10 +97,11 @@ private:
     M2MSecurity         *_register_security;
     M2MDevice           *_device;
     M2MObject           *_object;
+    M2MObjectList       _object_list;
     bool                _error;
     bool                _registered;
     bool                _unregistered;
     bool                _registration_updated;
     int                 _value;
 };
-#endif //__LWM2MCLIENT_H__
+#endif //__MBEDCLIENT_H__
