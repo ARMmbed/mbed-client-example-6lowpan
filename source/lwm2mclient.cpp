@@ -20,12 +20,13 @@
 #include "mbed-client/m2mresource.h"
 #include "minar/minar.h"
 #include "test_env.h"
+#include "security.h"
 
 // Enter your mbed Device Server's IPv6 address and Port number in
-// mentioned format like FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5683
-// For dynamic setup use something like coap://xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:5683", i.e., The IPv6 address and Port no.
+// mentioned format like FD00:FF1:CE0B:A5E1:1068:AF13:9B61:D557:5684
+// For dynamic setup use something like coap://xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:5684", i.e., The IPv6 address and Port no.
 
-const String &MBED_SERVER_ADDRESS = "coap://FD00:FF1:CE0B:A5E0::1:5683";
+const String &LWM2M_SERVER_ADDRESS = "coap://2607:f0d0:3701:9f::20:5684";
 
 const String &MANUFACTURER = "ARM";
 const String &TYPE = "type";
@@ -69,12 +70,14 @@ bool LWM2MClient::create_interface()
 
     M2MInterface::NetworkStack stack = M2MInterface::Nanostack_IPv6;
     if (!_interface) {
+        srand(time(NULL));
+        uint16_t port = rand() % 65535 + 12345;
         _interface = M2MInterfaceFactory::create_interface(*this,
-                     "lwm2m-client-6lowpan-endpoint",
+                     MBED_ENDPOINT_NAME,
                      "test",
-                     60,
-                     5683,
-                     "",
+                     600,
+                     port,
+                     MBED_DOMAIN,
                      M2MInterface::UDP,
                      stack,
                      "");
@@ -103,7 +106,12 @@ M2MSecurity *LWM2MClient::create_register_object()
     // required for client to connect to bootstrap server.
     M2MSecurity *security = M2MInterfaceFactory::create_security(M2MSecurity::M2MServer);
     if (security) {
-        security->set_resource_value(M2MSecurity::M2MServerUri, MBED_SERVER_ADDRESS);
+        security->set_resource_value(M2MSecurity::M2MServerUri, LWM2M_SERVER_ADDRESS);
+        security->set_resource_value(M2MSecurity::BootstrapServer, 0);
+        security->set_resource_value(M2MSecurity::SecurityMode, M2MSecurity::Certificate);
+        security->set_resource_value(M2MSecurity::ServerPublicKey,SERVER_CERT,sizeof(SERVER_CERT));
+        security->set_resource_value(M2MSecurity::PublicKey,CERT,sizeof(CERT));
+        security->set_resource_value(M2MSecurity::Secretkey,KEY,sizeof(KEY));
     }
     return security;
 }
@@ -170,10 +178,10 @@ void LWM2MClient::update_resource()
     }
 }
 
-void LWM2MClient::test_register(M2MObjectList object_list)
+void LWM2MClient::send_registration()
 {
     if (_interface) {
-        _interface->register_object(_register_security, object_list);
+        _interface->register_object(_register_security, _object_list);
     }
 }
 
@@ -219,9 +227,20 @@ void LWM2MClient::registration_updated(M2MSecurity */*security_object*/, const M
     _registration_updated = true;
 }
 
-void LWM2MClient::error(M2MInterface::Error /*error*/)
+void LWM2MClient::error(M2MInterface::Error error)
 {
     _error = true;
+    switch (error) {
+        case M2MInterface::NetworkError:
+        case M2MInterface::Timeout:
+            if (!_registered) {
+                FunctionPointer0<void> ur(this, &LWM2MClient::send_registration);
+                minar::Scheduler::postCallback(ur.bind()).delay(minar::milliseconds(10*1000));
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 void LWM2MClient::value_updated(M2MBase */*base*/, M2MBase::BaseType /*type*/)
@@ -237,8 +256,6 @@ void LWM2MClient::mesh_network_handler(mesh_connection_status_t status)
 
         M2MSecurity *register_object = create_register_object();
 
-        register_object->set_resource_value(M2MSecurity::SecurityMode, M2MSecurity::NoSecurity);
-
         set_register_object(register_object);
 
         // Create LWM2M device object specifying device resources
@@ -249,11 +266,11 @@ void LWM2MClient::mesh_network_handler(mesh_connection_status_t status)
 
         // Add all the objects that you would like to register
         // into the list and pass the list for register API.
-        M2MObjectList object_list;
-        object_list.push_back(device_object);
-        object_list.push_back(object);
+        _object_list.push_back(device_object);
+        _object_list.push_back(object);
 
         // Issue register command.
-        test_register(object_list);
+        FunctionPointer0<void> ur(this, &LWM2MClient::send_registration);
+        minar::Scheduler::postCallback(ur.bind()).delay(minar::milliseconds(1000));
     }
 }

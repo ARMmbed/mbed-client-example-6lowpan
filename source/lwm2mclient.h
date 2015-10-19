@@ -93,6 +93,7 @@ private:
     M2MSecurity         *_register_security;
     M2MDevice           *_device;
     M2MObject           *_object;
+    M2MObjectList       _object_list;
     bool                _error;
     bool                _registered;
     bool                _unregistered;
