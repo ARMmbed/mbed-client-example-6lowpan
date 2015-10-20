@@ -81,12 +81,12 @@ For client side configuration, please follow the steps below.
 
 1. Set application certificate as described in [Setting Certificate for the application](#setting-certificate-for-the-application) chapter.
 2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of the ARM mbed Device Connector:
-	* The `/source/lwm2mclient.cpp` file contains the IPv6 address of the ARM mbed Device Connector. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 28, as the value of `MBED_SERVER_ADDRESS`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5386". 
+	* The `/source/lwm2mclient.cpp` file contains the IPv6 address of the ARM mbed Device Connector. By default, this is set to  "2607:f0d0:3701:9f::20". It should be at line 28, as the value of `MBED_DEVICE_CONNECTOR_URI`. The full address format is `coap://<IPv6 address>:PORT`, that is "coap://2607:f0d0:3701:9f::20:5684". 
 3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) below for instructions.
 4. Build `mbed-client-example-6lowpan` (see [Build instructions](#build-instructions)).
 5. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
 
-**Note:** You may need to open UDP port 5683 in your computer's firewall for the ARM mbed Device Connector to communicate with this example application.
+**Note:** You may need to open UDP port 5684 in your computer's firewall for the ARM mbed Device Connector to communicate with this example application.
 
 
 ### IP address setup
@@ -195,9 +195,13 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 **Step 4**: You can send requests to mbed Client device with mbed Device Connector API. To do that, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request, the textbox will show selection of registered resources. Once resource is selected press the **TEST API** button to send the request.
 
-The **/Test/0/S** represents the static resource that is a fixed value set in the mbed client example application. 
+The **/Test/0/S** represents the static resource that is a fixed value set in the example application. For example:
+`https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/S?sync=true`, where `<ENDPOINT_NAME>` is name of the connected device, creates a request to the **/Test/0/S** resource.
 
-The **/Test/0/D** represents the dynamic resource that can be read by the mbed Device Connector. It is linked with the **SW2** button on the FRDM board. The value starts from zero and every time you press the **SW2** button the node increases the counter value by 1. You can make a CoAP request to the node resources to get the latest value. To do that, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request. For example: `https://ds-test-sl.dev.mbed.com/v1/endpoints/lwm2m-endpoint/Test/0/D?sync=true` creates a GET request to the **/Test/0/D** resource.This returns the latest value of **/Test/0/D**. 
+The **/Test/0/D** represents the dynamic resource that can be read by the mbed Device Connector. It is linked with the **SW2** button on the FRDM board. The value starts from zero and every time you press the **SW2** button the node increases the counter value by 1. You can make a CoAP request to the node resources to get the latest value. To do that, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request. 
+
+For example: `https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/D?sync=true`, where `<ENDPOINT_NAME>` is name of the connected device, creates a GET request to the **/Test/0/D** resource. This returns the latest value of **/Test/0/D**. 
+
 
 **NOTE:** In case you are getting error like Server Response : 410(Gone) or other such error, try clearing cache of your browser, logout and login again and then try.
 
