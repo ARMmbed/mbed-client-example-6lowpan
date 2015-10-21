@@ -189,8 +189,11 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 ### Testing the example application with the mbed Device Connector
 
 **Step 1**: Go to the [mbed Device Connector website](https://connector-test-sl.dev.mbed.com).
+
 **Step 2**: Log in using your mbed account.
+
 **Step 3**: Click the **Connected devices** link under **My devices** to see your registered devices.
+
 **Step 4**: To send requests to mbed Client device with mbed Device Connector API, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request. The textbox will show a list of registered resources. After selecting the resource press the **TEST API** button to send the request.
 
 The **/Test/0/S** represents the static resource that is a fixed value set in the example application. For example:
