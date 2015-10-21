@@ -1,7 +1,7 @@
 # Getting started with mesh networking
 
 This document describes how to use mesh networking to communicate with a [ARM mbed Device Connector](https://connector.mbed.com) 
-that is a new web service hosted by ARM. However, at the time of publishing this example, the service may not yet be live or fully ready for use. If the example doesn't work for you, or you are having problems with it, that probably means we haven't yet got the service online. Please look out for mbed Device Connector release announcements in [ARM mbed](https://mbed.com). If, however, you are mbed partner and have your own mbed Device Server setup, you can use this example application just by changing the mbed Device Server address from `api.connector.mbed.com` to your own mbed Device Server address. 
+that is a new web service hosted by ARM. However, at the time of publishing this example, the service may not yet be live or fully ready for use. If the example does not work for you, or you are having problems with it, that probably means we have not yet managed to get the service online. Please, look out for mbed Device Connector release announcements in [ARM mbed](https://mbed.com). If, however, you are a mbed partner and have your own mbed Device Server setup, you can use this example application just by changing the mbed Device Server address from `api.connector.mbed.com` to your own mbed Device Server address. 
 
 This example application demonstrates how to:
 
@@ -30,7 +30,7 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 ## Required software
 
 * [yotta](http://docs.yottabuild.org/#installing) - to build the example programs.
-* [ARM mbed Device Connector] - Web service running on Internet.
+* [ARM mbed Device Connector](https://connector.mbed.com) - Web service running on Internet.
 
 
 ## Optional software
@@ -45,22 +45,22 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 
 * Connect the Gateway router with an Ethernet cable to a router/L3 switch. 
 
-* To power up the Gateway router use a micro-USB charger connected to a wall socket or a micro-USB cable.
+* To power up the Gateway router, use a micro-USB charger connected to a wall socket or a micro-USB cable connected to a computer.
 
 * To flash the Gateway router with the firmware, you need a micro-USB cable (see gateway flashing instructions below).
 
 * The wireless link between the FRDM-K64F board (client end-point) and the Gateway router follows the IEEE 802.15.4 standard.
 
-* To power up the FRDM-K64F board (client end-point) use either a micro-USB charger or a micro-USB cable. If you are using micro-USB, you can view the debug and trace messages using third party software like PuTTY.
+* To power up the FRDM-K64F board (client end-point), use either a micro-USB charger or a micro-USB cable. If you are using micro-USB, you can view the debug and trace messages using third party software like PuTTY.
 
 **Note!**
 
-* If you are using a virtual machine, please set your network adapter mode to 'Bridged'.
+* If you are using a virtual machine, please set your network adapter mode to **Bridged**.
 
 
 ##Setting up the environment
 
-To set up the environment, you need to do configure the mbed 6LoWPAN Gateway router and the client as follows:
+To set up the environment, you need to configure the mbed 6LoWPAN Gateway router and the client as follows:
   
 ### Gateway configuration
 
@@ -79,10 +79,10 @@ To set up the environment, you need to do configure the mbed 6LoWPAN Gateway rou
 
 For client side configuration, please follow the steps below.
 
-1. Set application certificate as described in [Setting Certificate for the application](#setting-certificate-for-the-application) chapter.
+1. Set the application certificate as described in [Setting Certificate for the application](#setting-certificate-for-the-application) section.
 2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of the ARM mbed Device Connector:
-	* The `/source/lwm2mclient.cpp` file contains the IPv6 address of the ARM mbed Device Connector. By default, this is set to  "2607:f0d0:3701:9f::20". It should be at line 28, as the value of `MBED_DEVICE_CONNECTOR_URI`. The full address format is `coap://<IPv6 address>:PORT`, that is "coap://2607:f0d0:3701:9f::20:5684". 
-3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) below for instructions.
+	* The `/source/lwm2mclient.cpp` file contains the IPv6 address of the ARM mbed Device Connector. By default, this is set to `2607:f0d0:3701:9f::20`. It can be found on line 28, as the value of `MBED_DEVICE_CONNECTOR_URI`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:3701:9f::20:5684`. 
+3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) section for instructions.
 4. Build `mbed-client-example-6lowpan` (see [Build instructions](#build-instructions)).
 5. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
 
@@ -95,6 +95,7 @@ This example uses IPv6 to communicate with the [mbed Device Connector Server](ht
 
 
 #### Setting Certificate for the application
+
 1. Go to  [mbed Device Connector website](https://connector-test-sl.dev.mbed.com) and log in with your mbed.org account.
 2. Navigate to **Security credentials** under **My devices**.
 3. Click **GET MY DEVICE SECURITY CREDENTIALS**. You will get the needed certificate information as well as the endpoint name and domain.
@@ -102,7 +103,7 @@ This example uses IPv6 to communicate with the [mbed Device Connector Server](ht
 
 #### Changing radio channel
 
-To change the radio channel you use:
+To change the radio channel you are using:
 
 * Clone the `mbed-mesh-api` repository to your work area:
 
@@ -112,15 +113,16 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 
 * Modify the source code:
 
-	- In your copy of the `mbed-mesh-api` repository, find the file  `./source/include/static_config.h`.
+	- In your copy of the `mbed-mesh-api` repository, find the file `./source/include/static_config.h`.
 
-	- You'll need to use channel **1** for a sub-GHz module and channel **12** for a 2.4 GHz module.
+	- You need to use channel **1** for a sub-GHz module and channel **12** for a 2.4 GHz module.
 
-		Tip: To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
+		**Tip:** To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
 
 		- For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **1** (1<<1) or **12** (1<<12).
 
-		- For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **1** or **12**.	
+		- For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **1** or **12**.
+	
 * Create a yotta link to your code:
 
 	```
@@ -134,15 +136,15 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 	yt link mbed-mesh-api
 	```
 
-* You can check that linking was successful by using the command `yt ls` and checking that the module `mbed-mesh-api` points to the cloned repository.
+* Use the command `yt ls` to check that the link was established successfully and the module `mbed-mesh-api` points to the cloned repository.
 
 ##### Radio module identification
 
 * Make sure that you are using the same radio modules on both server and client sides:
 
-	* If the radio module on the Gateway router supports the 2.4 GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses a 2.4 GHz radio module (such as Atmel AT86RF233).
+	* If the radio module on the Gateway router supports the 2.4 GHz frequency band, the client side must have an mbed 6LoWPAN shield that uses a 2.4 GHz radio module (such as Atmel AT86RF233).
 
-	* If the radio module on the Gateway router supports the sub-GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses a sub-GHz radio module (such as Atmel AT86RF212B).
+	* If the radio module on the Gateway router supports the sub-GHz frequency band, the client side must have an mbed 6LoWPAN shield that uses a sub-GHz radio module (such as Atmel AT86RF212B).
 
 * An easy way to identify which frequency band your setup uses is to check the **Antenna size** on the radio module:
 
@@ -171,7 +173,6 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 
 The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder.
 
-
 ## Running the example application
 
 1. Find the  binary file `mbed-client-example-6lowpan.bin` in the folder `mbed-client-example-6lowpan/build/frdm-k64f-gcc/source/`.
@@ -187,38 +188,34 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 ### Testing the example application with the mbed Device Connector
 
-**Step 1**: Go to [mbed Device Connector website](https://connector-test-sl.dev.mbed.com).
-
+**Step 1**: Go to the [mbed Device Connector website](https://connector-test-sl.dev.mbed.com).
 **Step 2**: Log in using your mbed account.
-
 **Step 3**: Click the **Connected devices** link under **My devices** to see your registered devices.
-
-**Step 4**: You can send requests to mbed Client device with mbed Device Connector API. To do that, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request, the textbox will show selection of registered resources. Once resource is selected press the **TEST API** button to send the request.
+**Step 4**: To send requests to mbed Client device with mbed Device Connector API, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request. The textbox will show a list of registered resources. After selecting the resource press the **TEST API** button to send the request.
 
 The **/Test/0/S** represents the static resource that is a fixed value set in the example application. For example:
-`https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/S?sync=true`, where `<ENDPOINT_NAME>` is name of the connected device, creates a request to the **/Test/0/S** resource.
+`https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/S?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device. It creates a request to the **/Test/0/S** resource.
 
-The **/Test/0/D** represents the dynamic resource that can be read by the mbed Device Connector. It is linked with the **SW2** button on the FRDM board. The value starts from zero and every time you press the **SW2** button the node increases the counter value by 1. You can make a CoAP request to the node resources to get the latest value. To do that, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request. 
+The **/Test/0/D** represents the dynamic resource that can be read by the mbed Device Connector. It is linked with the **SW2** button on the FRDM board. The value starts from zero and every time you press the **SW2** button the node increases the counter value by 1. You can make a CoAP request to the node resources to get the latest value. To do that, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request.
 
-For example: `https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/D?sync=true`, where `<ENDPOINT_NAME>` is name of the connected device, creates a GET request to the **/Test/0/D** resource. This returns the latest value of **/Test/0/D**. 
+For example: `https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/D?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device, creates a GET request to the **/Test/0/D** resource. This returns the latest value of **/Test/0/D**. 
 
+**NOTE:** If you get, for example, an error `Server Response:410(Gone)` or other such error, clear the cache of your browser, log out and log in again.
 
-**NOTE:** In case you are getting error like Server Response : 410(Gone) or other such error, try clearing cache of your browser, logout and login again and then try.
+For more information on the mbed Device Connector REST API, see the [help pages](https://connector-test-sl.dev.mbed.com/#help-rest-api).
 
-For more information on the mbed Device Connector REST API, see [help pages](https://connector-test-sl.dev.mbed.com/#help-rest-api).
-
-**Step 5**: If you press the **SW3** button, the endpoint sends a deregister message to the mbed Device Connector. After a successful deregistration, LED **D12** starts blinking indicating that the application has successfully completed the task.
+**Step 5**: If you press the **SW3** button the endpoint sends a deregister message to the mbed Device Connector. After a successful deregistration, LED **D12** starts blinking indicating that the application has successfully completed the task.
 
 
 ### Debug trace on client side
 
-To see the debug trace for the mbed client, you can use either Wireshark or terminal emulation software.
+To see the debug trace for the mbed Client, you can use either Wireshark or terminal emulation software.
 
 The following is an example of using PuTTY and Linux:
 
 1. On the computer, open PuTTY with root privileges: `$ sudo putty`.
 
-2. Give the command `dmesg`to see which serial port your mbed client controller is connected to.
+2. Give the command `dmesg`to see which serial port your mbed Client controller is connected to.
 
 3. Go to the **Serial** category in PuTTY.
 
@@ -233,7 +230,7 @@ The following is an example of using PuTTY and Linux:
 
 6. Click the **Session** category. Give the session a name, for example `mbed_trace`, and save it.
 
-7. Select **Connection_type** as `Serial`.
+7. Select **Connection_type** `Serial`.
 
 8. Click **Open**.
 
@@ -241,9 +238,9 @@ This will give you the client's debug trace.
 
 ## Troubleshooting
 
-In case **lwm2m-client-6lowpan-endpoint** is not visible in the ARM mbed Device Connector try one of the following:
+If **lwm2m-client-6lowpan-endpoint** is not visible in the ARM mbed Device Connector try one of the following:
 
-* Reset your browser cache.
+* Clear your browser cache.
 * Restart the 6LoWPAN Gateway.
 * Restart the FRDM-K64F board.
 
@@ -253,7 +250,9 @@ You can also check the following settings:
 * Check that the mbed 6LoWPAN Gateway is using the correct binary, as explained in [Gateway configuration](#gateway-configuration).
 * Check that the ARM mbed Device Connector address is set to `mbed-client-example-6lowpan`, as explained in [Client side configuration](#client-side-configuration).
 * Check the client trace. It should indicate that the bootstrap is ready when the FRDM-K64F board is connected to the mbed 6LoWPAN Gateway. 
-For example, the **6LoWPAN ND** bootstrap trace window will indicate bootstrap state and object registration as follows:
+
+For example, the **6LoWPAN ND** bootstrap trace window will indicate the bootstrap state and object registration as follows:
+
 ```
 [INFO][m6LND]: 6LoWPAN ND bootstrap ready
 ...
