@@ -1,0 +1,10 @@
+{
+  "mbed-os": {
+    "net": {
+      "stacks": {
+         "lwip":false,
+         "nanostack": true
+      }
+    }
+  }
+}
