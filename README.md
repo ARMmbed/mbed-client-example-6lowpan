@@ -81,7 +81,7 @@ For client side configuration, please follow the steps below.
 
 1. Set the application certificate as described in [Setting Certificate for the application](#setting-certificate-for-the-application) section.
 2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of the ARM mbed Device Connector:
-	* The `/source/lwm2mclient.cpp` file contains the IPv6 address of the ARM mbed Device Connector. By default, this is set to `2607:f0d0:3701:9f::20`. It can be found on line 28, as the value of `MBED_DEVICE_CONNECTOR_URI`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:3701:9f::20:5684`. 
+	* The `/source/mbedclient.cpp` file contains the IPv6 address of the ARM mbed Device Connector. By default, this is set to `2607:f0d0:3701:9f::20`. It can be found on line 35, as the value of `MBED_DEVICE_CONNECTOR_URI`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:3701:9f::20:5684`. 
 3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) section for instructions.
 4. Build `mbed-client-example-6lowpan` (see [Build instructions](#build-instructions)).
 5. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
