@@ -43,8 +43,6 @@ public:
 
     void update_resource();
 
-    void test_register(M2MObjectList object_list);
-
     void send_registration();
 
     void set_register_object(M2MSecurity *&register_object);
