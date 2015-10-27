@@ -20,7 +20,7 @@
 #include "mbed-client/m2mresource.h"
 #include "minar/minar.h"
 #include "core-util/FunctionPointer.h"
-#include "test_env.h"
+#include "mbed-drivers/test_env.h"
 #include "security.h"
 #define HAVE_DEBUG 1
 #include "ns_trace.h"

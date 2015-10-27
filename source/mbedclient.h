@@ -17,7 +17,7 @@
 #define __MBEDCLIENT_H__
 
 #include "mbed-client/m2minterfaceobserver.h"
-#include "mbed/DigitalOut.h"
+#include "mbed-drivers/DigitalOut.h"
 #include "mbed-mesh-api/mesh_interface_types.h"
 
 class M2MDevice;
