@@ -20,7 +20,7 @@
 #include "mbed-client/m2mresource.h"
 #include "minar/minar.h"
 #include "core-util/FunctionPointer.h"
-#include "test_env.h"
+#include "mbed-drivers/test_env.h"
 #include "security.h"
 #define HAVE_DEBUG 1
 #include "ns_trace.h"
@@ -48,11 +48,22 @@ MbedClient::MbedClient()
     _register_security = NULL;
     _device = NULL;
     _object = NULL;
-    _error = false;
+    _update_timer_handle = NULL;
     _registered = false;
-    _unregistered = false;
-    _registration_updated = false;
+    _registering = false;
+    _updating = false;
     _value = 0;
+
+    // Create LWM2M device object specifying device resources
+    // as per OMA LWM2M specification.
+    M2MDevice *device_object = create_device_object();
+
+    M2MObject *object = create_generic_object();
+
+    // Add all the objects that you would like to register
+    // into the list and pass the list for register API.
+    _object_list.push_back(device_object);
+    _object_list.push_back(object);
 }
 
 MbedClient::~MbedClient()
@@ -69,39 +80,29 @@ MbedClient::~MbedClient()
     if (_interface) {
         delete _interface;
     }
+    if (_update_timer_handle) {
+        minar::Scheduler::cancelCallback(_update_timer_handle);
+    }
 }
 
 bool MbedClient::create_interface()
 {
-    if (!_interface) {
-        srand(time(NULL));
-        uint16_t port = rand() % 65535 + 12345;
-        _interface = M2MInterfaceFactory::create_interface(*this,
-                     MBED_ENDPOINT_NAME,
-                     "test",
-                     60,
-                     port,
-                     MBED_DOMAIN,
-                     M2MInterface::UDP,
-                     M2MInterface::Nanostack_IPv6,
-                     "");
+    if (_interface) {
+        delete _interface;
+        _interface = NULL;
     }
+    srand(time(NULL));
+    uint16_t port = rand() % 65535 + 12345;
+    _interface = M2MInterfaceFactory::create_interface(*this,
+                 MBED_ENDPOINT_NAME,
+                 "test",
+                 3600,
+                 port,
+                 MBED_DOMAIN,
+                 M2MInterface::UDP,
+                 M2MInterface::Nanostack_IPv6,
+                 "");
     return (_interface == NULL) ? false : true;
-}
-
-bool MbedClient::register_successful()
-{
-    return _registered;
-}
-
-bool MbedClient::unregister_successful()
-{
-    return _unregistered;
-}
-
-bool MbedClient::registration_update_successful()
-{
-    return _registration_updated;
 }
 
 M2MSecurity *MbedClient::create_register_object()
@@ -187,8 +188,9 @@ void MbedClient::update_resource()
 
 void MbedClient::send_registration()
 {
-    if (_interface) {
+    if (_interface && !_registered && !_registering && !_updating) {
         tr_debug("send_registration()");
+        _registering = true;
         _interface->register_object(_register_security, _object_list);
     }
 }
@@ -217,48 +219,30 @@ void MbedClient::bootstrap_done(M2MSecurity */*server_object*/)
 void MbedClient::object_registered(M2MSecurity */*security_object*/, const M2MServer &/*server_object*/)
 {
     tr_debug("object_registered()");
-    minar::Scheduler::postCallback(this,&MbedClient::test_update_register).period(minar::milliseconds(25000));
-    _registered = true;
-    _unregistered = false;
+    idle();
 }
 
 void MbedClient::object_unregistered(M2MSecurity */*server_object*/)
 {
     tr_debug("object_unregistered()");
-    _unregistered = true;
     _registered = false;
     // This will turn on the LED on the board specifying that
     // the application has run successfully.
-    notify_completion(_unregistered);
+    notify_completion(!_registered);
     minar::Scheduler::stop();
 }
 
 void MbedClient::registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/)
 {
-    _registration_updated = true;
+    tr_debug("Registration updated");
+    _updating = false;
 }
 
 
-void MbedClient::test_update_register() {
+void MbedClient::update_registration() {
     if (_registered) {
         _interface->update_registration(_register_security, 3600);
-    }
-}
-
-void MbedClient::error(M2MInterface::Error error)
-{
-    tr_error("error() %d", error);
-    _error = true;
-    switch (error) {
-        case M2MInterface::NetworkError:
-        case M2MInterface::Timeout:
-            if (!_registered) {
-           //     FunctionPointer0<void> ur(this, &MbedClient::send_registration);
-           //     minar::Scheduler::postCallback(ur.bind()).delay(minar::milliseconds(10*1000));
-            }
-            break;
-        default:
-            break;
+        _updating = true;
     }
 }
 
@@ -266,32 +250,72 @@ void MbedClient::value_updated(M2MBase */*base*/, M2MBase::BaseType /*type*/)
 {
 }
 
+void MbedClient::error(M2MInterface::Error error)
+{
+    tr_error("error() %d", error);
+    switch (error) {
+        case M2MInterface::NetworkError:
+            if (_registered || _updating) {
+                tr_debug("Reconnecting to server");
+                minar::Scheduler::postCallback(this, &MbedClient::wait);
+            } else if (_registering) {
+                tr_debug("Failed to register, restart");
+                minar::Scheduler::postCallback(this, &MbedClient::wait);
+            }
+            break;
+        case M2MInterface::NotAllowed: {
+            if (_registering || _updating) {
+                tr_debug("Failed to (re)register");
+                minar::Scheduler::postCallback(this, &MbedClient::wait);
+            }
+        }
+        default:
+            break;
+    }
+}
+
+void MbedClient::wait()
+{
+    _registering = false;
+    _registered = false;
+    _updating = false;
+
+    if (_update_timer_handle) {
+        minar::Scheduler::cancelCallback(_update_timer_handle);
+    }
+
+    if (_register_security) {
+        delete _register_security; // Delete old one, before creating new one.
+        _register_security = NULL;
+    }
+    // Create LWM2M Client API interface to manage bootstrap,
+    // register and unregister
+    create_interface();
+
+    M2MSecurity *register_object = create_register_object();
+    set_register_object(register_object);
+
+    // Issue register command.
+    tr_debug("waiting 5s before sending registration...");
+    FunctionPointer0<void> ur(this, &MbedClient::send_registration);
+    minar::Scheduler::postCallback(ur.bind()).delay(minar::milliseconds(5 * 1000));
+}
+
+void MbedClient::idle()
+{
+    _registered = true;
+    _registering = false;
+    _updating = false;
+    // Update registration in every minute
+    _update_timer_handle = minar::Scheduler::postCallback(this,&MbedClient::update_registration)
+            .period(minar::milliseconds(60*1000))
+            .getHandle();
+}
+
 void MbedClient::mesh_network_handler(mesh_connection_status_t status)
 {
     tr_debug("mesh_network_handler() %d", status);
     if (status == MESH_CONNECTED) {
-        // Create LWM2M Client API interface to manage bootstrap,
-        // register and unregister
-        this->create_interface();
-
-        M2MSecurity *register_object = create_register_object();
-
-        set_register_object(register_object);
-
-        // Create LWM2M device object specifying device resources
-        // as per OMA LWM2M specification.
-        M2MDevice *device_object = create_device_object();
-
-        M2MObject *object = create_generic_object();
-
-        // Add all the objects that you would like to register
-        // into the list and pass the list for register API.
-        _object_list.push_back(device_object);
-        _object_list.push_back(object);
-
-        // Issue register command.
-        tr_debug("waiting 15s before sending registration...");
-        FunctionPointer0<void> ur(this, &MbedClient::send_registration);
-        minar::Scheduler::postCallback(ur.bind()).delay(minar::milliseconds(15 * 1000));
+        wait();
     }
 }

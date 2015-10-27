@@ -17,8 +17,9 @@
 #define __MBEDCLIENT_H__
 
 #include "mbed-client/m2minterfaceobserver.h"
-#include "mbed/DigitalOut.h"
+#include "mbed-drivers/DigitalOut.h"
 #include "mbed-mesh-api/mesh_interface_types.h"
+#include "minar/minar.h"
 
 class M2MDevice;
 class M2MSecurity;
@@ -33,12 +34,6 @@ public:
 
     bool create_interface();
 
-    bool register_successful();
-
-    bool unregister_successful();
-
-    bool registration_update_successful();
-
     M2MSecurity *create_register_object();
 
     M2MDevice *create_device_object();
@@ -48,8 +43,6 @@ public:
     M2MObject *create_generic_object();
 
     void update_resource();
-
-    void test_register(M2MObjectList object_list);
 
     void send_registration();
 
@@ -75,7 +68,7 @@ public:
 
     void registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/);
 
-    void test_update_register(void);
+    void update_registration(void);
 
     //Callback from mbed client stack if any error is encountered
     // during any of the LWM2M operations. Error type is passed in
@@ -91,17 +84,18 @@ public:
     void mesh_network_handler(mesh_connection_status_t status);
 
 private:
-
+    void wait();
+    void idle();
     mbed::DigitalOut    _led;
     M2MInterface        *_interface;
     M2MSecurity         *_register_security;
     M2MDevice           *_device;
     M2MObject           *_object;
     M2MObjectList       _object_list;
-    bool                _error;
+    minar::callback_handle_t   _update_timer_handle;
     bool                _registered;
-    bool                _unregistered;
-    bool                _registration_updated;
+    bool                _registering;
+    bool                _updating;
     int                 _value;
 };
 #endif //__MBEDCLIENT_H__
