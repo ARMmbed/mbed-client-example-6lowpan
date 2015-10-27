@@ -194,7 +194,7 @@ void MbedClient::send_registration()
         _interface->register_object(_register_security, _object_list);
         // Check registration status after 30 seconds
         minar::Scheduler::postCallback(this,&MbedClient::check_registration_status)
-            .delay(minar::milliseconds(30 * 1000);
+            .delay(minar::milliseconds(30 * 1000));
     }
 }
 
