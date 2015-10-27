@@ -19,6 +19,7 @@
 #include "mbed-client/m2minterfaceobserver.h"
 #include "mbed-drivers/DigitalOut.h"
 #include "mbed-mesh-api/mesh_interface_types.h"
+#include "minar/minar.h"
 
 class M2MDevice;
 class M2MSecurity;
@@ -83,13 +84,15 @@ public:
     void mesh_network_handler(mesh_connection_status_t status);
 
 private:
-
+    void wait();
+    void idle();
     mbed::DigitalOut    _led;
     M2MInterface        *_interface;
     M2MSecurity         *_register_security;
     M2MDevice           *_device;
     M2MObject           *_object;
     M2MObjectList       _object_list;
+    minar::callback_handle_t   _update_timer_handle;
     bool                _registered;
     bool                _registering;
     bool                _updating;
