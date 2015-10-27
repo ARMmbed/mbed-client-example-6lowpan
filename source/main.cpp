@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-#include "mbed.h"
-#include "lwm2mclient.h"
+#include "mbed-drivers/mbed.h"
 #include "atmel-rf-driver/driverRFPhy.h"    // rf_device_register
 #include "mbed-mesh-api/Mesh6LoWPAN_ND.h"
 #include "mbed-mesh-api/MeshThread.h"
 #include "mbed-mesh-api/MeshInterfaceFactory.h"
-#include "test_env.h"
+#include "mbed-drivers/test_env.h"
 
 #include "mbed-client/m2minterfacefactory.h"
 #include "mbed-client/m2mdevice.h"
@@ -30,6 +29,7 @@
 #include "mbed-client/m2mresource.h"
 #include "ns_trace.h"
 #include "mbed-mesh-api/AbstractMesh.h"
+#include "mbedclient.h"
 
 // Set bootstrap mode to be Thread, otherwise 6LOWPAN_ND is used
 //#define APPL_BOOTSTRAP_MODE_THREAD
@@ -37,7 +37,7 @@
 #define OBS_BUTTON SW2
 #define UNREG_BUTTON SW3
 
-static LWM2MClient *lwm2mclient;
+static MbedClient *mbedclient;
 static InterruptIn *obs_button;
 static InterruptIn *unreg_button;
 
@@ -58,7 +58,7 @@ void app_start(int, char **)
 
     // Instantiate the class which implements
     // LWM2M Client API
-    lwm2mclient = new LWM2MClient();
+    mbedclient = new MbedClient();
     obs_button = new InterruptIn(OBS_BUTTON);
     unreg_button = new InterruptIn(UNREG_BUTTON);
 
@@ -73,10 +73,10 @@ void app_start(int, char **)
     // Read mac address after registering the device.
     rf_read_mac_address(&eui64[0]);
     char *pskd = (char *)"Secret password";
-    status = ((MeshThread *)mesh_api)->init(rf_device_id, AbstractMesh::mesh_network_handler_t(lwm2mclient, &LWM2MClient::mesh_network_handler), eui64, pskd);
+    status = ((MeshThread *)mesh_api)->init(rf_device_id, AbstractMesh::mesh_network_handler_t(mbedclient, &MbedClient::mesh_network_handler), eui64, pskd);
 #else /* APPL_BOOTSTRAP_MODE_THREAD */
     mesh_api = (Mesh6LoWPAN_ND *)MeshInterfaceFactory::createInterface(MESH_TYPE_6LOWPAN_ND);
-    status = ((Mesh6LoWPAN_ND *)mesh_api)->init(rf_device_register(), AbstractMesh::mesh_network_handler_t(lwm2mclient, &LWM2MClient::mesh_network_handler));
+    status = ((Mesh6LoWPAN_ND *)mesh_api)->init(rf_device_register(), AbstractMesh::mesh_network_handler_t(mbedclient, &MbedClient::mesh_network_handler));
 #endif /* APPL_BOOTSTRAP_MODE */
 
     if (status != MESH_ERROR_NONE) {
@@ -87,11 +87,11 @@ void app_start(int, char **)
     // Set up Hardware interrupt button.
     // On press of SW3 button on K64F board, example application
     // will call unregister API towards mbed Device Server
-    unreg_button->fall(lwm2mclient, &LWM2MClient::test_unregister);
+    unreg_button->fall(mbedclient, &MbedClient::test_unregister);
 
     // On press of SW2 button on K64F board, example application
     // will send observation towards mbed Device Server
-    obs_button->fall(lwm2mclient, &LWM2MClient::update_resource);
+    obs_button->fall(mbedclient, &MbedClient::update_resource);
 
     status = mesh_api->connect();
     if (status != MESH_ERROR_NONE) {

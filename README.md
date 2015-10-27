@@ -1,17 +1,18 @@
 # Getting started with mesh networking
 
-This document describes how to use mesh networking to communicate with mbed Device Server (mbed DS).
+This document describes how to use mesh networking to communicate with a [ARM mbed Device Connector](https://connector.mbed.com) 
+that is a new web service hosted by ARM. However, at the time of publishing this example, the service may not yet be live or fully ready for use. If the example does not work for you, or you are having problems with it, that probably means we have not yet managed to get the service online. Please, look out for mbed Device Connector release announcements in [ARM mbed](https://mbed.com). If, however, you are a mbed partner and have your own mbed Device Server setup, you can use this example application just by changing the mbed Device Server address from `api.connector.mbed.com` to your own mbed Device Server address. 
 
 This example application demonstrates how to:
 
-* Connect to a **6LoWPAN ND** or **Thread** type of mesh network.
-* Register, read resource values and send observations to mbed DS.
-* Deregister from mbed DS.
-* Disconnect from the network.
+* Connect a client to a **6LoWPAN ND** or **Thread** type of mesh network.
+* Register, read resource values and send observations to ARM mbed Device Connector.
+* Deregister from ARM mbed Device Connector.
+* Disconnect the client from the mesh network.
 
 ## Switching to Thread
 
-By default, the example application makes a **6LoWPAN ND** bootstrap. To change the bootstrap mode to **Thread**
+By default, the example application makes a **6LoWPAN ND** type of bootstrap. To change the bootstrap mode to **Thread**
 you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the file `source/main.cpp`. 
 
 ## Required hardware
@@ -22,256 +23,87 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 * A micro-USB cable.
 * A micro-USB charger for powering the mbed 6LoWPAN Gateway router.
 * An Ethernet cable.
-* A computer running mbed DS.
 
-![](img/hw_photo.png) 
+![](img/hw_photo.png)
 
 
 ## Required software
 
 * [yotta](http://docs.yottabuild.org/#installing) - to build the example programs.
-* [mbed Device Server (mbed DS)](https://silver.arm.com/browse/SEN00) - what the example application connects to. For installation instructions see [Starting mbed DS](#starting-mbed-ds).
-* Java Runtime for running the mbed DS.
+* [ARM mbed Device Connector](https://connector.mbed.com) - Web service running on Internet.
+
 
 ## Optional software
 * [Wireshark](https://www.wireshark.org/) - for packet inspection and network debugging.
 * [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) - for serial terminal emulation.
 
+
 ## Reference block diagram
-- **Static setup block diagram**
 
-![](img/Dia.png) 
-
-- **Dynamic setup block diagram**
+- **Setup block diagram**
 ![](img/Dia2.png) 
 
-* Connect the Gateway router with an Ethernet cable to the Ethernet card of the local machine running mbed DS or to a router/L3 switch. 
+* Connect the Gateway router with an Ethernet cable to a router/L3 switch. 
 
-* To power up the Gateway router use a micro-USB charger connected to a wall socket or a micro-USB cable connected to a computer.
+* To power up the Gateway router, use a micro-USB charger connected to a wall socket or a micro-USB cable connected to a computer.
 
-* To flash the Gateway router with the firmware, you need a micro-USB cable (see flashing instructions below).
+* To flash the Gateway router with the firmware, you need a micro-USB cable (see gateway flashing instructions below).
 
-* The wireless link between the FRDM-K64F board (client end-point) and the Gateway router follows the IEEE 802.15.4 standard. 
+* The wireless link between the FRDM-K64F board (client end-point) and the Gateway router follows the IEEE 802.15.4 standard.
 
-* To power up the FRDM-K64F board (client end-point) use either a micro-USB charger or a micro-USB cable. If you are using micro-USB, you can view the debug and trace messages using third party software like PuTTY.
+* To power up the FRDM-K64F board (client end-point), use either a micro-USB charger or a micro-USB cable. If you are using micro-USB, you can view the debug and trace messages using third party software like PuTTY.
 
-**Note!**  
-	
-* If you are using a virtual machine, please set your network adapter mode to 'Bridged'.
+**Note!**
 
-* For static setup: If you are using a docking board with a laptop, connect your Ethernet cable to the docking board RJ45 female connector rather than the laptop's own RJ45 female connector. 
+* If you are using a virtual machine, please set your network adapter mode to **Bridged**.
 
-* If you have access to an IPv6 network but do not have access to a globally running mbed DS instance, you can still test the dynamic setup by running a local instance of mbed DS.
 
-##Test environment setup
-The test environment for this example can be set up in two modes:
+##Setting up the environment
 
-1. **Static setup:** Where an mbed DS instance is running on a local machine and the Gateway router is connected directly to that machine using an Ethernet cable.
+To set up the environment, you need to configure the mbed 6LoWPAN Gateway router and the client as follows:
+  
+### Gateway configuration
 
-2. **Dynamic setup:** Where an mbed DS instance is running in the IPv6-enabled cloud or behind a global IPv6 network. In that case, the Gateway Router is connected to a physical network router or switch.
-
-   
-### Server side configuration
-
-1. Use an Ethernet cable to connect the mbed 6LoWPAN Gateway router to a computer running mbed DS.
+1. Use an Ethernet cable to connect the mbed 6LoWPAN Gateway router to the Internet.
 
 2. Use a micro-USB cable to connect the mbed 6LoWPAN Gateway router to your computer. The computer will list the router as removable storage.
 
 3. The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the binary matching your application bootstrap mode:
 
-	* For **static setup** with the **6LoWPAN ND** bootstrap, use `gateway6LoWPANStatic.bin`.
-	* For **static setup** with the **Thread** bootstrap, use `gatewayThreadStatic.bin`.
-
-4. If you have access to a global IPv6 network, you can also try dynamic setup (otherwise skip it and carry on with static setup):
-
-	* For **Dynamic Setup** with the **6LoWPAN ND** bootstrap, use `gateway6LoWPANDynamic.bin`.
-	* For **Dynamic Setup** with the **Thread** bootstrap, use `gatewayThreadDynamic.bin`.
+	* For **6LoWPAN ND** bootstrap, use `gateway6LoWPANDynamic.bin`.
+	* For **Thread** bootstrap, use `gatewayThreadDynamic.bin`.
 
 4. Copy the gateway binary file to the mbed 6LoWPAN Gateway router to flash the device. The device will reboot automatically after flashing. If that does not happen, push the **Reset** button on the board.
 
-5. Download and run mbed DS on your computer (see instructions below).
-
-
-#### Static setup configuration (_Server Side_)
-
-
-As mentioned above, in static setup the mbed DS instance runs on a local computer with a statically configured IPv6 address. The example application running on the client side will register with the mbed DS creating a 6LoWPAN network. 
-
-Please follow the instructions below to complete the setup.
-
-##### Downloading mbed DS
-
-Installing mbed DS on your computer:
-
-1. Download the free developer version of mbed DS from [ARM silver](https://silver.arm.com/browse/SEN00).
-2. Click the **Download Now** button in the right hand side pane.  
-3. Unzip the package on your computer. You should see the following files:
-
-```
-Device Server.tar.gz
-Device Server Clients.tar.gz
-Device Server Tools.tar.gz
-Ref Apps.tar.gz
-```
-
-**Note:** These instructions are valid for the Device Server 2.2 release.
-
-##### Starting mbed DS
-
-1. Extract the `Device Server.tar.gz` file.
-2. Go to the `bin` folder of the `Device Server` package that you just extracted.
-3. Run the start script:
-    - If you are running mbed DS on Linux, run `runDS.sh` in a new shell.
-    - If you are running mbed DS on Windows, run `runDS.bat` in a new command prompt.
-		
-This will start mbed DS on your system.
-
-##### Starting the web UI (_Connected_ _home_ _reference_ _app_)
-
-1. Extract the `Ref Apps.tar.gz` file.
-2. Go to the `bin` folder in the `Connected-home-trial` reference app that you extracted.
-3. Run the start script:	
-    - If you are running mbed DS on Linux, run `runConnectedHome.sh` in a new shell.	
-    - If you are running mbed DS on Windows, run `runConnectedHome.bat` in a new command prompt.	
-		
-This will start the web UI on your system. For user interface instructions, see [Test usage](#test-usage).
-
-
-##### Setting up a static IP address
-
-
-* Set your computer to use the IP address `fd00:ff1:ce0b:a5e0::1` .
-
-* Use the 64-bit network mask `fd00:ff1:ce0b:a5e0::1/64`.
-
-Note: Make sure that the computer running mbed DS is **not** connected to the internet.
-
-
-**IP settings in Windows:**
-
-1. Read [**Microsoft: Changing TCP/IP settings**](http://windows.microsoft.com/en-gb/windows/change-tcp-ip-settings).
-
-2. Go to **IPv6 properties**.
-
-3. Select **Use following**.
-
-4. Enter `fd00:ff1:ce0b:a5e0::1`.
-
-5. Enter subnet prefix length: `64`.
-
-6. Click **OK**.
-
-**Note!**  
-If you need a separate driver for Windows, [download](https://developer.mbed.org/handbook/Windows-serial-configuration) the mbed Windows Serial Port driver.
-
-**IP setting in Linux:**
-
-```
-ifconfig eth0 add fd00:ff1:ce0b:a5e0::1/64
-```
-
-#### Dynamic setup configuration (_Server Side_)
-
-
-**Note:** This section applies only if you plan to run mbed DS in a networked environment and have access to a global IPv6 network.
-
-- The binaries `gateway6LoWPANDynamic.bin` and `gatewayThreadDynamic.bin` will work when mbed DS is running on the IPv6 network. You should use the binary that corresponds to your application bootstrap mode and flash it according to the instructions above. In dynamic setup, the mbed 6LoWPAN Gateway will dynamically learn the network prefix from the IPv6 network it is connected to.
-
-- If you have a remote mbed DS instance running behind the IPv6 network (or IPv6-enabled cloud), you do not need to configure anything. However, if you plan to run your own instance of mbed DS on your network, please read the information provided below.
-
-##### How to check if you have a valid IPv6 network
-
-Please follow the instructions below to check whether you have access to a valid IPv6 network.
-
-** Windows:**
-	
-1. Go to **Network and Sharing Center**.
-
-2. Click the link **Local Area Connection**.
-
-3. From the menu, select **Details**.
-
-4. In the **Network Connection Details** menu, look for **IPv6 address**.
-
-5. If an **IPv6 address** is defined there, you have a valid IPv6 network.
-
-6. Another way of checking the same information:
-
-	- Open a command prompt.
-
-	- Type **ipconfig**.
-
-	- Check whether your Ethernet interface has a global scope IPv6 address. If it does, then you have a valid IPv6 network.
-
-** Linux (Ubuntu) :**
-
-1. Open a terminal and write the command **ifconfig**.
-
-2. Check the Ethernet interface (eth0) status.
-
-3. If you see an IPv6 address with global scope, you have a valid IPv6 network. For example: 
-
-	- inet6 addr: xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx/prefix Scope:Global
-
-4. If you are sure that you have IPv6 access but Linux (especially running as a virtual machine) is not showing it, then it could be an issue of duplicate address detection (DAD). To check if this is the problem:
-
-	- Disconnect and reconnect the Ethernet cable from your Ethernet card.
-
-	- Open the terminal and type **dmesg**.
-
-	- If you have duplicate address detection, then use the following command to disable the DAD:
-
-	```
-	sudo sysctl net.ipv6.conf.eth0.accept_dad=0
-	```
-	
-	- Use **ifconfig** again; you should have an IPv6 address with a global scope now.
-
-
-**Note !**
-
-You do not have access to a global IPv6 network if you:
-
-* See only a link local address (starts with "fe80").
-
-* See only a unique local address (starts with "fd00").
-
-
-## Client side configuration
+### Client side configuration
 
 For client side configuration, please follow the steps below.
 
-#### Static setup configuration (_Client Side_)
-
-1. Connect the FRDM-K64F development board to the mbed 6LoWPAN shield.
-
-2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of mbed DS:
-    * On Windows:
-         * On the computer running the mbed DS, open the command prompt and type _ipconfig_.
-         * The section **Ethernet adapter Local Area Connection** in the field **IPv6 address** contains the IPv6 address.
-    * On Mac OS X and Linux:
-         * On a Mac or a Linux machine running mbed DS, open the terminal and type _ifconfig_.
-         * Under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E0::1`. That is the IPv6 address of the machine running mbed DS.
-	* Make sure that on the client side, the `/source/lwm2mclient.cpp` file contains the right IPv6 address for mbed DS. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 28, as the value of `MBED_SERVER_ADDRESS`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5386". The  prefix `FD` tells you that it is a unique local IPv6 address. Notice that this is the same IP address you just set for your mbed DS machine (see [Static setup configuration (_Server Side_)](#static-setup-configuration-server-side)).
-
-3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) below for instructions.
-
-4. Build `mbed-client-example-6lowpan` with `yotta` (see [Build instructions](#build-instructions)).
-
+1. Set the application certificate as described in [Setting Certificate for the application](#setting-certificate-for-the-application) section.
+2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of the ARM mbed Device Connector:
+	* The `/source/mbedclient.cpp` file contains the IPv6 address of the ARM mbed Device Connector. By default, this is set to `2607:f0d0:3701:9f::20`. It can be found on line 35, as the value of `MBED_DEVICE_CONNECTOR_URI`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:3701:9f::20:5684`. 
+3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) section for instructions.
+4. Build `mbed-client-example-6lowpan` (see [Build instructions](#build-instructions)).
 5. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
 
+**Note:** You may need to open UDP port 5684 in your computer's firewall for the ARM mbed Device Connector to communicate with this example application.
 
-#### Dynamic setup configuration (_Client Side_)
 
-Dynamic setup follows the same steps detailed above, with one exception:
- 	
-* The string `MBED_SERVER_ADDRESS` gets the IPv6 address of the remote server machine that is running the mbed DS instance.
+### IP address setup
 
-**Note:** You may need to open UDP port 5683 in your computer's firewall for mbed DS to communicate with this example application. 
+This example uses IPv6 to communicate with the [mbed Device Connector Server](https://ds-test-sl.dev.mbed.com). The example program should automatically get an IPv6 address from the mbed 6LoWPAN Gateway router when it is connected via Ethernet.
+
+
+#### Setting Certificate for the application
+
+1. Go to  [mbed Device Connector website](https://connector-test-sl.dev.mbed.com) and log in with your mbed.org account.
+2. Navigate to **Security credentials** under **My devices**.
+3. Click **GET MY DEVICE SECURITY CREDENTIALS**. You will get the needed certificate information as well as the endpoint name and domain.
+4. Copy the created security credentials to file `source/security.h`.
 
 #### Changing radio channel
 
-To change the radio channel you use:
+To change the radio channel you are using:
 
 * Clone the `mbed-mesh-api` repository to your work area:
 
@@ -281,15 +113,16 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 
 * Modify the source code:
 
-	- In your copy of the `mbed-mesh-api` repository, find the file  `./source/include/static_config.h`.
+	- In your copy of the `mbed-mesh-api` repository, find the file `./source/include/static_config.h`.
 
-	- You'll need to use channel **1** for a sub-GHz module and channel **12** for a 2.4 GHz module.
+	- You need to use channel **1** for a sub-GHz module and channel **12** for a 2.4 GHz module.
 
-		Tip: To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
+		**Tip:** To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
 
 		- For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **1** (1<<1) or **12** (1<<12).
 
-		- For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **1** or **12**.	
+		- For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **1** or **12**.
+	
 * Create a yotta link to your code:
 
 	```
@@ -303,15 +136,15 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 	yt link mbed-mesh-api
 	```
 
-* You can check that linking was successful by using the command `yt ls` and checking that the module `mbed-mesh-api` points to the cloned repository.
+* Use the command `yt ls` to check that the link was established successfully and the module `mbed-mesh-api` points to the cloned repository.
 
-#### Radio module identification
+##### Radio module identification
 
 * Make sure that you are using the same radio modules on both server and client sides:
 
-	* If the radio module on the Gateway router supports the 2.4 GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses a 2.4 GHz radio module (such as Atmel AT86RF233).
+	* If the radio module on the Gateway router supports the 2.4 GHz frequency band, the client side must have an mbed 6LoWPAN shield that uses a 2.4 GHz radio module (such as Atmel AT86RF233).
 
-	* If the radio module on the Gateway router supports the sub-GHz frequency band, you must use an mbed 6LoWPAN shield on the client side that uses a sub-GHz radio module (such as Atmel AT86RF212B).
+	* If the radio module on the Gateway router supports the sub-GHz frequency band, the client side must have an mbed 6LoWPAN shield that uses a sub-GHz radio module (such as Atmel AT86RF212B).
 
 * An easy way to identify which frequency band your setup uses is to check the **Antenna size** on the radio module:
 
@@ -330,13 +163,13 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 
 2. Install the necessary toolchains. See [Required software](#required-software). 
 
-4. Set the `IPv6` address for mbed DS in `source/lwm2mclient.cpp` if you have not done it yet. The instructions are in the [Client side](#client-side) section of this document. 
+3. Set the `IPv6` address for the ARM mbed Device Connector in `source/lwm2mclient.cpp` if you have not done it yet. The instructions are in the [Client side configuration](#client-side-configuration) section of this document. 
 
-5. In the command line, move to the root of this example application.
+4. In the command line, move to the root of this example application.
 
-6. Set up the target device: `yotta target frdm-k64f-gcc`.
+5. Set up the target device: `yotta target frdm-k64f-gcc`.
 
-7. Build the binary: `yotta build`.
+6. Build the binary: `yotta build`.
 
 The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder.
 
@@ -346,63 +179,46 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 2. Copy the binary to the USB mass storage root of the FRDM-K64F development board. It will be automatically flashed to the target MCU. After flashing, the board will restart itself. Press the **Reset** button of the development board if it does not restart automatically.
 
-4. The program starts up and will begin registration with mbed DS.
+3. The program starts up and will begin registration with the ARM mbed Device Connector.
 
-5. After a successful registration, the program will automatically start sending observations every 10 seconds.
+4. After a successful registration, the program will automatically start sending observations every 10 seconds.
+
 
 ## Test usage
 
-* Make sure that mbed DS and the Connected Home app are up and running.
+### Testing the example application with the mbed Device Connector
 
-* On the server side where mbed DS is running, open a browser tab and type:
+**Step 1**: Go to the [mbed Device Connector website](https://connector-test-sl.dev.mbed.com).
+
+**Step 2**: Log in using your mbed account.
+
+**Step 3**: Click the **Connected devices** link under **My devices** to see your registered devices.
+
+**Step 4**: To send requests to mbed Client device with mbed Device Connector API, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request. The textbox will show a list of registered resources. After selecting the resource press the **TEST API** button to send the request.
+
+The **/Test/0/S** represents the static resource that is a fixed value set in the example application. For example:
+`https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/S?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device. It creates a request to the **/Test/0/S** resource.
+
+The **/Test/0/D** represents the dynamic resource that can be read by the mbed Device Connector. It is linked with the **SW2** button on the FRDM board. The value starts from zero and every time you press the **SW2** button the node increases the counter value by 1. You can make a CoAP request to the node resources to get the latest value. To do that, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request.
+
+For example: `https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/D?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device, creates a GET request to the **/Test/0/D** resource. This returns the latest value of **/Test/0/D**. 
+
+**NOTE:** If you get, for example, an error `Server Response:410(Gone)` or other such error, clear the cache of your browser, log out and log in again.
+
+For more information on the mbed Device Connector REST API, see the [help pages](https://connector-test-sl.dev.mbed.com/#help-rest-api).
+
+**Step 5**: If you press the **SW3** button the endpoint sends a deregister message to the mbed Device Connector. After a successful deregistration, LED **D12** starts blinking indicating that the application has successfully completed the task.
 
 
-	```
-	//localhost:8082
-	```
+### Debug trace on client side
 
-* Use the following username and password:
-
-	```
-	User-name = demo
-	Password = demo
-	```
-
-* The web UI for the Connected Home application opens. Click on the **End-points** tab.
-
-![](img/CH-endpoint.PNG) 
-
-* Click **lwm2m-client-6lowpan-endpoint**. It will bring you to a panel where you will see panes called **Device** and **Test**:
-
-![](img/CH-endpoint_Device.PNG)  
-
-* Click the **Read** button to retrieve information from the client:
-
-* Open the **Test** pane.
-
-* Click the **Read** buttons. **/Test/0/Static** returns a `Static value` string whereas **/Test/0/Dynamic** returns the count of button presses on the client board:
-
-![](img/CH-endpoint_Test.PNG) 
-
-* Press the **Dynamic Activity** button on the board (indicated in the image):
-
-![](img/board.PNG) 
-
-* You should be able to see an increment in the **/Test/0/Dynamic** count.
-
-* Press the **Register** button (indicated in the image below) to deregister your device from mbed DS. You will see that the end-point has been removed from the web UI and the device status is `Stale` in the Connected Home app.
-
-* To register your device again, simply press the **Restart** button.
-
-## Debug trace on client side
-
-To see the debug trace for the mbed client, you can use either Wireshark or some terminal emulation software. 
+To see the debug trace for the mbed Client, you can use either Wireshark or terminal emulation software.
 
 The following is an example of using PuTTY and Linux:
 
-1. On the client side computer, open PuTTY with root privileges: `$ sudo putty`.
+1. On the computer, open PuTTY with root privileges: `$ sudo putty`.
 
-2. Give the command `dmesg`to see which serial port your mbed client controller is connected to.
+2. Give the command `dmesg`to see which serial port your mbed Client controller is connected to.
 
 3. Go to the **Serial** category in PuTTY.
 
@@ -417,7 +233,7 @@ The following is an example of using PuTTY and Linux:
 
 6. Click the **Session** category. Give the session a name, for example `mbed_trace`, and save it.
 
-7. Select **Connection_type** as `Serial`.
+7. Select **Connection_type** `Serial`.
 
 8. Click **Open**.
 
@@ -425,22 +241,30 @@ This will give you the client's debug trace.
 
 ## Troubleshooting
 
-In case **lwm2m-client-6lowpan-endpoint** is not visible in the Connected Home application or if the 
-**Read** buttons on the **Device** pane do not return a value you can try one of the following:
+If **lwm2m-client-6lowpan-endpoint** is not visible in the ARM mbed Device Connector try one of the following:
 
-* Restart the Connected Home application.
+* Clear your browser cache.
 * Restart the 6LoWPAN Gateway.
-* Restart the FRDM-K64F board (always start the 6LoWPAN Gateway before the FRDM-K64F board).
-* Reset your browser cache.
+* Restart the FRDM-K64F board.
 
 You can also check the following settings:
 
-* Check that the computer running mbed DS has an IP address as instructed in [Setting up a static IP address](#setting-up-a-static-ip-address). Sometimes the IP address is lost when the network cable is unplugged.
 * Check that channels are set as described in [Changing radio channel](#changing-radio-channel).
-* Check that the mbed 6LoWPAN Gateway is using the correct binary, as explained in [Server side configuration](#server-side-configuration).
-* Check that the mbed DS IP address is set to `mbed-client-example-6lowpan`, as explained in [Client side configuration](#client-side-configuration).
-* Check the client trace. It should indicate that the bootstrap is ready when the FRDM-K64F board is connected to the mbed 6LoWPAN Gateway. For example, for the **6LoWPAN ND** bootstrap the trace window will show:
+* Check that the mbed 6LoWPAN Gateway is using the correct binary, as explained in [Gateway configuration](#gateway-configuration).
+* Check that the ARM mbed Device Connector address is set to `mbed-client-example-6lowpan`, as explained in [Client side configuration](#client-side-configuration).
+* Check the client trace. It should indicate that the bootstrap is ready when the FRDM-K64F board is connected to the mbed 6LoWPAN Gateway. 
+
+For example, the **6LoWPAN ND** bootstrap trace window will indicate the bootstrap state and object registration as follows:
+
 ```
 [INFO][m6LND]: 6LoWPAN ND bootstrap ready
+...
+[DBG ][m6LND]: Channel: 1
+[DBG ][mbedclient]: mesh_network_handler() 0
+[DBG ][mbedclient]: waiting 15s before sending registration...
+[DBG ][mbedclient]: send_registration()
+...
+[DBG ][mbedclient]: object_registered()
+
 ```
 
