@@ -192,6 +192,9 @@ void MbedClient::send_registration()
         tr_debug("send_registration()");
         _registering = true;
         _interface->register_object(_register_security, _object_list);
+        // Check registration status after 30 seconds
+        minar::Scheduler::postCallback(this,&MbedClient::check_registration_status)
+            .delay(minar::milliseconds(30 * 1000);
     }
 }
 
@@ -255,20 +258,10 @@ void MbedClient::error(M2MInterface::Error error)
     tr_error("error() %d", error);
     switch (error) {
         case M2MInterface::NetworkError:
-            if (_registered || _updating) {
-                tr_debug("Reconnecting to server");
-                minar::Scheduler::postCallback(this, &MbedClient::wait);
-            } else if (_registering) {
-                tr_debug("Failed to register, restart");
-                minar::Scheduler::postCallback(this, &MbedClient::wait);
-            }
+        case M2MInterface::NotAllowed:
+            tr_debug("Reconnecting to server");
+            minar::Scheduler::postCallback(this, &MbedClient::wait);
             break;
-        case M2MInterface::NotAllowed: {
-            if (_registering || _updating) {
-                tr_debug("Failed to (re)register");
-                minar::Scheduler::postCallback(this, &MbedClient::wait);
-            }
-        }
         default:
             break;
     }
@@ -306,10 +299,17 @@ void MbedClient::idle()
     _registered = true;
     _registering = false;
     _updating = false;
+
     // Update registration in every minute
     _update_timer_handle = minar::Scheduler::postCallback(this,&MbedClient::update_registration)
-            .period(minar::milliseconds(60*1000))
+            .period(minar::milliseconds(30*1000))
             .getHandle();
+}
+
+void MbedClient::check_registration_status(void){
+    if (!_registered && _registering) {
+        minar::Scheduler::postCallback(this, &MbedClient::wait);
+    }
 }
 
 void MbedClient::mesh_network_handler(mesh_connection_status_t status)
