@@ -33,12 +33,6 @@ public:
 
     bool create_interface();
 
-    bool register_successful();
-
-    bool unregister_successful();
-
-    bool registration_update_successful();
-
     M2MSecurity *create_register_object();
 
     M2MDevice *create_device_object();
@@ -98,10 +92,9 @@ private:
     M2MDevice           *_device;
     M2MObject           *_object;
     M2MObjectList       _object_list;
-    bool                _error;
     bool                _registered;
-    bool                _unregistered;
-    bool                _registration_updated;
+    bool                _registering;
+    bool                _updating;
     int                 _value;
 };
 #endif //__MBEDCLIENT_H__

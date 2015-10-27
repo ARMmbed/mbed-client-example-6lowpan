@@ -48,10 +48,9 @@ MbedClient::MbedClient()
     _register_security = NULL;
     _device = NULL;
     _object = NULL;
-    _error = false;
     _registered = false;
-    _unregistered = false;
-    _registration_updated = false;
+    _registering = false;
+    _updating = false;
     _value = 0;
 }
 
@@ -87,21 +86,6 @@ bool MbedClient::create_interface()
                      "");
     }
     return (_interface == NULL) ? false : true;
-}
-
-bool MbedClient::register_successful()
-{
-    return _registered;
-}
-
-bool MbedClient::unregister_successful()
-{
-    return _unregistered;
-}
-
-bool MbedClient::registration_update_successful()
-{
-    return _registration_updated;
 }
 
 M2MSecurity *MbedClient::create_register_object()
@@ -190,6 +174,7 @@ void MbedClient::send_registration()
     if (_interface) {
         tr_debug("send_registration()");
         _interface->register_object(_register_security, _object_list);
+        _registering = true;
     }
 }
 
@@ -219,36 +204,35 @@ void MbedClient::object_registered(M2MSecurity */*security_object*/, const M2MSe
     tr_debug("object_registered()");
     minar::Scheduler::postCallback(this,&MbedClient::test_update_register).period(minar::milliseconds(25000));
     _registered = true;
-    _unregistered = false;
+    _registering = false;
 }
 
 void MbedClient::object_unregistered(M2MSecurity */*server_object*/)
 {
     tr_debug("object_unregistered()");
-    _unregistered = true;
     _registered = false;
     // This will turn on the LED on the board specifying that
     // the application has run successfully.
-    notify_completion(_unregistered);
+    notify_completion(!_registered);
     minar::Scheduler::stop();
 }
 
 void MbedClient::registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/)
 {
-    _registration_updated = true;
+    _updating = false;
 }
 
 
 void MbedClient::test_update_register() {
     if (_registered) {
         _interface->update_registration(_register_security, 3600);
+        _updating = true;
     }
 }
 
 void MbedClient::error(M2MInterface::Error error)
 {
     tr_error("error() %d", error);
-    _error = true;
     switch (error) {
         case M2MInterface::NetworkError:
         case M2MInterface::Timeout:
