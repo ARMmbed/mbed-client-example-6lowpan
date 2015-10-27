@@ -202,7 +202,7 @@ void MbedClient::bootstrap_done(M2MSecurity */*server_object*/)
 void MbedClient::object_registered(M2MSecurity */*security_object*/, const M2MServer &/*server_object*/)
 {
     tr_debug("object_registered()");
-    minar::Scheduler::postCallback(this,&MbedClient::test_update_register).period(minar::milliseconds(25000));
+    minar::Scheduler::postCallback(this,&MbedClient::update_registration).period(minar::milliseconds(25000));
     _registered = true;
     _registering = false;
 }
@@ -219,11 +219,12 @@ void MbedClient::object_unregistered(M2MSecurity */*server_object*/)
 
 void MbedClient::registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/)
 {
+    tr_debug("Registration updated");
     _updating = false;
 }
 
 
-void MbedClient::test_update_register() {
+void MbedClient::update_registration() {
     if (_registered) {
         _interface->update_registration(_register_security, 3600);
         _updating = true;

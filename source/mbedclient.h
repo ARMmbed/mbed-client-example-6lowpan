@@ -67,7 +67,7 @@ public:
 
     void registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/);
 
-    void test_update_register(void);
+    void update_registration(void);
 
     //Callback from mbed client stack if any error is encountered
     // during any of the LWM2M operations. Error type is passed in
