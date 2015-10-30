@@ -20,41 +20,30 @@
 #include "mbed-mesh-api/MeshThread.h"
 #include "mbed-mesh-api/MeshInterfaceFactory.h"
 #include "mbed-drivers/test_env.h"
-
 #include "mbed-client/m2minterfacefactory.h"
 #include "mbed-client/m2mdevice.h"
 #include "mbed-client/m2minterfaceobserver.h"
 #include "mbed-client/m2minterface.h"
 #include "mbed-client/m2mobjectinstance.h"
 #include "mbed-client/m2mresource.h"
-#include "ns_trace.h"
 #include "mbed-mesh-api/AbstractMesh.h"
 #include "mbedclient.h"
 
 // Set bootstrap mode to be Thread, otherwise 6LOWPAN_ND is used
 //#define APPL_BOOTSTRAP_MODE_THREAD
 
-#define OBS_BUTTON SW2
-#define UNREG_BUTTON SW3
+#define OBS_BUTTON      SW2
+#define UNREG_BUTTON    SW3
 
 static MbedClient *mbedclient;
 static InterruptIn *obs_button;
 static InterruptIn *unreg_button;
-
-
-
-Serial pc(USBTX, USBRX);
-
-void trace_printer(const char* str)
-{
-	pc.printf("%s\r\n", str);
-}
+static Serial pc(USBTX, USBRX);
 
 void app_start(int, char **)
 {
-
-
 	pc.baud(115200);  //Setting the Baud-Rate for trace output
+    printf("Start mbed-client-example-6lowpan\r\n");
 
     // Instantiate the class which implements
     // LWM2M Client API
@@ -80,7 +69,7 @@ void app_start(int, char **)
 #endif /* APPL_BOOTSTRAP_MODE */
 
     if (status != MESH_ERROR_NONE) {
-        tr_error("Mesh network initialization failed %d!", status);
+        printf("Mesh network initialization failed %d!\r\n", status);
         return;
     }
 
@@ -95,7 +84,7 @@ void app_start(int, char **)
 
     status = mesh_api->connect();
     if (status != MESH_ERROR_NONE) {
-        tr_error("Can't connect to mesh network!");
+        printf("Can't connect to mesh network!\r\n");
         return;
     }
 }

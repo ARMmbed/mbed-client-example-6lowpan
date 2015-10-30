@@ -22,12 +22,9 @@
 #include "core-util/FunctionPointer.h"
 #include "mbed-drivers/test_env.h"
 #include "security.h"
-#define HAVE_DEBUG 1
-#include "ns_trace.h"
-
-#define TRACE_GROUP "mbedclient"
 
 using namespace mbed::util;
+
 
 // Enter ARM mbed Device Connector IPv6 address and Port number in
 // format coap://<IPv6 address>:PORT. If ARM mbed Device Connector IPv6 address
@@ -91,13 +88,12 @@ bool MbedClient::create_interface()
         delete _interface;
         _interface = NULL;
     }
-    srand(time(NULL));
-    uint16_t port = rand() % 65535 + 12345;
+
     _interface = M2MInterfaceFactory::create_interface(*this,
                  MBED_ENDPOINT_NAME,
                  "test",
                  3600,
-                 port,
+                 5684,
                  MBED_DOMAIN,
                  M2MInterface::UDP,
                  M2MInterface::Nanostack_IPv6,
@@ -171,7 +167,7 @@ M2MObject *MbedClient::create_generic_object()
 void MbedClient::update_resource()
 {
     if (_object) {
-        tr_debug("update_resource() %d", _value);
+        printf("update_resource() %d\r\n", _value);
         M2MObjectInstance *inst = _object->object_instance();
         if (inst) {
             M2MResource *res = inst->resource("D");
@@ -189,12 +185,9 @@ void MbedClient::update_resource()
 void MbedClient::send_registration()
 {
     if (_interface && !_registered && !_registering && !_updating) {
-        tr_debug("send_registration()");
+        printf("send_registration()\r\n");
         _registering = true;
         _interface->register_object(_register_security, _object_list);
-        // Check registration status after 30 seconds
-        minar::Scheduler::postCallback(this,&MbedClient::check_registration_status)
-            .delay(minar::milliseconds(30 * 1000));
     }
 }
 
@@ -221,13 +214,13 @@ void MbedClient::bootstrap_done(M2MSecurity */*server_object*/)
 
 void MbedClient::object_registered(M2MSecurity */*security_object*/, const M2MServer &/*server_object*/)
 {
-    tr_debug("object_registered()");
+    printf("object_registered()");
     idle();
 }
 
 void MbedClient::object_unregistered(M2MSecurity */*server_object*/)
 {
-    tr_debug("object_unregistered()");
+    printf("object_unregistered()\r\n");
     _registered = false;
     // This will turn on the LED on the board specifying that
     // the application has run successfully.
@@ -237,12 +230,13 @@ void MbedClient::object_unregistered(M2MSecurity */*server_object*/)
 
 void MbedClient::registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/)
 {
-    tr_debug("Registration updated");
+    printf("registration_updated()\r\n");
     _updating = false;
 }
 
 
 void MbedClient::update_registration() {
+    printf("update_registration()\r\n");
     if (_registered) {
         _interface->update_registration(_register_security, 3600);
         _updating = true;
@@ -255,11 +249,11 @@ void MbedClient::value_updated(M2MBase */*base*/, M2MBase::BaseType /*type*/)
 
 void MbedClient::error(M2MInterface::Error error)
 {
-    tr_error("error() %d", error);
+    printf("error %d\r\n", error);
     switch (error) {
         case M2MInterface::NetworkError:
         case M2MInterface::NotAllowed:
-            tr_debug("Reconnecting to server");
+            printf("Reconnecting to server\r\n");
             minar::Scheduler::postCallback(this, &MbedClient::wait);
             break;
         default:
@@ -283,13 +277,16 @@ void MbedClient::wait()
     }
     // Create LWM2M Client API interface to manage bootstrap,
     // register and unregister
-    create_interface();
+    if (create_interface() == false) {
+        printf("Fatal error, can't create interface\r\n");
+        return;
+    }
 
     M2MSecurity *register_object = create_register_object();
     set_register_object(register_object);
 
     // Issue register command.
-    tr_debug("waiting 5s before sending registration...");
+    printf("waiting 5s before sending registration...\r\n");
     FunctionPointer0<void> ur(this, &MbedClient::send_registration);
     minar::Scheduler::postCallback(ur.bind()).delay(minar::milliseconds(5 * 1000));
 }
@@ -300,21 +297,15 @@ void MbedClient::idle()
     _registering = false;
     _updating = false;
 
-    // Update registration in every minute
+    // Update registration in every 30s
     _update_timer_handle = minar::Scheduler::postCallback(this,&MbedClient::update_registration)
             .period(minar::milliseconds(30*1000))
             .getHandle();
 }
 
-void MbedClient::check_registration_status(void){
-    if (!_registered && _registering) {
-        minar::Scheduler::postCallback(this, &MbedClient::wait);
-    }
-}
-
 void MbedClient::mesh_network_handler(mesh_connection_status_t status)
 {
-    tr_debug("mesh_network_handler() %d", status);
+    printf("mesh_network_handler() %d\r\n", status);
     if (status == MESH_CONNECTED) {
         wait();
     }

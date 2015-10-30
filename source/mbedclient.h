@@ -75,8 +75,6 @@ public:
     // the callback.
     void error(M2MInterface::Error error);
 
-    void check_registration_status(void);
-
     //Callback from mbed client stack if any value has changed
     // during PUT operation. Object and its type is passed in
     // the callback.
