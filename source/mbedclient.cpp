@@ -89,11 +89,14 @@ bool MbedClient::create_interface()
         _interface = NULL;
     }
 
+    srand(time(NULL));
+    uint16_t port = rand() % 65535 + 12345;
+
     _interface = M2MInterfaceFactory::create_interface(*this,
                  MBED_ENDPOINT_NAME,
                  "test",
                  3600,
-                 5684,
+                 port,
                  MBED_DOMAIN,
                  M2MInterface::UDP,
                  M2MInterface::Nanostack_IPv6,
