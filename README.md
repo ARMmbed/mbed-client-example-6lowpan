@@ -1,7 +1,7 @@
 # Getting started with mesh networking
 
 This document describes how to use mesh networking to communicate with a [ARM mbed Device Connector](https://connector.mbed.com) 
-that is a new web service hosted by ARM. However, at the time of publishing this example, the service may not yet be live or fully ready for use. If the example does not work for you, or you are having problems with it, that probably means we have not yet managed to get the service online. Please, look out for mbed Device Connector release announcements in [ARM mbed](https://mbed.com). If, however, you are a mbed partner and have your own mbed Device Server setup, you can use this example application just by changing the mbed Device Server address from `api.connector.mbed.com` to your own mbed Device Server address. 
+that is a new web service hosted by ARM. However, at the time of publishing this example, the service may not yet be live or fully ready for use. If the example does not work for you, or you are having problems with it, that probably means we have not yet managed to get the service online. Please, look out for mbed Device Connector release announcements in [ARM mbed](https://mbed.com). If, however, you are a mbed partner and have your own mbed Device Server setup, you can use this example application just by changing the mbed Device Server address from `https://api.connector.mbed.com` to your own mbed Device Server address. 
 
 This example application demonstrates how to:
 
@@ -30,7 +30,7 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 ## Required software
 
 * [yotta](http://docs.yottabuild.org/#installing) - to build the example programs.
-* [ARM mbed Device Connector](https://connector.mbed.com) - Web service running on Internet.
+* [ARM mbed Device Connector website](https://connector.mbed.com) - Web service running on Internet.
 
 
 ## Optional software
@@ -91,12 +91,12 @@ For client side configuration, please follow the steps below.
 
 ### IP address setup
 
-This example uses IPv6 to communicate with the [mbed Device Connector Server](https://ds-test-sl.dev.mbed.com). The example program should automatically get an IPv6 address from the mbed 6LoWPAN Gateway router when it is connected via Ethernet.
+This example uses IPv6 to communicate with the [mbed Device Connector Server](https://api.connector.mbed.com). The example program should automatically get an IPv6 address from the mbed 6LoWPAN Gateway router when it is connected via Ethernet.
 
 
 #### Setting Certificate for the application
 
-1. Go to  [mbed Device Connector website](https://connector-test-sl.dev.mbed.com) and log in with your mbed.org account.
+1. Go to  [mbed Device Connector website](https://connector.mbed.com) and log in with your mbed.org account.
 2. Navigate to **Security credentials** under **My devices**.
 3. Click **GET MY DEVICE SECURITY CREDENTIALS**. You will get the needed certificate information as well as the endpoint name and domain.
 4. Copy the created security credentials to file `source/security.h`.
@@ -188,7 +188,7 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 
 ### Testing the example application with the mbed Device Connector
 
-**Step 1**: Go to the [mbed Device Connector website](https://connector-test-sl.dev.mbed.com).
+**Step 1**: Go to the [mbed Device Connector website](https://connector.mbed.com).
 
 **Step 2**: Log in using your mbed account.
 
@@ -197,15 +197,15 @@ The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder
 **Step 4**: To send requests to mbed Client device with mbed Device Connector API, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request. The textbox will show a list of registered resources. After selecting the resource press the **TEST API** button to send the request.
 
 The **/Test/0/S** represents the static resource that is a fixed value set in the example application. For example:
-`https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/S?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device. It creates a request to the **/Test/0/S** resource.
+`https://api.connector.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/S?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device. It creates a request to the **/Test/0/S** resource.
 
 The **/Test/0/D** represents the dynamic resource that can be read by the mbed Device Connector. It is linked with the **SW2** button on the FRDM board. The value starts from zero and every time you press the **SW2** button the node increases the counter value by 1. You can make a CoAP request to the node resources to get the latest value. To do that, click **API Console** under **mbed Device Connector**. Click the URL textbox to create a request.
 
-For example: `https://ds-test-sl.dev.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/D?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device, creates a GET request to the **/Test/0/D** resource. This returns the latest value of **/Test/0/D**. 
+For example: `https://api.connector.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/D?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device, creates a GET request to the **/Test/0/D** resource. This returns the latest value of **/Test/0/D**. 
 
 **NOTE:** If you get, for example, an error `Server Response:410(Gone)` or other such error, clear the cache of your browser, log out and log in again.
 
-For more information on the mbed Device Connector REST API, see the [help pages](https://connector-test-sl.dev.mbed.com/#help-rest-api).
+For more information on the mbed Device Connector REST API, see the [help pages](https://connector.mbed.com/#help-rest-api).
 
 **Step 5**: If you press the **SW3** button the endpoint sends a deregister message to the mbed Device Connector. After a successful deregistration, LED **D12** starts blinking indicating that the application has successfully completed the task.
 
