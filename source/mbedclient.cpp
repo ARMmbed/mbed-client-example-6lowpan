@@ -217,7 +217,7 @@ void MbedClient::bootstrap_done(M2MSecurity */*server_object*/)
 
 void MbedClient::object_registered(M2MSecurity */*security_object*/, const M2MServer &/*server_object*/)
 {
-    printf("object_registered()");
+    printf("object_registered()\r\n");
     idle();
 }
 
