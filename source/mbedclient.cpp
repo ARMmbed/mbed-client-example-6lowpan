@@ -28,8 +28,8 @@ using namespace mbed::util;
 
 // Enter ARM mbed Device Connector IPv6 address and Port number in
 // format coap://<IPv6 address>:PORT. If ARM mbed Device Connector IPv6 address
-// is 2607:f0d0:3701:9f::20 then the URI is: "coap://2607:f0d0:3701:9f::20:5684"
-const String &MBED_DEVICE_CONNECTOR_URI = "coap://2607:f0d0:3701:9f::20:5684";
+// is 2607:f0d0:2601:52::20 then the URI is: "coap://2607:f0d0:2601:52::20:5684"
+const String &MBED_DEVICE_CONNECTOR_URI = "coap://2607:f0d0:2601:52::20:5684";
 
 const String &MANUFACTURER = "ARM";
 const String &TYPE = "type";
