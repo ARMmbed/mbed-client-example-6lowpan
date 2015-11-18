@@ -25,18 +25,11 @@
 
 using namespace mbed::util;
 
-
-// Enter ARM mbed Device Connector IPv6 address and Port number in
-// format coap://<IPv6 address>:PORT. If ARM mbed Device Connector IPv6 address
-// is 2607:f0d0:2601:52::20 then the URI is: "coap://2607:f0d0:2601:52::20:5684"
-const String &MBED_DEVICE_CONNECTOR_URI = "coap://2607:f0d0:2601:52::20:5684";
-
 const String &MANUFACTURER = "ARM";
 const String &TYPE = "type";
 const String &MODEL_NUMBER = "2015";
 const String &SERIAL_NUMBER = "12345";
 const uint8_t STATIC_VALUE[] = "Static value";
-
 
 MbedClient::MbedClient()
     : _led(LED3)
@@ -110,7 +103,7 @@ M2MSecurity *MbedClient::create_register_object()
     // required for client to connect to bootstrap server.
     M2MSecurity *security = M2MInterfaceFactory::create_security(M2MSecurity::M2MServer);
     if (security) {
-        security->set_resource_value(M2MSecurity::M2MServerUri, MBED_DEVICE_CONNECTOR_URI);
+        security->set_resource_value(M2MSecurity::M2MServerUri, YOTTA_CFG_DEVICE_CONNECTOR_URI);
         security->set_resource_value(M2MSecurity::BootstrapServer, 0);
         security->set_resource_value(M2MSecurity::SecurityMode, M2MSecurity::Certificate);
         security->set_resource_value(M2MSecurity::ServerPublicKey,SERVER_CERT,sizeof(SERVER_CERT));
