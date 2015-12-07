@@ -10,7 +10,7 @@ This example application demonstrates how to:
 * Deregister from ARM mbed Device Connector.
 * Disconnect the client from the mesh network.
 
-**Note**: This application does not work with the mbed Device Server. If you want to use mbed DS, please check the example and instructions [here](https://github.com/ARMmbed/mbed-client-example-6lowpan/tree/device_server).
+**Note**: This application does not work with mbed Device Server. If you want to use mbed DS, please check the example and instructions [here](https://github.com/ARMmbed/mbed-client-example-6lowpan/tree/device_server).
 
 ## Switching to Thread
 
