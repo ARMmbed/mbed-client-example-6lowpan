@@ -1,7 +1,7 @@
 # Getting started with mesh networking
 
 This document describes how to use mesh networking to communicate with a [ARM mbed Device Connector](https://connector.mbed.com) 
-that is a new web service hosted by ARM. However, at the time of publishing this example, the service may not yet be live or fully ready for use. If the example does not work for you, or you are having problems with it, that probably means we have not yet managed to get the service online. Please, look out for mbed Device Connector release announcements in [ARM mbed](https://mbed.com). If, however, you are a mbed partner and have your own mbed Device Server setup, you can use this example application just by changing the mbed Device Server address from `https://api.connector.mbed.com` to your own mbed Device Server address. 
+that is a new web service hosted by ARM.
 
 This example application demonstrates how to:
 
@@ -9,6 +9,8 @@ This example application demonstrates how to:
 * Register, read resource values and send observations to ARM mbed Device Connector.
 * Deregister from ARM mbed Device Connector.
 * Disconnect the client from the mesh network.
+
+**Note**: This application does not work with the mbed Device Server. If you want to use mbed DS, please check the example and instructions [here](https://github.com/ARMmbed/mbed-client-example-6lowpan/tree/device_server).
 
 ## Switching to Thread
 
