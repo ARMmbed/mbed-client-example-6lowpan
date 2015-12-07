@@ -25,18 +25,26 @@
 
 using namespace mbed::util;
 
+// It is recommended to use Device Connector as cloud technology.
+// Define following flag if using old device server approach.
+#define USING_DEVICE_SERVER
 
+#ifdef USING_DEVICE_SERVER
+// Enter your mbed Device Server's IPv6 address and Port (5683) in format:
+// coap://<IPv6 address>:PORT.  For example: coap://FD00:FF1:CE0B:A5E0::1:5683
+const String &MBED_DEVICE_CONNECTOR_URI = "coap://FD00:FF1:CE0B:A5E0::1:5683";
+#else
 // Enter ARM mbed Device Connector IPv6 address and Port number in
 // format coap://<IPv6 address>:PORT. If ARM mbed Device Connector IPv6 address
 // is 2607:f0d0:2601:52::20 then the URI is: "coap://2607:f0d0:2601:52::20:5684"
 const String &MBED_DEVICE_CONNECTOR_URI = "coap://2607:f0d0:2601:52::20:5684";
+#endif
 
 const String &MANUFACTURER = "ARM";
 const String &TYPE = "type";
 const String &MODEL_NUMBER = "2015";
 const String &SERIAL_NUMBER = "12345";
 const uint8_t STATIC_VALUE[] = "Static value";
-
 
 MbedClient::MbedClient()
     : _led(LED3)
@@ -90,7 +98,16 @@ bool MbedClient::create_interface()
     }
 
     srand(time(NULL));
+
+#ifdef USING_DEVICE_SERVER
+#undef MBED_DOMAIN
+#undef MBED_ENDPOINT_NAME
+#define MBED_DOMAIN ""
+#define MBED_ENDPOINT_NAME "mbed-client-6lowpan-endpoint"
+    uint16_t port = 5683;
+#else
     uint16_t port = rand() % 65535 + 12345;
+#endif
 
     _interface = M2MInterfaceFactory::create_interface(*this,
                  MBED_ENDPOINT_NAME,
@@ -112,7 +129,11 @@ M2MSecurity *MbedClient::create_register_object()
     if (security) {
         security->set_resource_value(M2MSecurity::M2MServerUri, MBED_DEVICE_CONNECTOR_URI);
         security->set_resource_value(M2MSecurity::BootstrapServer, 0);
+#ifdef USING_DEVICE_SERVER
+        security->set_resource_value(M2MSecurity::SecurityMode, M2MSecurity::NoSecurity);
+#else
         security->set_resource_value(M2MSecurity::SecurityMode, M2MSecurity::Certificate);
+#endif
         security->set_resource_value(M2MSecurity::ServerPublicKey,SERVER_CERT,sizeof(SERVER_CERT));
         security->set_resource_value(M2MSecurity::PublicKey,CERT,sizeof(CERT));
         security->set_resource_value(M2MSecurity::Secretkey,KEY,sizeof(KEY));
