@@ -38,7 +38,7 @@
 static MbedClient *mbedclient;
 static InterruptIn *obs_button;
 static InterruptIn *unreg_button;
-static Serial pc(USBTX, USBRX);
+static Serial &pc = get_stdio_serial();
 
 void app_start(int, char **)
 {
