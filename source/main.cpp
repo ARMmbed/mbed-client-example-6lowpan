@@ -39,6 +39,11 @@ static MbedClient *mbedclient;
 static InterruptIn *obs_button;
 static InterruptIn *unreg_button;
 static Serial &pc = get_stdio_serial();
+static uint8_t mac_addr[8];
+
+uint8_t *get_mac_address(){
+    return mac_addr;
+}
 
 void app_start(int, char **)
 {
@@ -72,6 +77,8 @@ void app_start(int, char **)
         printf("Mesh network initialization failed %d!\r\n", status);
         return;
     }
+
+    rf_read_mac_address(mac_addr);
 
     // Set up Hardware interrupt button.
     // On press of SW3 button on K64F board, example application

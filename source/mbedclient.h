@@ -25,6 +25,9 @@ class M2MDevice;
 class M2MSecurity;
 class M2MObject;
 
+
+uint8_t *get_mac_address();
+
 class MbedClient : public M2MInterfaceObserver
 {
 public:
@@ -82,6 +85,7 @@ public:
 
     //Handler for mesh network status events
     void mesh_network_handler(mesh_connection_status_t status);
+
 
 private:
     void wait();

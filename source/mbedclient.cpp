@@ -15,6 +15,7 @@
  */
 #include "mbedclient.h"
 #include "mbed-client/m2minterfacefactory.h"
+#include "atmel-rf-driver/driverRFPhy.h"
 #include "mbed-client/m2mdevice.h"
 #include "mbed-client/m2mobjectinstance.h"
 #include "mbed-client/m2mresource.h"
@@ -23,13 +24,23 @@
 #include "mbed-drivers/test_env.h"
 #include "security.h"
 
+#define HAVE_DEBUG 1
+#include "ns_trace.h"
+#define TRACE_GROUP "CLA"
+
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+
 using namespace mbed::util;
 
 
 // Enter ARM mbed Device Connector IPv6 address and Port number in
 // format coap://<IPv6 address>:PORT. If ARM mbed Device Connector IPv6 address
 // is 2607:f0d0:2601:52::20 then the URI is: "coap://2607:f0d0:2601:52::20:5684"
-const String &MBED_DEVICE_CONNECTOR_URI = "coap://2607:f0d0:2601:52::20:5684";
+// Staging Environment 2607:f0d0:3701:9f::20
+//Public Server 2607:f0d0:2601:52::20:5684
+
+const String &MBED_DEVICE_CONNECTOR_URI = "coap://2607:f0d0:3701:9f::20:5684";
 
 const String &MANUFACTURER = "ARM";
 const String &TYPE = "type";
@@ -37,6 +48,23 @@ const String &MODEL_NUMBER = "2015";
 const String &SERIAL_NUMBER = "12345";
 const uint8_t STATIC_VALUE[] = "Static value";
 
+const char *rf_board_type(){
+    rf_trx_part_e type = rf_radio_type_read();
+   const  char *rf_type_str = NULL;
+    switch(type){
+        case ATMEL_AT86RF212:
+            rf_type_str = "SubGhz-";
+            break;
+        case ATMEL_AT86RF231:
+        case ATMEL_AT86RF233:
+            rf_type_str = "2.4GHz-";
+            break;
+        default:
+            rf_type_str = "Uknown-";
+            break;
+    }
+    return rf_type_str;
+}
 
 MbedClient::MbedClient()
     : _led(LED3)
@@ -92,9 +120,20 @@ bool MbedClient::create_interface()
     srand(time(NULL));
     uint16_t port = rand() % 65535 + 12345;
 
+   const char *rf_type = rf_board_type();
+
+    uint8_t *mac_addr = 0;
+    mac_addr = get_mac_address();
+    char *mac = trace_array(mac_addr, 8);
+    String info_type = "CH-";
+    info_type.append(STR(YOTTA_CFG_MBED_MESH_API_SELECTED_RF_CHANNEL), strlen(STR(YOTTA_CFG_MBED_MESH_API_SELECTED_RF_CHANNEL)));
+    info_type.append("-", 1);
+    info_type.append(rf_type, strlen(rf_type));
+    info_type.append(mac, strlen(mac));
+
     _interface = M2MInterfaceFactory::create_interface(*this,
                  MBED_ENDPOINT_NAME,
-                 "test",
+                 info_type,
                  3600,
                  port,
                  MBED_DOMAIN,

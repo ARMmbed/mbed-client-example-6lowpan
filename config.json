@@ -6,5 +6,8 @@
          "nanostack": true
       }
     }
-  }
+  },
+  "mbed-mesh-api": {
+  	"selected-rf-channel": 12
+  	}
 }
