@@ -72,11 +72,13 @@ To set up the environment, you need to configure the mbed 6LoWPAN Gateway router
 
 2. Use a micro-USB cable to connect the mbed 6LoWPAN Gateway router to your computer. The computer will list the router as removable storage.
 
-3. The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the binary matching your application bootstrap mode. Note that you can also run [FRDM-K64F Border Router](https://github.com/ARMmbed/k64f-border-router) as a gateway on a FRDM-K64F board.
+3. The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the binary matching your application bootstrap mode.
 
 	* For **6LoWPAN ND** bootstrap, use `gateway6LoWPANDynamic.bin`.
 	* For **Thread** bootstrap, use `gatewayThreadDynamic.bin`.
 
+	Note that you can also run [FRDM-K64F Border Router](https://github.com/ARMmbed/k64f-border-router) as a gateway on a FRDM-K64F board.
+	
 4. Copy the gateway binary file to the mbed 6LoWPAN Gateway router to flash the device. The device will reboot automatically after flashing. If that does not happen, push the **Reset** button on the board.
 
 ### Client side configuration
