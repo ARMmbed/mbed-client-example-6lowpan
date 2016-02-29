@@ -63,6 +63,8 @@ you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the fil
 ##Setting up the environment
 
 To set up the environment, you need to configure the mbed 6LoWPAN Gateway router and the client as follows:
+
+**Alternative:** Instead of using the pre-compiled firmware for the 6LoWPAN gateway, you can also compile the gateway application yourself and use an extra FRDM-K64F board as a 6LoWPAN gateway. The sources and instructions can be found in GitHub project [FRDM-K64F Border Router](https://github.com/ARMmbed/k64f-border-router).
   
 ### Gateway configuration
 
@@ -70,7 +72,7 @@ To set up the environment, you need to configure the mbed 6LoWPAN Gateway router
 
 2. Use a micro-USB cable to connect the mbed 6LoWPAN Gateway router to your computer. The computer will list the router as removable storage.
 
-3. The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the binary matching your application bootstrap mode:
+3. The firmware for the Gateway is located in the `GW_Binary` folder in the root of this example. You should select the binary matching your application bootstrap mode. Note that you can also run [FRDM-K64F Border Router](https://github.com/ARMmbed/k64f-border-router) as a gateway on a FRDM-K64F board.
 
 	* For **6LoWPAN ND** bootstrap, use `gateway6LoWPANDynamic.bin`.
 	* For **Thread** bootstrap, use `gatewayThreadDynamic.bin`.
