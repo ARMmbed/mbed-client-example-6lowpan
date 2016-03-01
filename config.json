@@ -1,10 +1,27 @@
 {
+  "appl_bootstrap_mode_thread": false,
+  "device_connector_uri": "\"coap:\/\/2607:f0d0:2601:52::20:5684\"",
   "mbed-os": {
     "net": {
       "stacks": {
          "lwip":false,
          "nanostack": true
       }
+    }
+  },
+  "mbed-mesh-api": {
+    "thread": {
+      "device_type": "\"Router\"",
+      "pollrate": 300,
+      "config": {
+        "channel_mask": "0x07fff800",
+        "channel_page": 0,
+        "channel": 12
+      }
+    },
+    "6lowpan_nd": {
+      "channel_mask": "0x1000",
+      "channel_page": 0
     }
   }
 }

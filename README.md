@@ -15,7 +15,14 @@ This example application demonstrates how to:
 ## Switching to Thread
 
 By default, the example application makes a **6LoWPAN ND** type of bootstrap. To change the bootstrap mode to **Thread**
-you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the file `source/main.cpp`. 
+you need to change value of the `appl_bootstrap_mode_thread` to `true` in the file `config.json` before building the project.
+
+### Change Thread device type
+In the Thread bootstrap mode the device type can be either **Router** or **Sleepy End Device**. By default the device type is set to **Router** but the type can be changed to **Sleepy End Device** by changing the parameter `device_type` value in the file `config.json` to value **SED**.
+
+**Sleepy End Device** data polling rate can be changed by modifying the the parameter `pollrate` in the file `config.json`.
+
+A list of all application configurable items can be found from [Application configurable items](#application-configurable-items).
 
 ## Required hardware
 
@@ -84,7 +91,7 @@ For client side configuration, please follow the steps below.
 1. Set the application certificate as described in [Setting Certificate for the application](#setting-certificate-for-the-application) section.
 2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of the ARM mbed Device Connector:
 	* You can get the mbed Device Connector IPv6 address by using command `nslookup -query=AAAA api.connector.mbed.com`.
-	* The `/source/mbedclient.cpp` file contains the IPv6 address of the ARM mbed Device Connector. By default, this is set to `2607:f0d0:2601:52::20`. It can be found on line 32, as the value of `MBED_DEVICE_CONNECTOR_URI`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:2601:52::20:5684`.
+	* The `config.json` file contains the IPv6 address of the ARM mbed Device Connector. By default, this is set to `2607:f0d0:2601:52::20`. It can be found on line 3, as the value of `device_connector_uri`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:2601:52::20:5684`.
 3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) section for instructions.
 4. Build `mbed-client-example-6lowpan` (see [Build instructions](#build-instructions)).
 5. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
@@ -106,40 +113,20 @@ This example uses IPv6 to communicate with the [mbed Device Connector Server](ht
 
 #### Changing radio channel
 
-To change the radio channel you are using:
+To change the radio channel you are using you need to modify file `config.json` that contains sections for **Thread** and **6LoWPAN-ND** configuration. Use channel **1** (1<<1) and channel page **2** for a sub-GHz module. Use channel **12** (1<<12) and channel page **0** for a 2.4 GHz module.
 
-* Clone the `mbed-mesh-api` repository to your work area:
+**Tip:** To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
 
-```
-git clone git@github.com:ARMmbed/mbed-mesh-api.git
-```
+* To change the radio channel modify the file `config.json`:
 
-* Modify the source code:
+	- For **6LoWPAN-ND**, change the value of `channel_mask` in section `6lowpan_nd` to either **2** (1<<1) or **4096** (1<<12).
 
-	- In your copy of the `mbed-mesh-api` repository, find the file `./source/include/static_config.h`.
+	- For **Thread**, change the value of `channel` to either **1** or **12**.
 
-	- You need to use channel **1** for a sub-GHz module and channel **12** for a 2.4 GHz module.
+	- For **sub-GHz** module set value of `channel_page` to **2**.
 
-		**Tip:** To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
-
-		- For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **1** (1<<1) or **12** (1<<12).
-
-		- For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **1** or **12**.
+	- For **2.4 GHz** module set value of `channel_page` to **0**.
 	
-* Create a yotta link to your code:
-
-	```
-	cd mbed-mesh-api
-	yt link
-	```
-* Go back to the `mbed-client-example-6lowpan` application folder and make a link to the cloned `mbed-mesh-api` repository:
-
-	```
-	cd mbed-client-example-6lowpan
-	yt link mbed-mesh-api
-	```
-
-* Use the command `yt ls` to check that the link was established successfully and the module `mbed-mesh-api` points to the cloned repository.
 
 ##### Radio module identification
 
@@ -175,6 +162,35 @@ git clone git@github.com:ARMmbed/mbed-mesh-api.git
 6. Build the binary: `yotta build`.
 
 The executable file will be created in the `/build/frdm-k64f-gcc/source/` folder.
+
+### Application configurable items
+
+Application configurable parameters are collected to file `config.json`. Tables below contain a summary of this application configurable items:
+
+Configuration values in top level:
+
+| Name                       | Value         | Description |
+| -------------------------- | ------------- | ----------- |
+| appl_bootstrap_mode_thread | [true, false] | Set application bootstrap mode to Thread (true) or 6LoWPAN ND (false) |
+| device_connector_uri       | string        | IPv6 address of the ARM mbed Device Connector |
+
+6LoWPAN-ND specific configuration values in section: mbed-mesh-api/6lowpan_nd:
+
+| Parameter name  | Type     | Description |
+| --------------- | ---------| ----------- |
+| channel_mask    | number   | Channel(s) to scan, 1 << channel number |
+| channel_page    | number (0, 2) | 0 for 2,4 GHz and 2 for sub-GHz radios |
+
+Thread specific configuration values in section: mbed-mesh-api/thread
+
+| Parameter name  | Value         | Description |
+| --------------- | ------------- | ----------- |
+| device_type     | string ["SED", "Router"] | Set device operating mode to Sleepy End Device (SED) or router (Router) |
+| pollrate        | number        | Sleepy End Device polling rate in milliseconds |
+| channel_mask    | number        | Channel(s) to scan, 1 << channel number |
+| channel_page    | number [0, 2] | Channel page, 0 for 2,4 GHz and 2 for sub-GHz radios |
+| channel         | number [0-27] | RF channel to use |
+
 
 ## Running the example application
 

@@ -17,7 +17,7 @@
   "dependencies": {
     "mbed-client": "^1.0.0",
     "atmel-rf-driver": "^2.0.0",
-    "mbed-mesh-api": "^2.0.0"
+    "mbed-mesh-api": "^2.1.0"
   },
   "targetDependencies": {},
   "bin": "./source"
