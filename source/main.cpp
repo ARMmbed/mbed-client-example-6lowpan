@@ -63,6 +63,7 @@ void app_start(int, char **)
     mesh_api = (Mesh6LoWPAN_ND *)MeshInterfaceFactory::createInterface(MESH_TYPE_6LOWPAN_ND);
     status = ((Mesh6LoWPAN_ND *)mesh_api)->init(rf_device_register(), AbstractMesh::mesh_network_handler_t(mbedclient, &MbedClient::mesh_network_handler));
 #endif /* YOTTA_CFG_BOOTSTRAP_MODE_THREAD */
+    mbedclient->mesh_api_set(mesh_api);
 
     if (status != MESH_ERROR_NONE) {
         printf("Mesh network initialization failed %d!\r\n", status);

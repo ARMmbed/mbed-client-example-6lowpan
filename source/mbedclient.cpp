@@ -43,6 +43,7 @@ MbedClient::MbedClient()
     _registering = false;
     _updating = false;
     _value = 0;
+    _mesh_api = NULL;
 
     // Create LWM2M device object specifying device resources
     // as per OMA LWM2M specification.
@@ -293,6 +294,17 @@ void MbedClient::idle()
     _registering = false;
     _updating = false;
 
+#if (YOTTA_CFG_APPL_BOOTSTRAP_MODE_THREAD == true)
+    if (YOTTA_CFG_MBED_MESH_API_THREAD_DEVICE_TYPE == MESH_DEVICE_TYPE_THREAD_SLEEPY_END_DEVICE) {
+        mesh_error_t status = ((MeshThread *)_mesh_api)->data_poll_rate_set(3);
+        if (status == MESH_ERROR_NONE) {
+            printf("Set SED data polling rate to 3 seconds\r\n");
+        } else {
+            printf("Failed to set SED data polling rate, error %d\r\n", status);
+        }
+    }
+#endif
+
     // Update registration in every 30s
     _update_timer_handle = minar::Scheduler::postCallback(this,&MbedClient::update_registration)
             .period(minar::milliseconds(30*1000))
@@ -305,4 +317,9 @@ void MbedClient::mesh_network_handler(mesh_connection_status_t status)
     if (status == MESH_CONNECTED) {
         wait();
     }
+}
+
+void MbedClient::mesh_api_set(AbstractMesh *mesh_api)
+{
+    _mesh_api = mesh_api;
 }

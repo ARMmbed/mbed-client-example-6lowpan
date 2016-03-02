@@ -18,9 +18,7 @@ By default, the example application makes a **6LoWPAN ND** type of bootstrap. To
 you need to change value of the `appl_bootstrap_mode_thread` to `true` in the file `config.json` before building the project.
 
 ### Change Thread device type
-In the Thread bootstrap mode the device type can be either **Router** or **Sleepy End Device**. By default the device type is set to **Router** but the type can be changed to **Sleepy End Device** by changing the parameter `device_type` value in the file `config.json` to value **SED**.
-
-**Sleepy End Device** data polling rate can be changed by modifying the the parameter `pollrate` in the file `config.json`.
+In the Thread bootstrap mode the device type can be either **Router** or **Sleepy End Device**. By default the device type is set to **Router** but the type can be changed to **Sleepy End Device** by changing the parameter `device_type` from `MESH_DEVICE_TYPE_THREAD_ROUTER` to value `MESH_DEVICE_TYPE_THREAD_SLEEPY_END_DEVICE` in the file `config.json`.
 
 A list of all application configurable items can be found from [Application configurable items](#application-configurable-items).
 
@@ -117,15 +115,15 @@ This example uses IPv6 to communicate with the [mbed Device Connector Server](ht
 
 #### Changing radio channel
 
-To change the radio channel you are using you need to modify file `config.json` that contains sections for **Thread** and **6LoWPAN-ND** configuration. Use channel **1** (1<<1) and channel page **2** for a sub-GHz module. Use channel **12** (1<<12) and channel page **0** for a 2.4 GHz module.
+To change the radio channel you are using you need to modify file `config.json` that contains sections for **Thread** and **6LoWPAN-ND** configuration. Use channel **1** and channel page **2** for a sub-GHz module. Use channel **12** and channel page **0** for a 2.4 GHz module.
 
 **Tip:** To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
 
 * To change the radio channel modify the file `config.json`:
 
-	- For **6LoWPAN-ND**, change the value of `channel_mask` in section `6lowpan_nd` to either **2** (1<<1) or **4096** (1<<12).
+	- For **6LoWPAN-ND**, change the value of `channel` to either **1** or **12** in section `6lowpan_nd`.
 
-	- For **Thread**, change the value of `channel` to either **1** or **12**.
+	- For **Thread**, change the value of `channel` to either **1** or **12** in section `thread`.
 
 	- For **sub-GHz** module set value of `channel_page` to **2**.
 
@@ -182,15 +180,14 @@ Configuration values in top level:
 
 | Parameter name  | Type     | Description |
 | --------------- | ---------| ----------- |
-| channel_mask    | number   | Channel(s) to scan, 1 << channel number |
 | channel_page    | number (0, 2) | 0 for 2,4 GHz and 2 for sub-GHz radios |
+| channel         | number [0-27] | RF channel to use |
 
 Thread specific configuration values in section: mbed-mesh-api/thread
 
 | Parameter name  | Value         | Description |
 | --------------- | ------------- | ----------- |
-| device_type     | string ["SED", "Router"] | Set device operating mode to Sleepy End Device (SED) or router (Router) |
-| pollrate        | number        | Sleepy End Device polling rate in milliseconds |
+| device_type     | enum from mbed-mesh-api `mesh_device_type_t` | Set device operating mode to Router (`MESH_DEVICE_TYPE_THREAD_ROUTER`) or Sleepy End Device (`MESH_DEVICE_TYPE_THREAD_SLEEPY_END_DEVICE`) |
 | channel_mask    | number        | Channel(s) to scan, 1 << channel number |
 | channel_page    | number [0, 2] | Channel page, 0 for 2,4 GHz and 2 for sub-GHz radios |
 | channel         | number [0-27] | RF channel to use |
