@@ -92,7 +92,7 @@ For client side configuration, please follow the steps below.
 1. Set the application certificate as described in [Setting Certificate for the application](#setting-certificate-for-the-application) section.
 2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of ARM mbed Device Connector:
 	* You can get the mbed Device Connector IPv6 address by using command `nslookup -query=AAAA api.connector.mbed.com`.
-	* The `config.json` file contains the IPv6 address of ARM mbed Device Connector. By default, this is set to `2607:f0d0:2601:52::20`. It can be found on line 3, as the value of `device_connector_uri`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:2601:52::20:5684`.
+	* The `config.json` file contains the IPv6 address of ARM mbed Device Connector. By default, this is set to `2607:f0d0:2601:52::20`. It can be found on line 3, as the value of `device_connector_uri`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:2601:52::20:5684`. Please note that IPv6 address is presented as a string that must be escaped `"\"coap:\/\/2607:f0d0:2601:52::20:5684\""`.
 3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) section for instructions.
 4. Build `mbed-client-example-6lowpan` (see [Build instructions](#build-instructions)).
 5. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
@@ -151,7 +151,7 @@ To change the radio channel you are using you need to modify the `config.json` f
 		
 1. Install yotta. See instructions [here](http://docs.yottabuild.org/#installing). On Linux, enter `pip install --pre pyusb` and then `pip install yotta`.
 
-2. Set the `IPv6` address for ARM mbed Device Connector in `source/lwm2mclient.cpp` if you have not done it yet. The instructions are in the [Client side configuration](#client-side-configuration) section of this document. 
+2. Set the `IPv6` address for ARM mbed Device Connector if you have not done it yet. The instructions are in the [Client side configuration](#client-side-configuration) section of this document. 
 
 3. In the command line, move to the root of this example application.
 
@@ -258,19 +258,21 @@ This will give you the client's debug trace.
 
 ## Troubleshooting
 
-If **lwm2m-client-6lowpan-endpoint** is not visible in ARM mbed Device Connector try one of the following:
+If your endpoint is not visible in the ARM mbed Device Connector **Connected devices** link under **My devices** try one of the following:
 
 * Clear your browser cache.
-* Restart the 6LoWPAN gateway.
-* Restart the FRDM-K64F board.
+* Unplug FRDM-K64F board and restart the 6LoWPAN gateway.
+* Start the FRDM-K64F board.
 
 You can also check the following settings:
 
 * Check that channels are set as described in [Changing radio channel](#changing-radio-channel).
 * Check that the mbed 6LoWPAN gateway is using the correct binary, as explained in [Gateway configuration](#gateway-configuration).
-* Check that the ARM mbed Device Connector address is set to `mbed-client-example-6lowpan`, as explained in [Client side configuration](#client-side-configuration).
-* Check the client trace. It should indicate that the bootstrap is ready when the FRDM-K64F board is connected to the mbed 6LoWPAN gateway. 
+* Check that the ARM mbed Device Connector address is set as described in [Client side configuration](#client-side-configuration).
+* Check that you have working IPv6 connection by pinging the IPv6 address of ARM mbed Device Connector.
+* Check the client trace. It should indicate that the bootstrap is ready when the FRDM-K64F board is connected to the mbed 6LoWPAN gateway.
 
+### Traces in **6LoWPAN ND** bootstrap mode
 For example, the **6LoWPAN ND** bootstrap trace window indicates the bootstrap state and object registration as follows:
 
 ```
@@ -283,5 +285,59 @@ For example, the **6LoWPAN ND** bootstrap trace window indicates the bootstrap s
 ...
 [DBG ][mbedclient]: object_registered()
 
+```
+
+### Traces in **Thread** bootstrap mode
+In the **Thread** bootstrap mode the trace should be as follows:
+```
+Start mbed-client-example-6lowpan
+[DBG ][m6La]: init()
+[DBG ][m6La]: connect()
+[DBG ][m6Thread]: PANID defa
+[DBG ][m6Thread]: channel: 12
+[DBG ][m6Thread]: channel page: 0
+[DBG ][m6Thread]: channel mask: 134215680
+[DBG ][m6Thread]: Mesh prefix: fd:00:0d:b8:00:00:00:00
+[DBG ][m6Thread]: Master key: 00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff
+[DBG ][m6Thread]: PSKc: 00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff
+[DBG ][m6Thread]: PSKd: Secret password
+[INFO][m6Thread]: Start Thread bootstrap (Router mode)
+[DBG ][m6Thread]: app_parse_network_event() 0
+[INFO][m6Thread]: Thread bootstrap ready
+[DBG ][m6Thread]: MAC 16-bit: 04:00
+[DBG ][m6Thread]: PAN ID: de:fa
+[DBG ][m6Thread]: MAC 64-bit: fe:c2:3d:00:00:05:2f:8e
+[DBG ][m6Thread]: IID (Based on MAC 64-bit address): fc:c2:3d:00:00:05:2f:8e
+mesh_network_handler() 0
+[DBG ][ns_wrap]: ns_wrapper_socket_open(5)
+waiting 5s before sending registration...
+send_registration()
+[DBG ][ns_wrap]: SOCKET_TX_DONE, 163 bytes sent
+[DBG ][ns_wrap]: SOCKET_DATA, sock=5, bytes=60
+[DBG ][ns_wrap]: SOCKET_TX_DONE, 195 bytes sent
+[DBG ][ns_wrap]: SOCKET_DATA, sock=5, bytes=112
+...
+object_registered()
+...
+```
+
+In case of error in IPv6 connectivity the trace will look as follows:
+```
+...
+send_registration()
+[DBG ][ns_wrap]: SOCKET_TX_DONE, 163 bytes sent
+[DBG ][ns_wrap]: SOCKET_TX_DONE, 163 bytes sent
+[DBG ][ns_wrap]: SOCKET_TX_DONE, 163 bytes sent
+error 6
+Reconnecting to server
+[DBG ][ns_wrap]: ns_wrapper_socket_free(8)
+[DBG ][ns_wrap]: ns_wrapper_socket_open(9)
+waiting 5s before sending registration...
+send_registration()
+[DBG ][ns_wrap]: SOCKET_TX_DONE, 163 bytes sent
+[DBG ][ns_wrap]: SOCKET_TX_DONE, 163 bytes sent
+[DBG ][ns_wrap]: SOCKET_TX_DONE, 163 bytes sent
+error 6
+...
 ```
 
