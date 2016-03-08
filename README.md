@@ -87,29 +87,29 @@ To set up the environment, you need to configure the mbed 6LoWPAN gateway router
 
 ### Client side configuration
 
-For client side configuration, please follow the steps below.
-
-1. Set the application certificate as described in [Setting Certificate for the application](#setting-certificate-for-the-application) section.
-2. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of ARM mbed Device Connector:
-	* You can get the mbed Device Connector IPv6 address by using command `nslookup -query=AAAA api.connector.mbed.com`.
-	* The `config.json` file contains the IPv6 address of ARM mbed Device Connector. By default, this is set to `2607:f0d0:2601:52::20`. It can be found on line 3, as the value of `device_connector_uri`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:2601:52::20:5684`. Please note that IPv6 address is presented as a string that must be escaped `"\"coap:\/\/2607:f0d0:2601:52::20:5684\""`.
-3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) section for instructions.
-4. Build `mbed-client-example-6lowpan` (see [Build instructions](#build-instructions)).
-5. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
-
-**Note:** You may need to open UDP port 5684 in your computer's firewall for ARM mbed Device Connector to communicate with this example application.
-
-### IP address setup
-
-This example uses IPv6 to communicate with the [mbed Device Connector Server](https://api.connector.mbed.com). The example program should automatically get an IPv6 address from the mbed 6LoWPAN gateway router when it is connected via Ethernet.
-
-
 #### Setting the certificate for the application
+
+First you need to create and set a certificate for the client application.
 
 1. Open the [mbed Device Connector website](https://connector.mbed.com) and log in with your mbed.org account.
 2. Navigate to **Security credentials** under **My devices**.
 3. Click **GET MY DEVICE SECURITY CREDENTIALS**. You will get the needed certificate information as well as the endpoint name and domain.
 4. Copy the created security credentials to file `source/security.h`.
+
+To further configure the client side application, please follow the steps below:
+
+1. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of ARM mbed Device Connector:
+	* You can get the mbed Device Connector IPv6 address by using command `nslookup -query=AAAA api.connector.mbed.com`.
+	* The `config.json` file contains the IPv6 address of ARM mbed Device Connector. By default, this is set to `2607:f0d0:2601:52::20`. It can be found on line 3, as the value of `device_connector_uri`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:2601:52::20:5684`. Please note that IPv6 address is presented as a string that must be escaped `"\"coap:\/\/2607:f0d0:2601:52::20:5684\""`.
+2. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) section for instructions.
+3. Build `mbed-client-example-6lowpan` (see [Build instructions](#build-instructions)).
+4. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
+
+**Note:** You may need to open UDP port 5684 in your computer's firewall for ARM mbed Device Connector to communicate with this example application.
+
+#### IP address setup
+
+This example uses IPv6 to communicate with the [mbed Device Connector Server](https://api.connector.mbed.com). The example program should automatically get an IPv6 address from the mbed 6LoWPAN gateway router when it is connected via Ethernet.
 
 #### Changing the radio channel
 
@@ -128,7 +128,7 @@ To change the radio channel you are using you need to modify the `config.json` f
 	- For **2.4 GHz** module set value of `channel_page` to **0**.
 	
 
-##### Radio module identification
+#### Radio module identification
 
 * Make sure that you are using the same radio modules on both server and client sides:
 
