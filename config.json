@@ -14,12 +14,16 @@
       "device_type": "MESH_DEVICE_TYPE_THREAD_ROUTER",
       "config": {
         "channel_mask": "0x07fff800",
-        "channel_page": 0,
-        "channel": 12
+        "channel_page": 2,
+        "channel": 1
       }
     },
     "6lowpan_nd": {
-      "channel_page": 0,
+      "security-mode": "PSK",
+      "psk-key-id": 1,
+      "psk-key": "{0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf}",
+      "channel-page": 0,
+      "channel-mask": "0x07fff800",
       "channel": 12
     }
   }
