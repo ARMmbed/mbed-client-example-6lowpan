@@ -25,9 +25,9 @@ A list of all application configurable items can be found from [Application conf
 
 ## Required hardware
 
-* An [FRDM-K64F|https://www.mbed.com/en/development/hardware/boards/nxp/frdm_k64f/] development board (client end-point).
-* An [mbed 6LoWPAN shield (with a radio module)|http://uk.rs-online.com/web/p/radio-frequency-development-kits/9054107/].
-* An [mbed 6LoWPAN gateway router|http://uk.rs-online.com/web/p/radio-frequency-development-kits/9054097/].
+* An [FRDM-K64F](https://www.mbed.com/en/development/hardware/boards/nxp/frdm_k64f) development board (client end-point).
+* An [mbed 6LoWPAN shield (with a radio module)](http://uk.rs-online.com/web/p/radio-frequency-development-kits/9054107).
+* An [mbed 6LoWPAN gateway router](http://uk.rs-online.com/web/p/radio-frequency-development-kits/9054097).
 * A micro-USB cable.
 * A micro-USB charger for powering the mbed 6LoWPAN gateway router.
 * An Ethernet cable.
