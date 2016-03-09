@@ -79,11 +79,7 @@ To set up the environment, you need to configure the mbed 6LoWPAN gateway router
 	* For the **6LoWPAN ND** bootstrap, use `gateway6LoWPANDynamic.bin`.
 	* For the **Thread** bootstrap, use `gatewayThreadDynamic.bin`.
 
-	**Note**: You can also run [FRDM-K64F border router](https://github.com/ARMmbed/k64f-border-router) as a gateway on a FRDM-K64F board.
-	
 4. Copy the gateway binary file to the mbed 6LoWPAN gateway router to flash the device. The device will reboot automatically after flashing. If that does not happen, push the **Reset** button on the board.
-
-**Alternative:** Instead of using the pre-compiled firmware for the 6LoWPAN gateway, you can also compile the gateway application yourself and use an extra FRDM-K64F board as a 6LoWPAN gateway. The sources and instructions can be found in GitHub project [FRDM-K64F border router](https://github.com/ARMmbed/k64f-border-router).
 
 ### Client side configuration
 
