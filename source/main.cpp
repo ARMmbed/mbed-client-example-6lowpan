@@ -29,16 +29,13 @@
 #include "mbed-mesh-api/AbstractMesh.h"
 #include "mbedclient.h"
 
-// Set bootstrap mode to be Thread, otherwise 6LOWPAN_ND is used
-//#define APPL_BOOTSTRAP_MODE_THREAD
-
 #define OBS_BUTTON      SW2
 #define UNREG_BUTTON    SW3
 
 static MbedClient *mbedclient;
 static InterruptIn *obs_button;
 static InterruptIn *unreg_button;
-static Serial pc(USBTX, USBRX);
+static Serial &pc = get_stdio_serial();
 
 void app_start(int, char **)
 {
@@ -55,7 +52,7 @@ void app_start(int, char **)
     // by LWM2M Client API to communicate with mbed Device server.
     AbstractMesh *mesh_api;
     int8_t status;
-#ifdef APPL_BOOTSTRAP_MODE_THREAD
+#if (YOTTA_CFG_APPL_BOOTSTRAP_MODE_THREAD == true)
     mesh_api = MeshInterfaceFactory::createInterface(MESH_TYPE_THREAD);
     uint8_t eui64[8];
     int8_t rf_device_id = rf_device_register();
@@ -63,10 +60,10 @@ void app_start(int, char **)
     rf_read_mac_address(&eui64[0]);
     char *pskd = (char *)"Secret password";
     status = ((MeshThread *)mesh_api)->init(rf_device_id, AbstractMesh::mesh_network_handler_t(mbedclient, &MbedClient::mesh_network_handler), eui64, pskd);
-#else /* APPL_BOOTSTRAP_MODE_THREAD */
+#else /* YOTTA_CFG_APPL_BOOTSTRAP_MODE_THREAD */
     mesh_api = (Mesh6LoWPAN_ND *)MeshInterfaceFactory::createInterface(MESH_TYPE_6LOWPAN_ND);
     status = ((Mesh6LoWPAN_ND *)mesh_api)->init(rf_device_register(), AbstractMesh::mesh_network_handler_t(mbedclient, &MbedClient::mesh_network_handler));
-#endif /* APPL_BOOTSTRAP_MODE */
+#endif /* YOTTA_CFG_APPL_BOOTSTRAP_MODE_THREAD */
 
     if (status != MESH_ERROR_NONE) {
         printf("Mesh network initialization failed %d!\r\n", status);

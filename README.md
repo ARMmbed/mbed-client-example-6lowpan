@@ -11,8 +11,13 @@ This example application demonstrates how to:
 
 ## Switching to Thread
 
-By default, the example application makes a **6LoWPAN ND** bootstrap. To change the bootstrap mode to **Thread**
-you need to define (uncomment) the macro `APPL_BOOTSTRAP_MODE_THREAD` in the file `source/main.cpp`. 
+By default, the example application makes a **6LoWPAN ND** type of bootstrap. To change the bootstrap mode to **Thread**
+you need to change value of the `appl_bootstrap_mode_thread` to `true` in the `config.json` file before building the project.
+
+### Change Thread device type
+
+In the Thread bootstrap mode, the device type can be either **Router** or **Sleepy End Device**. By default, the device type is set to **Router** but the type can be changed to **Sleepy End Device** by changing the parameter `device_type` from `MESH_DEVICE_TYPE_THREAD_ROUTER` to value `MESH_DEVICE_TYPE_THREAD_SLEEPY_END_DEVICE` in the `config.json` file.
+
 
 ## Required hardware
 
@@ -252,7 +257,7 @@ For client side configuration, please follow the steps below.
     * On Mac OS X and Linux:
          * On a Mac or a Linux machine running mbed DS, open the terminal and type _ifconfig_.
          * Under the appropriate device (usually `eth0`, `en0`, or something similar), look for the `inet6` address that looks similar to `FD00:FF1:CE0B:A5E0::1`. That is the IPv6 address of the machine running mbed DS.
-	* Make sure that on the client side, the `/source/mbedclient.cpp` file contains the right IPv6 address for mbed DS. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 36, as the value of `MBED_DEVICE_CONNECTOR_URI`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5683". The  prefix `FD` tells you that it is a unique local IPv6 address. Notice that this is the same IP address you just set for your mbed DS machine (see [Static setup configuration (_Server Side_)](#static-setup-configuration-server-side)).
+	* Make sure that on the client side, the `/source/mbedclient.cpp` file contains the right IPv6 address for mbed DS. By default, this is set to  "FD00:FF1:CE0B:A5E0::1". It should be at line 35, as the value of `MBED_DEVICE_CONNECTOR_URI`. The full address format is `coap://<IPv6 address>:PORT`, that is "FD00:FF1:CE0B:A5E0::1:5683". The  prefix `FD` tells you that it is a unique local IPv6 address. Notice that this is the same IP address you just set for your mbed DS machine (see [Static setup configuration (_Server Side_)](#static-setup-configuration-server-side)).
 
 3. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) below for instructions.
 
@@ -271,39 +276,20 @@ Dynamic setup follows the same steps detailed above, with one exception:
 
 #### Changing radio channel
 
-To change the radio channel you use:
 
-* Clone the `mbed-mesh-api` repository to your work area:
+To change the radio channel you are using you need to modify the `config.json` file that contains sections for the **Thread** and **6LoWPAN-ND** configuration. Use channel **1** and channel page **2** for a sub-GHz module. Use channel **12** and channel page **0** for a 2.4 GHz module.
 
-```
-git clone git@github.com:ARMmbed/mbed-mesh-api.git
-```
+**Tip:** To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
 
-* Modify the source code:
+* To change the radio channel, modify the `config.json` file:
 
-	- In your copy of the `mbed-mesh-api` repository, find the file  `./source/include/static_config.h`.
+	- For **6LoWPAN-ND**, change the value of `channel` to either **1** or **12** in section `6lowpan_nd`.
 
-	- You'll need to use channel **1** for a sub-GHz module and channel **12** for a 2.4 GHz module.
+	- For **Thread**, change the value of `channel` to either **1** or **12** in section `thread`.
 
-		Tip: To identify which radio module you have, see the section [Radio Module Identification](#radio-module-identification).
+	- For **sub-GHz** module set value of `channel_page` to **2**.
 
-		- For **6LoWPAN-ND**, change the macro `SCAN_CHANNEL_LIST` to either **1** (1<<1) or **12** (1<<12).
-
-		- For **Thread**, change the macro `THREAD_RF_CHANNEL` to either **1** or **12**.	
-* Create a yotta link to your code:
-
-	```
-	cd mbed-mesh-api
-	yt link
-	```
-* Go back to the `mbed-client-example-6lowpan` application folder and make a link to the cloned `mbed-mesh-api` repository:
-
-	```
-	cd mbed-client-example-6lowpan
-	yt link mbed-mesh-api
-	```
-
-* You can check that linking was successful by using the command `yt ls` and checking that the module `mbed-mesh-api` points to the cloned repository.
+	- For **2.4 GHz** module set value of `channel_page` to **0**.
 
 #### Radio module identification
 

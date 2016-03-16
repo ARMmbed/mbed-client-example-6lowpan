@@ -34,10 +34,7 @@ using namespace mbed::util;
 // coap://<IPv6 address>:PORT.  For example: coap://FD00:FF1:CE0B:A5E0::1:5683
 const String &MBED_DEVICE_CONNECTOR_URI = "coap://FD00:FF1:CE0B:A5E0::1:5683";
 #else
-// Enter ARM mbed Device Connector IPv6 address and Port number in
-// format coap://<IPv6 address>:PORT. If ARM mbed Device Connector IPv6 address
-// is 2607:f0d0:2601:52::20 then the URI is: "coap://2607:f0d0:2601:52::20:5684"
-const String &MBED_DEVICE_CONNECTOR_URI = "coap://2607:f0d0:2601:52::20:5684";
+const String &MBED_DEVICE_CONNECTOR_URI = YOTTA_CFG_DEVICE_CONNECTOR_URI;
 #endif
 
 const String &MANUFACTURER = "ARM";
