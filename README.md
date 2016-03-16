@@ -266,6 +266,7 @@ You can also check the following settings:
 * Check that the mbed 6LoWPAN gateway is using the correct binary, as explained in [Gateway configuration](#gateway-configuration).
 * Check that the ARM mbed Device Connector address is set as described in [Client side configuration](#client-side-configuration).
 * Check that you have working IPv6 connection by pinging the IPv6 address of ARM mbed Device Connector.
+* Check the trace from mbed 6LoWPAN Gateway using baud rate 460800. IPv6 address is correctly configured to the gateway if following trace is visible: `Eth bootstrap ready, IP=XXXX:XXXX:XXXX:XXXX:XXXX:XXXX:XXXX:XXXX`.
 * Check the client trace. It should indicate that the bootstrap is ready when the FRDM-K64F board is connected to the mbed 6LoWPAN gateway.
 
 ### Traces in **6LoWPAN ND** bootstrap mode
