@@ -7,7 +7,7 @@ This example application demonstrates how to:
 * Connect to a **6LoWPAN ND** or **Thread** type of mesh network.
 * Register, read resource values and send observations to mbed DS.
 * Deregister from mbed DS.
-* Disconnect from the network.
+* Disconnect from the network.   
 
 ## Switching to Thread
 
@@ -35,8 +35,31 @@ In the Thread bootstrap mode, the device type can be either **Router** or **Slee
 ## Required software
 
 * [yotta](http://docs.yottabuild.org/#installing) - to build the example programs.
-* [mbed Device Server (mbed DS)](https://silver.arm.com/browse/SEN00) - what the example application connects to. For installation instructions see [Starting mbed DS](#starting-mbed-ds).
-* Java Runtime for running the mbed DS.
+* [mbed Device Server (mbed DS)](http://connect.arm.com/browse/Evaluation%20Product/Sensinode/Development%20Tools/SEN00-BN-00010) - what the example application connects to. For installation instructions see [Starting mbed DS](#starting-mbed-ds).
+* Java Runtime/Development environment (jdk/jre 8 and later) plus Java cryptography extensions (JCE 8) for running the mbed DS.
+
+**Installing Java8**
+```
+ $ sudo add-apt-repository ppa:webupd8team/java
+ $ sudo apt-get update
+ $ sudo apt-get install oracle-java8-installer
+
+/* For automatic configuration of environment variables */
+
+$ sudo apt-get install oracle-java8-set-default
+```
+
+**Installing Java Cryptographic Extensions:** 
+
+> i) Download jce_policy.jar from the following link.
+   	http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
+	ii) Unzip the archive
+
+```
+$ cd UnlimitiedJCEPolicyJDK8
+$ sudo cp local_policy.jar $JAVA_HOME
+$ sudo cp US_export_policy.jar $JAVA_HOME
+```
 
 ## Optional software
 * [Wireshark](https://www.wireshark.org/) - for packet inspection and network debugging.
@@ -104,38 +127,31 @@ As mentioned above, in static setup the mbed DS instance runs on a local compute
 
 Please follow the instructions below to complete the setup.
 
-##### Downloading mbed DS
+##### Downloading mbed DS & ARM Reference App.
 
 Installing mbed DS on your computer:
 
-1. Download the free developer version of mbed DS from [ARM silver](https://silver.arm.com/browse/SEN00).
-2. Click the **Download Now** button in the right hand side pane.  
-3. Unzip the package on your computer. You should see the following files:
+1. Download the mbed DS from [ARM Connect mDS](http://connect.arm.com/browse/Evaluation%20Product/Sensinode/Development%20Tools/SEN00-BN-00010).
+2. Download ARM Reference App. from [ARM Connect mbed Ref. Apps.](http://connect.arm.com/browse/SEN00-BN-00012).
+3. Download your subscribed versions. (Access for ARM partners only)  
+3. Unzip the packages on your computer. 
 
-```
-Device Server.tar.gz
-Device Server Clients.tar.gz
-Device Server Tools.tar.gz
-Ref Apps.tar.gz
-```
+**Note:** These instructions are valid for the Device Server 3.x.x release.
 
-**Note:** These instructions are valid for the Device Server 2.2 release.
 
 ##### Starting mbed DS
 
-1. Extract the `Device Server.tar.gz` file.
-2. Go to the `bin` folder of the `Device Server` package that you just extracted.
-3. Run the start script:
+1. Move to the `bin` folder of the `device-server-3.x.x-xxx` package that you just extracted.
+2. Run the start script:
     - If you are running mbed DS on Linux, run `runDS.sh` in a new shell.
     - If you are running mbed DS on Windows, run `runDS.bat` in a new command prompt.
 		
-This will start mbed DS on your system.
+This will start mbed DS on your system. 
 
-##### Starting the web UI (_Connected_ _home_ _reference_ _app_)
+##### Starting the ARM Reference App. (_Connected_ _home_ _reference_ _app_)
 
-1. Extract the `Ref Apps.tar.gz` file.
-2. Go to the `bin` folder in the `Connected-home-trial` reference app that you extracted.
-3. Run the start script:	
+1. Go to the `bin` folder in the `connected-home-3.x.x-xx` reference app that you extracted.
+2. Run the start script:	
     - If you are running mbed DS on Linux, run `runConnectedHome.sh` in a new shell.	
     - If you are running mbed DS on Windows, run `runConnectedHome.bat` in a new command prompt.	
 		
