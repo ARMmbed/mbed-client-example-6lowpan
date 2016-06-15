@@ -1,6 +1,6 @@
 {
   "name": "mbed-client-example-6lowpan",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "6LoWPAN networking example",
   "keywords": [
     "6LoWPAN",
@@ -15,7 +15,7 @@
   "homepage": "https://github.com/ARMmbed/mbed-client-example-6lowpan",
   "license": "Apache-2.0",
   "dependencies": {
-    "mbed-client": "^1.0.0",
+    "mbed-client": "^1.12.4",
     "atmel-rf-driver": "^2.0.0",
     "mbed-mesh-api": "^2.2.0"
   },
