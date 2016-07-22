@@ -25,9 +25,9 @@ A list of all application configurable items can be found from [Application conf
 
 ## Required hardware
 
-* An FRDM-K64F development board (client end-point).
-* An mbed 6LoWPAN shield (with a radio module).
-* An mbed 6LoWPAN gateway router.
+* An [FRDM-K64F](https://developer.mbed.org/platforms/FRDM-K64F/) development board (client end-point).
+* An mbed [6LoWPAN shield](https://firefly-iot.com/product/firefly-arduino-shield-2-4ghz/) (with a radio module).
+* An mbed [6LoWPAN gateway router](https://firefly-iot.com/product/firefly-6lowpan-gateway-2-4ghz/).
 * A micro-USB cable.
 * A micro-USB charger for powering the mbed 6LoWPAN gateway router.
 * An Ethernet cable.
