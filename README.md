@@ -215,7 +215,7 @@ The **/Test/0/D** represents the dynamic resource that can be read by mbed Devic
 
 For example: `https://api.connector.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/D?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device, creates a GET request to the **/Test/0/D** resource. This returns the latest value of **/Test/0/D**. 
 
-<span class="notes">**Note:** If you get, for example, an error `Server Response:410(Gone)` or other such error, clear the cache of your browser, log out and log in again.
+<span class="notes">**Note:** If you get, for example, an error `Server Response:410(Gone)` or other such error, clear the cache of your browser, log out and log in again.</span>
 
 For more information on the mbed Device Connector REST API, see the [help pages](https://connector.mbed.com/#help-rest-api).
 
