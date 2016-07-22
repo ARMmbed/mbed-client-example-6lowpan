@@ -10,8 +10,6 @@ This example application demonstrates how to:
 * Deregister from ARM mbed Device Connector.
 * Disconnect the client from the mesh network.
 
-**Note**: This application does not work with mbed Device Server (mbed DS). If you want to use mbed DS, please check the example and instructions [here](https://github.com/ARMmbed/mbed-client-example-6lowpan/tree/device_server).
-
 ## Switching to Thread
 
 By default, the example application makes a **6LoWPAN ND** type of bootstrap. To change the bootstrap mode to **Thread**
@@ -37,13 +35,14 @@ A list of all application configurable items can be found from [Application conf
 
 ## Required software
 
-* [yotta](http://docs.yottabuild.org/#installing) - to build the example programs.
+* [yotta](http://docs.yottabuild.org/#installing) to build the example programs.
 * [ARM mbed Device Connector website](https://connector.mbed.com) - Web service running on the internet.
 
 
 ## Optional software
-* [Wireshark](https://www.wireshark.org/) - for packet inspection and network debugging.
-* [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) - for serial terminal emulation.
+
+* [Wireshark](https://www.wireshark.org/) for packet inspection and network debugging.
+* [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) for serial terminal emulation.
 
 
 ## Reference block diagram
@@ -61,7 +60,7 @@ A list of all application configurable items can be found from [Application conf
 
 * To power up the FRDM-K64F board (client endpoint), use either a micro-USB charger or a micro-USB cable. If you are using micro-USB cable, you can view the debug and trace messages using third party software such as PuTTY.
 
-**Note!**: If you are using a virtual machine, please set your network adapter mode to **Bridged**.
+<span class="notes">**Note!**: If you are using a virtual machine, please set your network adapter mode to **Bridged**.</span>
 
 
 ## Setting up the environment
@@ -92,16 +91,16 @@ First you need to create and set a certificate for the client application.
 3. Click **GET MY DEVICE SECURITY CREDENTIALS**. You will get the needed certificate information as well as the endpoint name and domain.
 4. Copy the created security credentials to file `source/security.h`.
 
-To further configure the client side application, please follow the steps below:
+To further configure the client side application, proceed as follows:
 
 1. Configure the `mbed-client-example-6lowpan` application to use the IPv6 address of ARM mbed Device Connector:
-	* You can get the mbed Device Connector IPv6 address by using command `nslookup -query=AAAA api.connector.mbed.com`.
+	* You can get the mbed Device Connector IPv6 address by using the command `nslookup -query=AAAA api.connector.mbed.com`.
 	* The `config.json` file contains the IPv6 address of ARM mbed Device Connector. By default, this is set to `2607:f0d0:2601:52::20`. It can be found on line 3, as the value of `device_connector_uri`. The full address format is `coap://<IPv6 address>:PORT`, that is `coap://2607:f0d0:2601:52::20:5684`. Please note that IPv6 address is presented as a string that must be escaped `"\"coap:\/\/2607:f0d0:2601:52::20:5684\""`.
-2. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing radio channel](#changing-radio-channel) section for instructions.
+2. Configure the `mbed-client-example-6lowpan` application to use an appropriate radio channel based on your hardware. See [Changing the radio channel](#changing-the-radio-channel) section for instructions.
 3. Build `mbed-client-example-6lowpan` (see [Build instructions](#build-instructions)).
 4. Load the `mbed-client-example-6lowpan` application binary to the FRDM-K64F board (see [Running the example application](#running-the-example-application)).
 
-**Note:** You may need to open UDP port 5684 in your computer's firewall for ARM mbed Device Connector to communicate with this example application.
+<span class="notes">**Note:** You may need to open UDP port 5684 in your computer's firewall for ARM mbed Device Connector to communicate with this example application.</span>
 
 #### IP address setup
 
@@ -216,7 +215,7 @@ The **/Test/0/D** represents the dynamic resource that can be read by mbed Devic
 
 For example: `https://api.connector.mbed.com/endpoints/<ENDPOINT_NAME>/Test/0/D?sync=true`, where `<ENDPOINT_NAME>` is the name of the connected device, creates a GET request to the **/Test/0/D** resource. This returns the latest value of **/Test/0/D**. 
 
-**NOTE:** If you get, for example, an error `Server Response:410(Gone)` or other such error, clear the cache of your browser, log out and log in again.
+<span class="notes">**Note:** If you get, for example, an error `Server Response:410(Gone)` or other such error, clear the cache of your browser, log out and log in again.
 
 For more information on the mbed Device Connector REST API, see the [help pages](https://connector.mbed.com/#help-rest-api).
 
@@ -257,18 +256,18 @@ This will give you the client's debug trace.
 If your endpoint is not visible in the ARM mbed Device Connector **Connected devices** link under **My devices** try one of the following:
 
 * Clear your browser cache.
-* Unplug FRDM-K64F board and restart the 6LoWPAN gateway.
+* Unplug the FRDM-K64F board and restart the 6LoWPAN gateway.
 * Start the FRDM-K64F board.
 
 You can also check the following settings:
 
-* Check that channels are set as described in [Changing radio channel](#changing-radio-channel).
+* Check that channels are set as described in [Changing the radio channel](#changing-the-radio-channel).
 * Check that the mbed 6LoWPAN gateway is using the correct binary, as explained in [Gateway configuration](#gateway-configuration).
 * Check that the ARM mbed Device Connector address is set as described in [Client side configuration](#client-side-configuration).
 * Check that you have working IPv6 connection by pinging the IPv6 address of ARM mbed Device Connector.
 * Check the trace from mbed 6LoWPAN Gateway using baud rate 460800. IPv6 address is correctly configured to the gateway if following trace is visible: `Eth bootstrap ready, IP=XXXX:XXXX:XXXX:XXXX:XXXX:XXXX:XXXX:XXXX`.
 * Check the client trace. It should indicate that the bootstrap is ready when the FRDM-K64F board is connected to the mbed 6LoWPAN gateway.
-* **[Applicable only to 6LoWPAN ND bootstrap mode]** If you are not using the Gateway binary provided, e.g., using [K64f-Border-Router](https://github.com/ARMmbed/k64f-border-router), make sure that you have configured the link layer security.
+* **[Applicable only to 6LoWPAN ND bootstrap mode]** If you are not using the Gateway binary provided, using for example the [K64F border router](https://github.com/ARMmbed/k64f-border-router), make sure that you have configured the link layer security.
  
 ```json
  "6lowpan_nd": {
@@ -278,8 +277,9 @@ You can also check the following settings:
 }
 ```  
 
-### Traces in **6LoWPAN ND** bootstrap mode
-For example, the **6LoWPAN ND** bootstrap trace window indicates the bootstrap state and object registration as follows:
+### Traces in 6LoWPAN ND bootstrap mode
+
+The **6LoWPAN ND** bootstrap trace window indicates the bootstrap state and object registration as follows:
 
 ```
 [INFO][m6LND]: 6LoWPAN ND bootstrap ready
@@ -293,8 +293,10 @@ For example, the **6LoWPAN ND** bootstrap trace window indicates the bootstrap s
 
 ```
 
-### Traces in **Thread** bootstrap mode
+### Traces in Thread bootstrap mode
+
 In the **Thread** bootstrap mode the trace should be as follows:
+
 ```
 Start mbed-client-example-6lowpan
 [DBG ][m6La]: init()
@@ -327,7 +329,8 @@ object_registered()
 ...
 ```
 
-In case of error in IPv6 connectivity the trace will look as follows:
+In case of an error in IPv6 connectivity, the trace will look as follows:
+
 ```
 ...
 send_registration()
