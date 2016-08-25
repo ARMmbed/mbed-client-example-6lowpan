@@ -1,4 +1,4 @@
-*Note:* this example is based on mbed OS 3.0 and now superseeded by the [mbed Client example based on mbed OS 5](https://github.com/ARMmbed/mbed-os-example-client)
+*Note:* this example is based on mbed OS 3.0 and now superseded by the [mbed Client example based on mbed OS 5](https://github.com/ARMmbed/mbed-os-example-client)
 
 # Getting started with mesh networking
 
