@@ -1,3 +1,5 @@
+*Note:* this example is based on mbed OS 3.0 and now superseded by the [mbed Client example based on mbed OS 5](https://github.com/ARMmbed/mbed-os-example-client)
+
 # Getting started with mesh networking
 
 This document describes how to use mesh networking to communicate with [ARM mbed Device Connector](https://connector.mbed.com) 
